@@ -32,12 +32,12 @@ $(document).ready(function () {
                     return `
                     <center class="table-columns">
                         <div class="flex justify-center items-center">
-                            <a class="btn btn-primary items-center mr-3 button-custom" href="">
-                            <i class="fa-regular fa-pen-to-square"></i> Editar
-                            </a>
-                            <a class="btn btn-danger items-center button-custom" href="">
-                            <i class="fa-solid fa-trash"></i> Eliminar 
-                            </a>
+                            <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idSchool})">
+                                <i class="fa-duotone fa-pen-to-square"></i> Editar
+                            </button>
+                            <button class="btn btn-danger items-center button-custom" onclick="">
+                                <i class="fa-duotone fa-trash"></i> Eliminar 
+                            </button>
                         </div>
                     </center>
                     `;
@@ -122,3 +122,22 @@ function formatoDetalle(data) {
     });
     return html; // Devolvemos el valor html
 }
+
+function deleteSchool(idSchool){
+    $.ajax({
+        url: 'controller/ajax/ajax.form.php',
+        type: 'POST',
+        data: {
+            deleteSchool: idSchool
+        },
+        dataType: 'json',
+        async: false, // Asegura que la función espere a que se complete la solicitud AJAX
+        success: function (response) {
+            if (response.length > 0) { // Verificamos si hay resultados en la respuesta
+                response.forEach(function (school) {
+                    $('#nameSchool').val(school.nameSchool);
+                });
+            }
+        }
+    });
+};

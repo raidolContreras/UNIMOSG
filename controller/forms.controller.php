@@ -1,11 +1,11 @@
 <?php 
 
 class FormsController {
-    static public function ctrSearchUsers($email){
-        return FormsModel::mdlSearchUsers($email);
+    static public function ctrSearchUsers($item,$value){
+        return FormsModel::mdlSearchUsers($item,$value);
     }
-    static public function ctrSearchschools(){
-        return FormsModel::mdlSearchschools();
+    static public function ctrSearchschools($item,$value){
+        return FormsModel::mdlSearchschools($item,$value);
     }
 
     static public function ctrRegisterSchool($nameSchool){
@@ -18,6 +18,25 @@ class FormsController {
 
     static public function ctrSearchZones($idSchool){
         return FormsModel::mdlSearchZones($idSchool);
+    }
+
+    static public function ctrRegisterUser($data){
+        return FormsModel::mdlRegisterUser($data);
+    }
+
+    static public function ctrEditUser($data){
+        return FormsModel::mdlEditUser($data);
+    }
+
+    static public function ctrSuspendUser($idUsers){
+        return FormsModel::mdlSuspendUser($idUsers);
+    }
+    static public function ctrActivateUser($idUsers){
+        return FormsModel::mdlActivateUser($idUsers);
+    }
+
+    static public function ctrEditSchool($data){
+        return FormsModel::mdlEditSchool($data);
     }
 
 }

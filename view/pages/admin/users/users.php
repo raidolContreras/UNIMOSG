@@ -6,7 +6,7 @@
 <div class="col-12">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-success" onclick="openMenu('modalNav', 'newUsers')">Registrar usuario</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalNav', 'newUsers')"><i class="fa-duotone fa-plus"></i> Registrar usuario</button>
         </div>
     </div>
     <table id="tableUsers" class="table">
@@ -27,6 +27,13 @@
     <span class="close-btn" onclick="closeMenu('modalNav')">&times;</span>
     <ul class="modal-nav">
         <?php include "view/pages/admin/users/newUser.php"; ?>
+    </ul>
+</div>
+
+<div class="modal-collapse" id="modalNavUpdate">
+    <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
+    <ul class="modal-nav">
+        <?php include "view/pages/admin/users/editUser.php"; ?>
     </ul>
 </div>
 

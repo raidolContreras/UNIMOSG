@@ -17,5 +17,4 @@
 <link rel="stylesheet" href="view/assets/css/aos.css" />
 
 <link rel="stylesheet" href="view/assets/css/style.css" />
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css" />
+<link href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.1-web/css/all.min.css" rel="stylesheet">

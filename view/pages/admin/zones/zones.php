@@ -6,7 +6,7 @@
 <div class="col-12">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-success" onclick="openMenu('modalNav', 'newAreas')">Registrar areas</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalNav', 'newAreas')">Registrar areas</button>
         </div>
     </div>
     <table id="zones" class="table">

@@ -10,7 +10,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 
 	$cryptPassword = crypt($password, '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 
-	$users = FormsController::ctrSearchUsers($email);
+	$users = FormsController::ctrSearchUsers('email',$email);
 	
 	if ($users != false){
 		if ($email == $users['email'] && $cryptPassword == $users['password']) {

@@ -14,7 +14,7 @@
         </div>
         <div class="mb-3">
             <label for="regular-form-5" class="form-label">Nivel de acceso</label>
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" id="regular-form-5">
                 <option value="1">Supervisor</option>
                 <option value="2">Director de servicios generales</option>
                 <option value="0">Administrador</option>

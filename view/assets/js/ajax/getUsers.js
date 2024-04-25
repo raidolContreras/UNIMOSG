@@ -25,11 +25,11 @@ $(document).ready(function() {
                             level = 'Administrador';
                             break;
                     
-                        case 1:
+                        case 2:
                             level = 'Director';
                             break;
                 
-                        case 2:
+                        case 1:
                             level = 'Supervisor';
                             break;
                         
@@ -64,18 +64,29 @@ $(document).ready(function() {
 			{
 				data: null,
 				render: function(data) {
-					return `
+					html = `
 					<center class="table-columns">
                         <div class="flex justify-center items-center">
-                            <a class="flex items-center mr-3" href="">
-                                Editar
-                            </a>
-                            <a class="flex items-center text-danger" href="">
-                                Suspender 
-                            </a>
-                        </div>
-                    </center>
+                            <button class="btn btn-info flex items-center mr-3 editUser" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idUsers})">
+								<i class="fa-duotone fa-pen-to-square"></i> Editar
+                            </button>
 					`;
+					if (data.status == 1) {
+						html += `
+                            <button class="btn btn-danger flex items-center" onclick="SuspendUsers(${data.idUsers})">
+								<i class="fa-duotone fa-user-slash"></i> Suspender 
+                            </button>
+                        </div>
+                    </center>`;
+					} else {
+						html += `
+                            <button class="btn btn-success flex items-center" onclick="ActivateUsers(${data.idUsers})">
+								<i class="fa-duotone fa-user-plus"></i> Activar 
+                            </button>
+                        </div>
+                    </center>`;
+					}
+					return html;
 				}
 			}
 		],
@@ -84,3 +95,42 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function SuspendUsers(idUsers) {
+	$.ajax({
+        url: 'controller/ajax/ajax.form.php',
+        type: 'POST',
+        data: {
+            suspendUsers: idUsers
+        },
+        success: function(response) {
+            if (response == 'ok') {
+                $('#tableUsers').DataTable().ajax.reload();
+            } else {
+                console.log(response);
+            }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+function ActivateUsers(idUsers) {
+	$.ajax({
+        url: 'controller/ajax/ajax.form.php',
+        type: 'POST',
+        data: {
+            activateUsers: idUsers
+        },
+        success: function(response) {
+            if (response == 'ok') {
+                $('#tableUsers').DataTable().ajax.reload();
+            } else {
+                console.log(response);
+            }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}

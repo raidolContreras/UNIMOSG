@@ -7,7 +7,7 @@
 <main class="container">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-success" onclick="openMenu('modalCollapse', 'newSchools')">Registrar escuela</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalCollapse', 'newSchools')"><i class="fa-duotone fa-plus"></i> Registrar escuela</button>
         </div>
     </div>
 	
@@ -32,6 +32,13 @@
     <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
     <ul class="modal-nav">
         <?php include "view/pages/admin/schools/addZones.php"; ?>
+    </ul>
+</div>
+
+<div class="modal-collapse" id="modalNavUpdate">
+    <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
+    <ul class="modal-nav">
+        <?php include "view/pages/admin/schools/editSchool.php"; ?>
     </ul>
 </div>
 

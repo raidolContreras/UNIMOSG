@@ -38,12 +38,10 @@
 
     function closeMenu(collapse) {
         document.querySelector('#' + collapse).classList.remove('show');
-        if (collapse == 'modalNav' || collapse == 'modalCollapse' || collapse == 'modalZones') {
             var modalBackdrop = document.querySelector('.modal-backdrop');
             if (modalBackdrop) {
                 modalBackdrop.parentNode.removeChild(modalBackdrop);
             }
-        }
         document.querySelector('.navbar-toggler').classList.remove('active');
     }
 
