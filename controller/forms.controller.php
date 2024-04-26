@@ -16,8 +16,16 @@ class FormsController {
         return FormsModel::mdlRegisterZone($nameZone, $idSchool);
     }
 
-    static public function ctrSearchZones($idSchool){
-        return FormsModel::mdlSearchZones($idSchool);
+    static public function ctrRegisterArea($nameArea, $idSchool){
+        return FormsModel::mdlRegisterArea($nameArea, $idSchool);
+    }
+
+    static public function ctrSearchZones($idSchool, $item, $value){
+        return FormsModel::mdlSearchZones($idSchool, $item, $value);
+    }
+
+    static public function ctrSearchArea($idZone, $item, $value){
+        return FormsModel::mdlSearchArea($idZone, $item, $value);
     }
 
     static public function ctrRegisterUser($data){
@@ -37,6 +45,10 @@ class FormsController {
 
     static public function ctrEditSchool($data){
         return FormsModel::mdlEditSchool($data);
+    }
+
+    static public function ctrEditZone($data){
+        return FormsModel::mdlEditZone($data);
     }
 
 }

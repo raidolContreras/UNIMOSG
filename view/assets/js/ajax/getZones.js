@@ -1,34 +1,107 @@
 $(document).ready(function() {
-	var tablaEscuelas = $('#tablaEscuelas').DataTable({
-	  paging: false
+	$('#zones').DataTable({
+		ajax: {
+            url: 'controller/ajax/getZones.php',
+			dataSrc: ''
+		},
+		columns:[
+			{
+                data: null,
+                render: function (data, type, row, meta) {
+                    // Utilizando el contador proporcionado por DataTables
+                    return `
+                    <center class="table-columns">
+                        ${meta.row + 1}
+                    </center>
+                    `;
+                }
+			},
+			{
+				data: null,
+				render: function(data) {
+					return `
+					<center class="table-columns">
+						`+data.nameZone+`
+					</center>
+					`;
+				}
+			},
+			{
+				data: null,
+				render: function(data) {
+					return `
+					<center class="table-columns">
+						`+data.nameSchool+`
+					</center>
+					`;
+				}
+			},
+			{
+				data: null,
+				render: function(data) {
+                    return `
+                    <center class="table-columns">
+                        <div class="flex justify-center items-center">
+                            <button class="btn btn-primary items-center mr-3 button-custom" onclick="verArea(${data.idZone})">
+								Ver areas <i class="fa-duotone fa-right-from-bracket"></i>
+                            </button>
+                            <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editZones', ${data.idZone})">
+                                <i class="fa-duotone fa-pen-to-square"></i> Editar
+                            </button>
+                            <button class="btn btn-danger items-center button-custom" onclick="">
+                                <i class="fa-duotone fa-trash"></i> Eliminar 
+                            </button>
+                        </div>
+                    </center>
+                    `;
+				}
+			},
+		],
+		"language": {
+			"url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+		}
 	});
-  
-	$('#tablaEscuelas tbody').on('click', 'tr', function() {
-	  var fila = tablaEscuelas.row(this);
-	  var datosFila = fila.data();
-  
-	  // Verificar si ya se ha creado un detalle para esta fila
-	  if (fila.child.isShown()) {
-		// Si se muestra, ocultarlo
-		fila.child.hide();
-		$(this).removeClass('details');
-	  } else {
-		// Si no se muestra, crear el detalle
-		fila.child(formatoDetalle(datosFila)).show();
-		$(this).addClass('details');
-	  }
-	});
-  });
-  
-  function formatoDetalle(data) {
-	// Generar el HTML para el detalle (información de zonas)
-	var html = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-	html += '<tr><td><b>Zonas:</b></td></tr>';
-	// Aquí puedes agregar un bucle para cada zona y generar una fila de detalle para cada una
-	html += '<tr><td>Zona 1</td></tr>';
-	html += '<tr><td>Zona 2</td></tr>';
-	// Puedes agregar más zonas aquí si es necesario
-	html += '</table>';
-	return html;
-  }
-  
+});
+
+function openMenuEdit(collapse, idForm, id) {
+
+    $.ajax({
+        type: "POST",
+        url: "controller/ajax/ajax.form.php",
+        data: {
+            searchZone: id
+            },
+        dataType: 'json',
+        success: function(data) {
+            $('#nameZoneEdit').val(data.nameZone);
+            $('#edit').val(data.idZone);
+
+            document.querySelector('#' + collapse).classList.add('show');
+            var modalBackdrop = document.createElement('div');
+            modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');
+            document.body.appendChild(modalBackdrop);
+        }
+    });
+}
+
+function verArea(idZone) {
+    // Crear un formulario oculto
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = 'areas'; // Coloca la URL a la que quieres enviar los datos
+
+    // Crear un input oculto para enviar el valor
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'zone';
+    input.value = idZone; // El valor que quieres enviar
+
+    // Agregar el input al formulario
+    form.appendChild(input);
+
+    // Agregar el formulario al cuerpo del documento
+    document.body.appendChild(form);
+
+    // Enviar el formulario
+    form.submit();
+}

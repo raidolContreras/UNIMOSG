@@ -15,13 +15,6 @@ if (!isset($_SESSION['logged'])) {
         exit();
     }
 } else {
-    // Definir las páginas disponibles en el menú de navegación
-    $navs = [
-        'inicio',
-        'users',
-        'schools',
-        'zones',
-    ];
 
     // Verificar la página solicitada
     switch ($pagina) {
@@ -51,6 +44,11 @@ if (!isset($_SESSION['logged'])) {
             // Incluir componentes comunes y páginas relacionadas a zonas
             includeCommonComponents();
             include 'view/pages/admin/zones/'.$pagina.'.php';
+            break;
+        case 'areas':
+            // Incluir componentes comunes y páginas relacionadas a zonas
+            includeCommonComponents();
+            include 'view/pages/admin/areas/'.$pagina.'.php';
             break;
         case 'login':
             // Si intenta acceder al login estando logueado, redirigir a la página de inicio

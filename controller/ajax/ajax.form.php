@@ -12,30 +12,49 @@ if(isset($_POST['nameSchool'])) {
 
 if(isset($_POST['uploadZones'])) {
     $result = '';
-	if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK && $_FILES['file']['type'] === 'text/csv') {
         $idSchool = $_POST['uploadZones'];
-		// Ruta donde se almacenará el archivo temporalmente
-		$fileTmpPath = $_FILES['file']['tmp_name'];
-		// Obtener el contenido del archivo CSV
-		$csvData = file_get_contents($fileTmpPath);
-		// Parsear el contenido del archivo CSV
-		$lines = explode("\n", $csvData);
-		$init = false;
-		foreach ($lines as $line) {
-			// Verificar que la línea no esté vacía
-			if (!empty($line)) {
-				if ($init) {
-					$fields = str_getcsv($line);
+        $fileTmpPath = $_FILES['file']['tmp_name'];
+        $csvData = file_get_contents($fileTmpPath);
+        $lines = explode("\n", $csvData);
+        $init = false;
+        foreach ($lines as $line) {
+            if (!empty($line)) {
+                if ($init) {
+                    $fields = str_getcsv($line);
                     $nameZone = $fields[0];
-                    $result = FormsController::ctrRegisterZone($nameZone, $idSchool);
-				} else {
-					$init = true;
-				}
+                    $nameArea = $fields[1];
+                    // Verificar si la zona ya existe
+                    $school = FormsController::ctrSearchZones($idSchool, 'nameZone', $nameZone);
+                    if (empty($school)) {
+                        $idZone = FormsController::ctrRegisterZone($nameZone, $idSchool);
+                        // Verificar si el área ya existe
+                        $area = FormsController::ctrSearchArea($idZone, 'nameArea', $nameArea);
+                        if (empty($area)) {
+                            $result = FormsController::ctrRegisterArea($nameArea, $idZone);
+                        } else {
+                            $result = 'ok';
+                        }
+                    } else {
+                        // Verificar si el área ya existe
+                        $area = FormsController::ctrSearchArea($school['idZone'], 'nameArea', $nameArea);
+                        if (!empty($area)) {
+                            $result = 'ok';
+                        } else {
+                            $result = FormsController::ctrRegisterArea($nameArea, $school['idZone']);
+                        }
+                    }
+                } else {
+                    $init = true;
+                }
             }
         }
         echo $result;
+    } else {
+        echo 'Error al cargar el archivo CSV';
     }
 }
+
 
 if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['level'])) {
 	$name = $_POST['name'];
@@ -100,4 +119,19 @@ if (isset($_POST['nameSchoolEdit']) && isset($_POST['idSchoolEdit'])) {
         "idSchool" => $idSchool
     );
     echo FormsController::ctrEditSchool($data);
+}
+
+if (isset($_POST['searchZone'])) {
+    $searchZone = $_POST['searchZone'];
+    echo json_encode(FormsController::ctrSearchZones(null,'idZone', $searchZone));
+}
+
+if (isset($_POST['nameZoneEdit'])) {
+    $nameZone = $_POST['nameZoneEdit'];
+    $idZone = $_POST['idZoneEdit'];
+    $data = array(
+        "nameZone" => $nameZone,
+        "idZone" => $idZone
+    );
+    echo FormsController::ctrEditZone($data);
 }

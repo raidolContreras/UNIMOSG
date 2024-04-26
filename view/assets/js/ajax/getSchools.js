@@ -21,7 +21,7 @@ $(document).ready(function () {
                 render: function (data) {
                     return `
                     <center class="table-columns school">
-                        `+ data.nameSchool + `
+                        <span class="arrow">`+ data.nameSchool + ` <i class="fa-solid fa-angle-right"></i></span>
                     </center>
                     `;
                 }
@@ -52,18 +52,21 @@ $(document).ready(function () {
     $('#schools tbody').on('click', '.school', function () {
         var fila = tablaEscuelas.row($(this).closest('tr'));
         var datosFila = fila.data();
-
+    
         // Verificar si ya se ha creado un detalle para esta fila
         if (fila.child.isShown()) {
             // Si se muestra, ocultarlo
             fila.child.hide();
             $(this).removeClass('details');
+            $(this).find('.arrow').removeClass('active');
         } else {
             // Si no se muestra, crear el detalle
             fila.child(formatoDetalle(datosFila)).show();
             $(this).addClass('details');
+            $(this).find('.arrow').addClass('active');
         }
     });
+    
 });
 
 function formatoDetalle(data) {

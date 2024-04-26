@@ -80,9 +80,20 @@ $(document).ready(function(){
 
 function toggleSubmitButton() {
     var submitButton = document.querySelector('.sendZones');
+    var zone = $('#zone').val();
     if (numCSV == 1) {
-        submitButton.disabled = false;
+        if (zone != '1'){
+            submitButton.disabled = false;
+        } else {
+            var select = $('#idSchool').val();
+            if (select >= 1) {
+                submitButton.disabled = false;
+            }
+        }
     } else {
         submitButton.disabled = true;
     }
 }
+document.getElementById('idSchool').addEventListener('change', function() {
+    toggleSubmitButton();
+});

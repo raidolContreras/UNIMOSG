@@ -8,7 +8,7 @@
         </center>
         <!-- Botón para descargar plantilla de ejemplo -->
         <div class="form-group my-3">
-            <a type="button" class="btn btn-link" download="" href="view/assets/templates/zones_template.csv">Descargar plantilla</a>
+            <a type="button" class="btn btn-link" download="zones_template.csv" href="view/assets/templates/zones_template.csv">Descargar plantilla</a>
         </div>
         <!-- Dropzone para cargar archivos -->
         <div class="col-md-12">

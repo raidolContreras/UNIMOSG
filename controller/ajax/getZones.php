@@ -2,5 +2,6 @@
 
     require_once "../forms.controller.php";
     require_once "../../model/forms.models.php";
-    $response = FormsController::ctrSearchZones($_POST['idSchool']);
+    $idSchool = (isset($_POST['idSchool']) ? $_POST['idSchool'] : null);
+    $response = FormsController::ctrSearchZones($idSchool, null, null);
     echo json_encode($response);

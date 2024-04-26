@@ -80,7 +80,7 @@ class FormsModel {
             $stmt->bindParam(':nameZone', $nameZone, PDO::PARAM_STR);
             $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
             if ($stmt->execute()) {
-                return 'ok';
+                return $pdo->lastInsertId();
             } else {
                 return 'error';
             }
@@ -90,15 +90,61 @@ class FormsModel {
         }
     }
 
-    static public function mdlSearchZones($idSchool) {
+    static public function mdlSearchZones($idSchool, $item, $value) {
         try {
             $pdo = Conexion::conectar();
-            $stmt = $pdo->prepare('SELECT * FROM servicios_zones WHERE zone_idSchool = :idSchool');
-            $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
-            if ($stmt->execute() && $stmt->rowCount() > 0) {
-                return $stmt->fetchAll();
+            if ($item == null) {
+                if  ($idSchool == null) {
+                    $stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool');
+                } else {
+                    $stmt = $pdo->prepare('SELECT * FROM servicios_zones WHERE zone_idSchool = :idSchool');
+                    $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
+                }
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetchAll();
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                if  ($idSchool == null) {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_zones WHERE $item = :$item");
+                } else {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_zones WHERE zone_idSchool = :idSchool AND $item = :$item");
+                    $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
+                }
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlSearchArea($idZone, $item, $value) {
+        try {
+            $pdo = Conexion::conectar();
+            if ($item == null) {
+                $stmt = $pdo->prepare('SELECT * FROM servicios_areas WHERE area_idZones = :idZone');
+                $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetchAll();
+                } else {
+                    return false;
+                }
+            } else {
+                $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE area_idZones = :idZone AND $item = :$item");
+                $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
             }
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
@@ -182,6 +228,40 @@ class FormsModel {
             $stmt = $pdo->prepare('UPDATE servicios_schools SET nameSchool = :nameSchool WHERE idSchool = :idSchool');
             $stmt->bindParam(':nameSchool', $data['nameSchool'], PDO::PARAM_STR);
             $stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlRegisterArea($nameArea, $idZone){
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('INSERT INTO servicios_areas (nameArea, area_idZones) VALUES (:nameArea, :idZone)');
+            $stmt->bindParam(':nameArea', $nameArea, PDO::PARAM_STR);
+            $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlEditZone($data){
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('UPDATE servicios_zones SET nameZone = :nameZone WHERE idZone = :idZone');
+            $stmt->bindParam(':nameZone', $data['nameZone'], PDO::PARAM_STR);
+            $stmt->bindParam(':idZone', $data['idZone'], PDO::PARAM_INT);
             if ($stmt->execute()) {
                 return 'ok';
             } else {

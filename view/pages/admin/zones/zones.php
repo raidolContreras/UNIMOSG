@@ -6,7 +6,7 @@
 <div class="col-12">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-secondary" onclick="openMenu('modalNav', 'newAreas')">Registrar areas</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalZones', 'newZones')"><i class="fa-duotone fa-plus"></i> Registrar zonas</button>
         </div>
     </div>
     <table id="zones" class="table">
@@ -21,10 +21,17 @@
     </table>
 </div>
 
-<div class="modal-collapse" id="modalNav">
-    <span class="close-btn" onclick="closeMenu('modalNav')">&times;</span>
+<div class="modal-collapse" id="modalZones">
+    <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
     <ul class="modal-nav">
         <?php include "view/pages/admin/zones/newZones.php"; ?>
+    </ul>
+</div>
+
+<div class="modal-collapse" id="modalNavUpdate">
+    <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
+    <ul class="modal-nav">
+        <?php include "view/pages/admin/zones/editZones.php"; ?>
     </ul>
 </div>
 
