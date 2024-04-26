@@ -273,4 +273,48 @@ class FormsModel {
         }
     }
 
+    static public function mdlSearchAreas($idZone, $item, $value){
+        try {
+            $pdo = Conexion::conectar();
+            if ($item == null) {
+                if  ($idZone == null) {
+                    $stmt = $pdo->prepare('SELECT * FROM servicios_areas a 
+                                            LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
+                                            LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool');
+                } else {
+                    $stmt = $pdo->prepare('SELECT * FROM servicios_areas a 
+                                            LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
+                                            LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool
+                                            WHERE area_idZones = :idZone');
+                    $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+                }
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetchAll();
+                } else {
+                    return false;
+                }
+            } else {
+                if  ($idZone == null) {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item");
+                } else {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_areas a 
+                                            LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
+                                            LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool
+                                            WHERE area_idZones = :idZone AND $item = :$item");
+                    $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+                }
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
+            }
+
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
 }

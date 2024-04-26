@@ -51,4 +51,8 @@ class FormsController {
         return FormsModel::mdlEditZone($data);
     }
 
+    static public function ctrSearchAreas($idZone, $item, $value){
+        return FormsModel::mdlSearchAreas($idZone, $item, $value);
+    }
+
 }
