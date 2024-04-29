@@ -55,6 +55,66 @@ if(isset($_POST['uploadZones'])) {
     }
 }
 
+if(isset($_POST['uploadAreas'])) {
+    $result = '';
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK && $_FILES['file']['type'] === 'text/csv') {
+        $idZone = $_POST['uploadAreas'];
+        $fileTmpPath = $_FILES['file']['tmp_name'];
+        $csvData = file_get_contents($fileTmpPath);
+        $lines = explode("\n", $csvData);
+        $init = false;
+        foreach ($lines as $line) {
+            if (!empty($line)) {
+                if ($init) {
+                    $fields = str_getcsv($line);
+                    $nameArea = $fields[0];
+                        $area = FormsController::ctrSearchArea($idZone, 'nameArea', $nameArea);
+                        if (empty($area)) {
+                            $result = FormsController::ctrRegisterArea($nameArea, $idZone);
+                        } else {
+                            $result = 'ok';
+                        }
+                } else {
+                    $init = true;
+                }
+            }
+        }
+        echo $result;
+    } else {
+        echo 'Error al cargar el archivo CSV';
+    }
+}
+
+if(isset($_POST['uploadObjects'])) {
+    $result = '';
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK && $_FILES['file']['type'] === 'text/csv') {
+        $idArea = $_POST['uploadObjects'];
+        $fileTmpPath = $_FILES['file']['tmp_name'];
+        $csvData = file_get_contents($fileTmpPath);
+        $lines = explode("\n", $csvData);
+        $init = false;
+        foreach ($lines as $line) {
+            if (!empty($line)) {
+                if ($init) {
+                    $fields = str_getcsv($line);
+                    $nameObject = $fields[0];
+                    $cantidad = $fields[1];
+                        $area = FormsController::ctrSearchObject($idArea, 'nameObject', $nameObject);
+                        if (empty($area)) {
+                            $result = FormsController::ctrRegisterObject($nameObject, $cantidad, $idArea);
+                        } else {
+                            $result = 'ok';
+                        }
+                } else {
+                    $init = true;
+                }
+            }
+        }
+        echo $result;
+    } else {
+        echo 'Error al cargar el archivo CSV';
+    }
+}
 
 if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['level'])) {
 	$name = $_POST['name'];

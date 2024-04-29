@@ -72,7 +72,7 @@ $(document).ready(function(){
             showAlertBootstrap('Éxito', 'Archivo cargado excitosamente.');
         } else {
             myDropzone.removeAllFiles();
-            showAlertBootstrap1('¡Alerta!', 'El archivo no se pudo cargar, intentalo más tarde.');
+            showAlertBootstrap('¡Alerta!', 'El archivo no se pudo cargar, intentalo más tarde.');
         }
     });
 

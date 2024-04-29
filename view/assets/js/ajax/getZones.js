@@ -1,8 +1,12 @@
 $(document).ready(function() {
+    var school = $('#school').val();
+    
 	$('#zones').DataTable({
 		ajax: {
+            type: "POST",
             url: 'controller/ajax/getZones.php',
-			dataSrc: ''
+            data: {idSchool: school},
+			dataSrc: '',
 		},
 		columns:[
 			{

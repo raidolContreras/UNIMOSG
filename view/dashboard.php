@@ -46,6 +46,16 @@
     }
 
     function openMenu(collapse, idForm) {
+        if (collapse == 'modalAreas') {
+            // Borrar archivos cargados en el Dropzone
+            var myDropzone = Dropzone.forElement("#addAreasDropzone");
+            if (myDropzone) {
+                myDropzone.removeAllFiles();
+                numCSV = 0;
+                var submitButton = document.querySelector('.sendAreas');
+                submitButton.disabled = true;
+            }
+        }
         document.querySelector('#' + collapse).classList.add('show');
         var modalBackdrop = document.createElement('div');
         modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');

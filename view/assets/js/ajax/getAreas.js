@@ -58,7 +58,7 @@ $(document).ready(function() {
                     <center class="table-columns">
                         <div class="flex justify-center items-center">
                             <button class="btn btn-primary items-center mr-3 button-custom" onclick="agregarObjetos(${data.idArea})">
-								Agregar objetos <i class="fa-duotone fa-right-from-bracket"></i>
+								Ver objetos <i class="fa-duotone fa-right-from-bracket"></i>
                             </button>
                             <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editZones', ${data.idArea})">
                                 <i class="fa-duotone fa-pen-to-square"></i> Editar
@@ -119,4 +119,17 @@ function verArea(idArea) {
 
     // Enviar el formulario
     form.submit();
+}
+
+function agregarObjetos(idArea){
+    openMenu('modalObjects', 'newObjets');
+    // Borrar archivos cargados en el Dropzone
+    var myDropzone = Dropzone.forElement("#addObjectsDropzone");
+    if (myDropzone) {
+        myDropzone.removeAllFiles();
+        numCSV = 0;
+        var submitButton = document.querySelector('.sendObjects');
+        submitButton.disabled = true;
+    }
+    $('#idArea').val(idArea);
 }

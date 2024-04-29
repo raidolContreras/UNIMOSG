@@ -31,4 +31,11 @@
     </ul>
 </div>
 
+<div class="modal-collapse" id="modalObjects">
+    <span class="close-btn" onclick="closeMenu('modalObjects')">&times;</span>
+    <ul class="modal-nav">
+        <?php include "view/pages/admin/areas/addObjects.php"; ?>
+    </ul>
+</div>
+
 <script src="view/assets/js/ajax/getAreas.js"></script>

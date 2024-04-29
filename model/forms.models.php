@@ -94,10 +94,10 @@ class FormsModel {
         try {
             $pdo = Conexion::conectar();
             if ($item == null) {
-                if  ($idSchool == null) {
+                if ($idSchool == null || $idSchool == 0) {
                     $stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool');
                 } else {
-                    $stmt = $pdo->prepare('SELECT * FROM servicios_zones WHERE zone_idSchool = :idSchool');
+                    $stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool WHERE zone_idSchool = :idSchool');
                     $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
                 }
                 if ($stmt->execute() && $stmt->rowCount() > 0) {
@@ -139,6 +139,33 @@ class FormsModel {
             } else {
                 $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE area_idZones = :idZone AND $item = :$item");
                 $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlSearchObject($idArea, $item, $value) {
+        try {
+            $pdo = Conexion::conectar();
+            if ($item == null) {
+                $stmt = $pdo->prepare('SELECT * FROM servicios_objects WHERE objects_idArea = :idArea');
+                $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetchAll();
+                } else {
+                    return false;
+                }
+            } else {
+                $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE objects_idArea = :idArea AND $item = :$item");
+                $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
                 $stmt->bindParam(":$item", $value);
                 if ($stmt->execute() && $stmt->rowCount() > 0) {
                     return $stmt->fetch();
@@ -245,6 +272,24 @@ class FormsModel {
             $stmt = $pdo->prepare('INSERT INTO servicios_areas (nameArea, area_idZones) VALUES (:nameArea, :idZone)');
             $stmt->bindParam(':nameArea', $nameArea, PDO::PARAM_STR);
             $stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlRegisterObject($nameObject, $cantidad, $idArea) {
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('INSERT INTO servicios_objects (nameObject, objects_idArea, cantidad) VALUES (:nameObject, :idArea, :cantidad)');
+            $stmt->bindParam(':nameObject', $nameObject, PDO::PARAM_STR);
+            $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+            $stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
             if ($stmt->execute()) {
                 return 'ok';
             } else {

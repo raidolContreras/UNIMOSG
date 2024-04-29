@@ -104,7 +104,7 @@ function formatoDetalle(data) {
                     <tr class="">
                         <td>${zone.nameZone}</td>
                         <td>
-                            <a class="btn btn-link" href="zones&zone=${zone.idZone}">
+                            <a class="btn btn-link" href="zones&school=${data.idSchool}">
                                 <i class="fa-solid fa-angle-right"></i>
                             </a>
                         </td>

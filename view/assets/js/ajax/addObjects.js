@@ -1,6 +1,6 @@
 var numCSV = 0;
 $(document).ready(function(){
-    var myDropzone = new Dropzone("#addAreasDropzone", {
+    var myDropzone = new Dropzone("#addObjectsDropzone", {
         maxFiles: 1,
         url: "controller/ajax/ajax.form.php",
         maxFilesize: 2,
@@ -32,7 +32,6 @@ $(document).ready(function(){
             this.on("addedfile", function(file) {
                 if (file.type === "text/csv") {
                     numCSV++;
-                    console.log(numCSV);
                 }
                 toggleSubmitButton(); // Actualizar estado del botón de enviar
                 var removeButton = Dropzone.createElement('<button class="rounded-button">&times;</button>');
@@ -43,7 +42,6 @@ $(document).ready(function(){
 
                     if (file.type === "text/csv") {
                         numCSV--;
-                        console.log(numCSV);
                     } 
                 
                     _this.removeFile(file);
@@ -54,19 +52,19 @@ $(document).ready(function(){
         }
     });    
     
-    $('.sendAreas').click(function(e){
-        idZone = $('#idZone').val();
+    $('.sendObjects').click(function(e){
+        idArea = $('#idArea').val();
         myDropzone.processQueue();
     });
 
     myDropzone.on("sending", function(file, xhr, formData) {
-        formData.append("uploadAreas", idZone);
+        formData.append("uploadObjects", idArea);
     });
 
     myDropzone.on("success", function(file, response) {
         
         if (response == 'ok') {
-            closeMenu('modalAreas');
+            closeMenu('modalObjects');
             myDropzone.removeAllFiles();
             showAlertBootstrap('Éxito', 'Archivo cargado excitosamente.');
         } else {
@@ -78,7 +76,7 @@ $(document).ready(function(){
 });
 
 function toggleSubmitButton() {
-    var submitButton = document.querySelector('.sendAreas');
+    var submitButton = document.querySelector('.sendObjects');
     if (numCSV == 1) {
         submitButton.disabled = false;
     } else {

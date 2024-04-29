@@ -20,6 +20,7 @@
         </thead>
     </table>
 </div>
+<input type="hidden" id="school" value="<?php echo (isset($_GET['school']) ? $_GET['school'] :0) ?>">
 
 <div class="modal-collapse" id="modalZones">
     <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
