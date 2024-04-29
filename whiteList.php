@@ -1,8 +1,10 @@
-<?php 
+<?php
 
 session_start();
 
-$pagina = $_GET['pagina'] ?? 'inicio';
+// Validar y obtener la página solicitada
+$pagina = filter_input(INPUT_GET, 'pagina', FILTER_SANITIZE_STRING);
+$pagina = $pagina ? $pagina : 'inicio';
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['logged'])) {
@@ -15,40 +17,25 @@ if (!isset($_SESSION['logged'])) {
         exit();
     }
 } else {
-
     // Verificar la página solicitada
     switch ($pagina) {
         case 'inicio':
-            // Incluir componentes comunes y la página de inicio
-            includeCommonComponents();
-            include 'view/pages/'.$pagina.'.php';
+            includeUserPages($pagina);
             break;
         case 'newUser':
         case 'users':
-            // Verificar permisos de usuario y cargar páginas relacionadas a usuarios
-            if($_SESSION['level'] == 0){
-                includeCommonComponents();
-                include 'view/pages/admin/users/'.$pagina.'.php';
-            } else {
-                includeError404();
-            }
+            includeAdminPages('users', $pagina);
             break;
         case 'schools':
         case 'newSchools':
-            // Incluir componentes comunes y páginas relacionadas a escuelas
-            includeCommonComponents();
-            include 'view/pages/admin/schools/'.$pagina.'.php';
+            includeAdminPages('schools', $pagina);
             break;
         case 'zones':
         case 'newZones':
-            // Incluir componentes comunes y páginas relacionadas a zonas
-            includeCommonComponents();
-            include 'view/pages/admin/zones/'.$pagina.'.php';
+            includeAdminPages('zones', $pagina);
             break;
         case 'areas':
-            // Incluir componentes comunes y páginas relacionadas a zonas
-            includeCommonComponents();
-            include 'view/pages/admin/areas/'.$pagina.'.php';
+            includeAdminPages('areas', $pagina);
             break;
         case 'login':
             // Si intenta acceder al login estando logueado, redirigir a la página de inicio
@@ -60,15 +47,27 @@ if (!isset($_SESSION['logged'])) {
     }
 }
 
+// Función para incluir páginas de usuarios
+function includeUserPages($pagina) {
+    includeCommonComponents();
+    include 'view/pages/' . $pagina . '.php';
+}
+
+// Función para incluir páginas de administrador
+function includeAdminPages($category, $pagina) {
+    includeCommonComponents();
+    include 'view/pages/admin/' . $category . '/' . $pagina . '.php';
+}
+
 // Función para incluir componentes comunes
 function includeCommonComponents() {
-    include "view/pages/navs/header.php";
-    include "view/pages/modals.php";
-    include "view/js.php";
-    include "view/pages/navs/sidebar.php";
+    include 'view/pages/navs/header.php';
+    include 'view/pages/modals.php';
+    include 'view/js.php';
+    include 'view/pages/navs/sidebar.php';
 }
 
 // Función para incluir página de error 404
 function includeError404() {
-    include "error404.php";
+    include 'error404.php';
 }

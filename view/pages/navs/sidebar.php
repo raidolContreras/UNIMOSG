@@ -9,9 +9,11 @@
                     <a href="./" class="col-12 btn btn-success">
                         Tablero
                     </a>
-                    <a href="users" class="mt-3 col-12 btn btn-success">
-                        Usuarios
-                    </a>
+                    <?php if ($_SESSION['level']== 0):?>
+                        <a href="users" class="mt-3 col-12 btn btn-success">
+                            Usuarios
+                        </a>
+                    <?php endif ?>
                     <a href="schools" class="mt-3 col-12 btn btn-success">
                         Escuelas
                     </a>
