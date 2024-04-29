@@ -7,7 +7,7 @@
 <main class="container">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-secondary" onclick="openMenu('modalCollapse', 'newAreas')"><i class="fa-duotone fa-plus"></i> Registrar areas</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalAreas', 'newAreas')"><i class="fa-duotone fa-plus"></i> Registrar areas</button>
         </div>
     </div>
 	
@@ -24,8 +24,8 @@
 </div>
 <input type="hidden" id="zone" value="<?php echo $_POST['zone'] ?>">
 
-<div class="modal-collapse" id="modalCollapse">
-    <span class="close-btn" onclick="closeMenu('modalCollapse')">&times;</span>
+<div class="modal-collapse" id="modalAreas">
+    <span class="close-btn" onclick="closeMenu('modalAreas')">&times;</span>
     <ul class="modal-nav">
         <?php include "view/pages/admin/areas/addAreas.php"; ?>
     </ul>

@@ -12,13 +12,13 @@
         </div>
         <!-- Dropzone para cargar archivos -->
         <div class="col-md-12">
-            <div id="addZonesDropzone" class="dropzone"></div>
+            <div id="addAreasDropzone" class="dropzone"></div>
         </div>
-        <input type="hidden" class="idReference" id="idZone">
+        <input type="hidden" class="idReference" id="idZone" value="<?php echo $_POST['zone'] ?>">
         
         <div class="d-flex justify-content-center my-3">
-            <button type="button" class="btn btn-danger me-2" onclick="closeMenu('modalCollapse')">Cancelar</button>
-            <button type="button" class="btn btn-success sendZones" disabled>Aceptar</button>
+            <button type="button" class="btn btn-danger me-2" onclick="closeMenu('modalAreas')">Cancelar</button>
+            <button type="button" class="btn btn-success sendAreas" disabled>Aceptar</button>
         </div>
     </form>
 </div>
