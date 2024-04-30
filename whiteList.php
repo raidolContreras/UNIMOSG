@@ -23,23 +23,70 @@ if (!isset($_SESSION['logged'])) {
             includeUserPages($pagina);
             break;
         case 'newUser':
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('users', $pagina);
+            } else {
+                includeError404();
+            }
+            break;
         case 'users':
-            includeAdminPages('users', $pagina);
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('users', $pagina);
+            } else {
+                includeError404();
+            }
             break;
         case 'schools':
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('schools', $pagina);
+            } else {
+                includeUserPages('principal/schools/'.$pagina);
+            }
+            break;
         case 'newSchools':
-            includeAdminPages('schools', $pagina);
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('schools', $pagina);
+            } else {
+                includeError404();
+            }
             break;
         case 'zones':
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('zones', $pagina);
+            } else {
+                includeUserPages('principal/zones/'.$pagina);
+            }
+            break;
         case 'newZones':
-            includeAdminPages('zones', $pagina);
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('zones', $pagina);
+            } else {
+                includeError404();
+            }
             break;
         case 'areas':
-            includeAdminPages('areas', $pagina);
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('areas', $pagina);
+            } else {
+                includeUserPages('principal/areas/'.$pagina);
+            }
+            break;
+        case 'objetos':
+            if ($_SESSION['level'] == 0) {
+                includeAdminPages('objetos', $pagina);
+            } else {
+                includeUserPages('principal/objetos/'.$pagina);
+            }
             break;
         case 'login':
-            // Si intenta acceder al login estando logueado, redirigir a la página de inicio
             header("Location: inicio");
+            exit();
+        case 'lista':
+            if ($_SESSION['level'] == 0) {
+                includeError404();
+            } else {
+                includeUserPages('principal/general/'.$pagina);
+            }
             exit();
         default:
             // Si la página solicitada no se encuentra en el menú, mostrar error 404

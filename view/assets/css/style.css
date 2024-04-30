@@ -15614,3 +15614,33 @@ body {
 .arrow.active .fa-angle-right {
   transform: rotate(90deg);
 }
+/* Estilos para el enlace de retorno */
+#return {
+  cursor: pointer;
+  color: #093F2A; /* Color de texto predeterminado */
+  transition: color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+#return:hover {
+  color: #086611; /* Cambio de color al pasar el mouse */
+  transform: translateX(-0.3em); /* Movimiento suave hacia la izquierda */
+}
+
+.schoolList {
+  min-height: 80vh;
+}
+
+.list-group-item {
+  background-color: #EAFAF4 !important;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #BFEEDC !important;
+  cursor: pointer;
+}
+
+.list-group-item.active {
+  color: #000f23 !important;
+  background-color: #C5D6CF !important;
+}

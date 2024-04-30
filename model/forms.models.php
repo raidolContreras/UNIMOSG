@@ -125,6 +125,47 @@ class FormsModel {
         }
     }
 
+    static public function mdlSearchObjects($idArea, $item, $value) {
+        try {
+            $pdo = Conexion::conectar();
+            if ($item == null) {
+                if ($idArea == null || $idArea == 0) {
+                    $stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool FROM servicios_objects o
+                                            LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+                                            LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+                                            LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool;');
+                } else {
+                    $stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool FROM servicios_objects o
+                                            LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+                                            LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+                                            LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool WHERE objects_idArea = :idArea');
+                    $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+                }
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetchAll();
+                } else {
+                    return false;
+                }
+            } else {
+                if  ($idArea == null) {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE $item = :$item");
+                } else {
+                    $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE objects_idArea = :idArea AND $item = :$item");
+                    $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+                }
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
     static public function mdlSearchArea($idZone, $item, $value) {
         try {
             $pdo = Conexion::conectar();

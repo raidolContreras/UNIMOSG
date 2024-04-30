@@ -28,6 +28,10 @@ class FormsController {
         return FormsModel::mdlSearchZones($idSchool, $item, $value);
     }
 
+    static public function ctrSearchObjects($idArea, $item, $value){
+        return FormsModel::mdlSearchObjects($idArea, $item, $value);
+    }
+
     static public function ctrSearchArea($idZone, $item, $value){
         return FormsModel::mdlSearchArea($idZone, $item, $value);
     }
