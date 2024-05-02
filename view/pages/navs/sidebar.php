@@ -14,12 +14,18 @@
                             Usuarios
                         </a>
                     <?php endif ?>
-                    <a href="schools" class="mt-3 col-12 btn btn-success">
-                        Escuelas
-                    </a>
-                    <a href="zones" class="mt-3 col-12 btn btn-success">
-                        Zonas
-                    </a>
+                    <?php if ($_SESSION['level']== 2 || $_SESSION['level']== 0):?>
+                        <a href="schools" class="mt-3 col-12 btn btn-success">
+                            Escuelas
+                        </a>
+                        <a href="zones" class="mt-3 col-12 btn btn-success">
+                            Zonas
+                        </a>
+                    <?php else: ?>
+                        <a href="lista" class="mt-3 col-12 btn btn-success">
+                            Supervición
+                        </a>
+                    <?php endif ?>
                 </div>
             </nav>
 	    </div>

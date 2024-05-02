@@ -3,6 +3,7 @@
         <strong id='namePage'></strong>
     </div>
 </div>
+<?php if ($_SESSION['level']!= 2):?>
 <div class="card">
     <div class="row justify-content-center">
         <div class="col-12 col-md-4 my-3">
@@ -13,6 +14,11 @@
         </div>
     </div>
 </div>
+<?php else: 
+    include 'view/pages/principal/general/lista.php';
+?>
+    
+<?php endif ?>
 
 
 </div>

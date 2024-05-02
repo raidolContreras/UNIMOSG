@@ -96,13 +96,17 @@ if (!isset($_SESSION['logged'])) {
 
 // Función para incluir páginas de usuarios
 function includeUserPages($pagina) {
-    includeCommonComponents();
+    if ($_SESSION['level'] != 2){
+        includeCommonComponents();
+    }
     include 'view/pages/' . $pagina . '.php';
 }
 
 // Función para incluir páginas de administrador
 function includeAdminPages($category, $pagina) {
-    includeCommonComponents();
+    if ($_SESSION['level'] != 2){
+        includeCommonComponents();
+    }
     include 'view/pages/admin/' . $category . '/' . $pagina . '.php';
 }
 
