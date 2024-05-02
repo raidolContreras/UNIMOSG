@@ -36,4 +36,7 @@
         </div>
     </div>
 </div>
+<?php
+    include 'view/pages/principal/general/modalList.php';
+?>
 <script src="view/assets/js/ajax/General/selectOption.js"></script>

@@ -135,10 +135,12 @@ class FormsModel {
                                             LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
                                             LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool;');
                 } else {
-                    $stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool FROM servicios_objects o
-                                            LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
-                                            LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
-                                            LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool WHERE objects_idArea = :idArea');
+                    $stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool, i.* FROM servicios_objects o
+                                                LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+                                                LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+                                                LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+                                                LEFT JOIN servicios_incidentes i ON i.incidente_idObject = o.idObject
+                                            WHERE objects_idArea = :idArea');
                     $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
                 }
                 if ($stmt->execute() && $stmt->rowCount() > 0) {
@@ -397,6 +399,25 @@ class FormsModel {
                 }
             }
 
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlSendForm($idObject, $estado, $description, $importancia){
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('INSERT INTO servicios_incidentes (estado, description, importancia, incidente_idObject ) VALUES (:estado, :description, :importancia, :idObject)');
+            $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
+            $stmt->bindParam(':idObject', $idObject, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
             throw $e;

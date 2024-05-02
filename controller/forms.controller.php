@@ -67,4 +67,8 @@ class FormsController {
         return FormsModel::mdlSearchAreas($idZone, $item, $value);
     }
 
+    static public function ctrSendForm($idObject, $estado, $description, $importancia){
+        return FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+    }
+
 }

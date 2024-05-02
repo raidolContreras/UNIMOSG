@@ -15644,3 +15644,23 @@ body {
   color: #000f23 !important;
   background-color: #C5D6CF !important;
 }
+
+.sendButton {
+  border: 0;
+  background-color: transparent !important;
+  color: #31d2f2;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.sendButton:disabled {
+  cursor: not-allowed;
+  color: #333;
+  pointer-events: none;
+}
+
+.sendButton:hover {
+  transform: translateX(5px); /* Movimiento hacia la derecha al hacer hover */
+}
+
