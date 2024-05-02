@@ -96,6 +96,9 @@ if (!isset($_SESSION['logged'])) {
 
 // Función para incluir páginas de usuarios
 function includeUserPages($pagina) {
+    include 'view/pages/navs/header.php';
+    include 'view/pages/modals.php';
+    include 'view/js.php';
     if ($_SESSION['level'] != 2){
         includeCommonComponents();
     }
@@ -104,6 +107,9 @@ function includeUserPages($pagina) {
 
 // Función para incluir páginas de administrador
 function includeAdminPages($category, $pagina) {
+    include 'view/pages/navs/header.php';
+    include 'view/pages/modals.php';
+    include 'view/js.php';
     if ($_SESSION['level'] != 2){
         includeCommonComponents();
     }
@@ -112,9 +118,6 @@ function includeAdminPages($category, $pagina) {
 
 // Función para incluir componentes comunes
 function includeCommonComponents() {
-    include 'view/pages/navs/header.php';
-    include 'view/pages/modals.php';
-    include 'view/js.php';
     include 'view/pages/navs/sidebar.php';
 }
 

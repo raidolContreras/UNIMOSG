@@ -111,7 +111,7 @@ function showForms(idArea) {
                                 <td class="datetime">${updateDateTime()}</td>
                                 <td>
                                     <select id="estado_${object.idObject}" class="form-control">
-                                        <option value="">Seleccione una descripción</option>
+                                        <option value="">Seleccione una opción</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                     </select>

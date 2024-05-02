@@ -13,13 +13,15 @@
                         <a href="users" class="mt-3 col-12 btn btn-success">
                             Usuarios
                         </a>
-                    <?php endif ?>
-                    <?php if ($_SESSION['level']== 2 || $_SESSION['level']== 0):?>
                         <a href="schools" class="mt-3 col-12 btn btn-success">
                             Escuelas
                         </a>
                         <a href="zones" class="mt-3 col-12 btn btn-success">
                             Zonas
+                        </a>
+                    <?php elseif ($_SESSION['level']== 1):?>
+                        <a href="revision" class="mt-3 col-12 btn btn-success">
+                            Revisión
                         </a>
                     <?php else: ?>
                         <a href="lista" class="mt-3 col-12 btn btn-success">
