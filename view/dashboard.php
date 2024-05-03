@@ -21,7 +21,11 @@
         // Tu código JavaScript aquí
         $("#namePage").html(`<?php 
             if ($pagina === 'inicio'){
-                echo 'Servicios generales UNIMO';
+                if ($_SESSION['level'] != 1){
+                    echo 'Servicios generales UNIMO';
+                } else {
+                    echo 'Estadísticas de reparaciones';
+                }
             } else if ($pagina === 'newUser'){
                 echo 'Registrar nuevos usuarios';
             } else if ($pagina === 'users'){
