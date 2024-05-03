@@ -43,6 +43,9 @@ if (!isset($_SESSION['logged'])) {
                 includeUserPages('principal/schools/'.$pagina);
             }
             break;
+        case 'school':
+            includeUserPages('principal/schools/'.$pagina);
+            break;
         case 'newSchools':
             if ($_SESSION['level'] == 0) {
                 includeAdminPages('schools', $pagina);

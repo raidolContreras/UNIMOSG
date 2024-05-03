@@ -2,6 +2,7 @@
 	<nav class="navbar">
 		<div class="container">
 			<a class="navbar-brand" href="./">
+				<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
 			</a>
 			<button class="navbar-toggler boton-sombra" type="button" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon one"></span>
@@ -23,6 +24,30 @@
 						</a>
 					</li>
 				</ul>
+			</div>
+		</div>
+		<div class="container navbar-hidden">
+			<div class="row schools" style="padding-right: 0 !important;">
+				<a href="./" class="col-xl-12  col-xs-3 mt-3 btn btn-success">
+					Tablero
+				</a>
+				<?php if ($_SESSION['level'] == 0): ?>
+					<a href="users" class="mt-3 col-xl-12 col-xs-3 mt-3 btn btn-success">
+						Usuarios
+					</a>
+					<a href="schools" class="mt-3 col-xl-12 col-xs-3 mt-3 btn btn-success">
+						Escuelas
+					</a>
+					<a href="zones" class="mt-3 col-xl-12 col-xs-3 mt-3 btn btn-success">
+						Zonas
+					</a>
+				<?php elseif ($_SESSION['level'] == 1): ?>
+					<script src="view/assets/js/ajax/General/getSchools.js"></script>
+				<?php else: ?>
+					<a href="lista" class="mt-3 col-xl-12 col-xs-3 mt-3 btn btn-success">
+						Supervisión
+					</a>
+				<?php endif ?>
 			</div>
 		</div>
 	</nav>

@@ -8,14 +8,17 @@
 </head>
 
 <body>
-	
+<div class="loader-section">
+     <span class="loader"></span>
+</div>
 <?php
     include 'whiteList.php';
 ?>
 
-    
 <script src="view/assets/js/bootstrap.bundle.min.js"></script>
 <script>
+
+    document.onload = pageLoaded();
 
     document.addEventListener('DOMContentLoaded', function() {
         // Tu código JavaScript aquí
@@ -106,6 +109,11 @@
         for (var i = 0; i < selects.length; i++) {
             selects[i].selectedIndex = 0;
         }
+    }
+
+    function pageLoaded() {
+        let loaderSection = document.querySelector('.loader-section');
+        loaderSection.classList.add('loaded');
     }
 
 </script>
