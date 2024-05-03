@@ -7,7 +7,7 @@ $(document).ready(function () {
         success: function (data) {
             var html = `
                 <a href="./" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                    Tablero
+                <i class="fa-duotone fa-house"></i> Tablero
                 </a>
             `;
             data.forEach(school => {
