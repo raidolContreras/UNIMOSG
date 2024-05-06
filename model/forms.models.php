@@ -424,4 +424,28 @@ class FormsModel {
         }
     }
 
+    static public function mdlSearchSolicitudes($idSchool,$importancia){
+        try {
+            $pdo = Conexion::conectar();
+            $sql = "SELECT i.*, o.nameObject, o.idObject, a.nameArea, a.idArea, z.idZone, z.nameZone, s.idSchool, s.nameSchool
+                    FROM servicios_incidentes i 
+                        LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+                        LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+                        LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+                        LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+                    WHERE i.status = 0 AND s.idSchool = :idSchool AND i.importancia = :importancia;";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
+            $stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetchAll();
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
 }

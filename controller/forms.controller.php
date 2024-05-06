@@ -71,4 +71,8 @@ class FormsController {
         return FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
     }
 
+    static public function ctrSearchSolicitudes($idSchool,$importancia){
+        return FormsModel::mdlSearchSolicitudes($idSchool,$importancia);
+    }
+
 }

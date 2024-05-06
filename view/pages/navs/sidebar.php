@@ -6,25 +6,50 @@
 			</a>
             <nav class="navbar">
                 <div class="row schools px-4" style="padding-right: 0 !important;">
-                    <a href="./" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                    <i class="fa-duotone fa-house"></i> Tablero
+                    <a href="./" class="mt-3 btn btn-success">
+                        <div class="row">
+                            <div class="col-2">
+                                <i class="fa-duotone fa-house"></i> 
+                            </div>
+                            <div class="col-8">Tablero</div> 
+                        </div>
                     </a>
                     <?php if ($_SESSION['level']== 0):?>
-                        <a href="users" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                        <i class="fa-duotone fa-users"></i> Usuarios
+                        <a href="users" class="mt-3 btn btn-success">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-users"></i> 
+                                </div>
+                                <div class="col-8">Usuarios</div> 
+                            </div>
                         </a>
-                        <a href="schools" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                        <i class="fa-duotone fa-school"></i> Escuelas
+                        <a href="schools" class="mt-3 btn btn-success">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-school"></i> 
+                                </div>
+                                <div class="col-8">Escuelas</div> 
+                            </div>
                         </a>
-                        <a href="zones" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                            <i class="fa-duotone fa-location-dot"></i> Zonas
+                        <a href="zones" class="mt-3 btn btn-success">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-location-dot"></i> 
+                                </div>
+                                <div class="col-8">Zonas</div> 
+                            </div>
                         </a>
                     <?php elseif ($_SESSION['level']== 1):?>
                     
                         <script src="view/assets/js/ajax/General/getSchools.js"></script>
                     <?php else: ?>
-                        <a href="lista" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
-                            Supervición
+                        <a href="lista" class="mt-3 btn btn-success">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-users"></i> 
+                                </div>
+                                <div class="col-8">Supervisión</div> 
+                            </div>
                         </a>
                     <?php endif ?>
                 </div>
