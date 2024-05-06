@@ -7,13 +7,13 @@
     <div class="card">
         <div class="row justify-content-center p-3">
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Pendiente')" class="btn btn-success w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">1</span></button>
+                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Pendiente')" class="btn btn-success w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">5</span></button>
+                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Importante')" class="btn btn-success w-100">Incidencias importantes<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span></button>
+                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Importante')" class="btn btn-success w-100">Incidencias importantes<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
         </div>
     </div>
