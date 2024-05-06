@@ -56,7 +56,7 @@ function solicitud(school, importancia){
                     // Utilizando el contador proporcionado por DataTables
                     return `
                     <center class="table-columns">
-                        <button class="btn btn-success">
+                        <button class="btn btn-success" onclick="lookOrder(${data.idIncidente})">
                             <div class="row">
                                 <div class="col-9">Ver orden</div> 
                                 <div class="col-2">
@@ -70,4 +70,8 @@ function solicitud(school, importancia){
             },
         ]
     });
+}
+
+function lookOrder(idIncidente){
+    $('#lookOrder').modal('show');
 }
