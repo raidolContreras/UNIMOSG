@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var tablaEscuelas = $('#schools').DataTable({
+    var tablaEscuelas = $('#schoolsActive').DataTable({
         ajax: {
             url: 'controller/ajax/getSchools.php',
             dataSrc: ''

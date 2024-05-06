@@ -11,7 +11,7 @@
         </div>
     </div>
 	
-    <table id="schools" class="table table-resposive stripe">
+    <table id="schoolsActive" class="table table-resposive stripe">
         <thead>
             <th>#</th>
             <th class="">Nombre de la escuela</th>
