@@ -35,7 +35,7 @@ $(document).ready(function () {
                             <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idSchool})">
                                 <i class="fa-duotone fa-pen-to-square"></i> Editar
                             </button>
-                            <button class="btn btn-danger items-center button-custom" onclick="">
+                            <button class="btn btn-danger items-center button-custom" onclick="showModal(${data.idSchool})">
                                 <i class="fa-duotone fa-trash"></i> Eliminar 
                             </button>
                         </div>
@@ -126,20 +126,25 @@ function formatoDetalle(data) {
     return html; // Devolvemos el valor html
 }
 
-function deleteSchool(idSchool){
+function showModal(idSchool) {
+    $('#deleteSchool').modal('show');
+    $('#idSchool').val(idSchool);
+}
+
+function deleteSchool(){
+    var idSchool = $('#idSchool').val();
     $.ajax({
         url: 'controller/ajax/ajax.form.php',
         type: 'POST',
         data: {
             deleteSchool: idSchool
         },
-        dataType: 'json',
+        dataSrc: '',
         async: false, // Asegura que la función espere a que se complete la solicitud AJAX
         success: function (response) {
-            if (response.length > 0) { // Verificamos si hay resultados en la respuesta
-                response.forEach(function (school) {
-                    $('#nameSchool').val(school.nameSchool);
-                });
+            if (response == 'ok') { 
+                $('#deleteSchool').modal('hide');
+                $('#schoolsActive').DataTable().ajax.reload();
             }
         }
     });

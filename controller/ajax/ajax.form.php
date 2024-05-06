@@ -195,3 +195,8 @@ if (isset($_POST['nameZoneEdit'])) {
     );
     echo FormsController::ctrEditZone($data);
 }
+
+if (isset($_POST['deleteSchool'])) {
+    $idSchool = $_POST['deleteSchool'];
+    echo FormsController::ctrDeleteSchool($idSchool);
+}

@@ -43,7 +43,7 @@ class FormsModel {
                     return false;
                 }
             } else {
-                $stmt = $pdo->prepare('SELECT * FROM servicios_schools');
+                $stmt = $pdo->prepare('SELECT * FROM servicios_schools WHERE status = 1');
             
                 if ($stmt->execute() && $stmt->rowCount() > 0) {
                     return $stmt->fetchAll();
@@ -441,6 +441,22 @@ class FormsModel {
                 return $stmt->fetchAll();
             } else {
                 return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlDeleteSchool($idSchool){
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('UPDATE servicios_schools SET status = 0 WHERE idSchool = :idSchool');
+            $stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
             }
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
