@@ -6,7 +6,7 @@ $(document).ready(function () {
         dataType: 'json',
         success: function (data) {
             var html = `
-                <a href="./" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
+                <a href="./" class="mt-3 btn btn-success">
                 <i class="fa-duotone fa-house"></i> Tablero
                 </a>
             `;
