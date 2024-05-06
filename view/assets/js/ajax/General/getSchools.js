@@ -12,12 +12,13 @@ $(document).ready(function () {
             `;
             data.forEach(school => {
                 html += `
-                    <a href="school&idSchool=${school.idSchool}" class="col-xl-12 col-xs-3 mt-3 btn btn-success">
+                    <a href="school&idSchool=${school.idSchool}" class="mt-3 btn btn-success">
                         ${school.nameSchool}
                     </a>
                 `;
             });
             $('.schools').html(html);
+            $('#schools').html(html);
         }
     });
 });
