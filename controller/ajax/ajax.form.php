@@ -200,3 +200,17 @@ if (isset($_POST['deleteSchool'])) {
     $idSchool = $_POST['deleteSchool'];
     echo FormsController::ctrDeleteSchool($idSchool);
 }
+
+if (isset($_POST['detailsCorrect']) && isset($_POST['idIncidente']) && isset($_POST['specificShopping']) && isset($_POST['shoppingOption'])) {
+    $detailsCorrect = $_POST['detailsCorrect'];
+    $idIncidente = $_POST['idIncidente'];
+    $specificShopping = ($_POST['specificShopping'] != '') ? $_POST['specificShopping'] : null;
+    $shoppingOption = ($_POST['shoppingOption'] == 'Si') ? 1 : 0;
+    $data = array(
+        "detallesCorregidos" => $detailsCorrect,
+        "idIncidente" => $idIncidente,
+        "detalleCompra" => $specificShopping,
+        "compra" => $shoppingOption
+    );
+    echo FormsController::ctrDetailsCorrect($data);
+}

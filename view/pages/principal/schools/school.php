@@ -25,6 +25,8 @@
                     <tr>
                         <th class="localitation">Localización</th>
                         <th class="observations">Observaciónes</th>
+                        <th class="reportDate">Fecha del reporte</th>
+                        <th class="days">Días transcurridos</th>
                         <th whith="10%"></th>
                     </tr>
                 </thead>
@@ -43,12 +45,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-6">
-                        <label class="form-label" for="Cantidad">Cantidad</label>
-                        <input type="text" id="Cantidad" disabled class="form-control">
-                    </div>
-                    <div class="col-6">
                         <label class="form-label" for="nPedido">N° de pedido</label>
                         <input type="text" id="nPedido" disabled class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="Cantidad">Cantidad</label>
+                        <input type="text" id="Cantidad" disabled class="form-control">
                     </div>
                     <div class="col-12">
                         <label class="form-label" for="Observaciones">Observaciones</label>
@@ -66,11 +68,56 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="corregido()">Corregido</button>
+                <button type="button" class="btn btn-success corregido">Corregido</button>
             </div>
             </div>
         </div>
     </div>
+
+<!-- Modal: Marcar como corregido -->
+<div class="modal fade" id="corregidoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Marcar como corregido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Campo para ingresar los detalles corregidos -->
+                        <label class="form-label" for="detailsCorrect">Detalles corregidos</label>
+                        <textarea name="detailsCorrect" id="detailsCorrect" class="form-control"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <!-- Opciones para indicar si se realizó alguna compra o gasto -->
+                        <label class="form-label">¿Se realizó alguna compra o gasto?</label>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="shoppingOption" id="shoppingYes" value="Si">
+                            <label class="form-check-label" for="shoppingYes">Sí</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="shoppingOption" id="shoppingNo" value="No">
+                            <label class="form-check-label" for="shoppingNo">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <input type="hidden" id="idIncidente">
+                    <!-- Campo para ingresar los detalles corregidos -->
+                    <label class="form-label" for="specificShopping">Especifique el gasto</label>
+                    <textarea name="specificShopping" id="specificShopping" disabled class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Botón para cancelar la acción de corrección -->
+                <button type="button" class="btn btn-danger" onclick="cancelCorreccion()">Cancelar</button>
+                <!-- Botón para confirmar que se ha corregido -->
+                <button type="button" class="btn btn-success marcarCorreccion">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <input type="hidden" id="school" value="<?php echo $_GET['idSchool'] ?>">
 

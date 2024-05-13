@@ -79,4 +79,12 @@ class FormsController {
         return FormsModel::mdlDeleteSchool($idSchool);
     }
 
+    static public function ctrSearchIncidentes($idIncidente){
+        return FormsModel::mdlSearchIncidentes($idIncidente);
+    }
+
+    static public function ctrDetailsCorrect($data){
+        return FormsModel::mdlDetailsCorrect($data);
+    }
+
 }

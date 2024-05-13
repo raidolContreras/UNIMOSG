@@ -25,7 +25,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -52,7 +52,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -120,7 +120,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -163,7 +163,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -190,7 +190,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -217,7 +217,7 @@ class FormsModel {
                 }
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -400,7 +400,7 @@ class FormsModel {
             }
 
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -443,7 +443,7 @@ class FormsModel {
                 return false;
             }
         } catch (PDOException $e) {
-            error_log("Error al registrar el evento: " . $e->getMessage());
+            error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
         }
     }
@@ -460,6 +460,45 @@ class FormsModel {
             }
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlSearchIncidentes($idIncidente) {
+        try {
+            $pdo = Conexion::conectar();
+            $sql = 'SELECT * FROM servicios_incidentes i
+                        LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+                    WHERE idIncidente = :idIncidente';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':idIncidente', $idIncidente, PDO::PARAM_INT);
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetch();
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al buscar el evento: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    static public function mdlDetailsCorrect($data) {
+        try {
+            $pdo = Conexion::conectar();
+            $sql = "UPDATE servicios_incidentes SET detallesCorregidos = :detallesCorregidos, compra =:compra, detalleCompra = :detalleCompra, status = 1 WHERE idIncidente = :idIncidente";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':detallesCorregidos', $data['detallesCorregidos'], PDO::PARAM_STR);
+            $stmt->bindParam(':compra', $data['compra'], PDO::PARAM_INT);
+            $stmt->bindParam(':detalleCompra', $data['detalleCompra'], PDO::PARAM_STR);
+            $stmt->bindParam(':idIncidente', $data['idIncidente'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al ACTUALIZAR el evento: " . $e->getMessage());
             throw $e;
         }
     }
