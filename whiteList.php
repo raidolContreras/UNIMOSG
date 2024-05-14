@@ -83,14 +83,21 @@ if (!isset($_SESSION['logged'])) {
             break;
         case 'login':
             header("Location: inicio");
-            exit();
+            break;
         case 'lista':
             if ($_SESSION['level'] == 0) {
                 includeError404();
             } else {
                 includeUserPages('principal/general/'.$pagina);
             }
-            exit();
+            break;
+        case 'plan':
+            if ($_SESSION['level'] == 0) {
+                includeError404();
+            } else {
+                includeUserPages('principal/plan/'.$pagina);
+            }
+            break;
         default:
             // Si la página solicitada no se encuentra en el menú, mostrar error 404
             includeError404();

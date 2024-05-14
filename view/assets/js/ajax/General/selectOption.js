@@ -142,7 +142,6 @@ function showForms(idArea) {
                     var estado = $('#estado_' + idObject).val();
                     var description = $('#description_' + idObject).val();
                     var concepto = $('input[name=concepto_' + idObject + ']:checked').val();
-            
                     // Verificar si los tres campos están llenos o seleccionados
                     if (estado.trim() !== '' && description.trim() !== '' && concepto) {
                         $('#button_' + idObject).prop('disabled', false); // Activar el botón de enviar
@@ -155,7 +154,6 @@ function showForms(idArea) {
         }
     });
 }
-
 
 function updateDateTime() {
     var currentDate = new Date(); // Obtiene la fecha y hora actual

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-3 col-xl-2 px-0 sidebar sidebar-collapse">
+    <div class="col-md-3 col-xl-2 px-0 sidebar sidebar-collapse pt-2">
 		<div class="container">
 			<a class="navbar-brand" href="./">
 				<img src="view/assets/images/logo.png" alt="Logo" class="logo">
