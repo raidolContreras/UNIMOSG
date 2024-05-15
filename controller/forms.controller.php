@@ -87,4 +87,13 @@ class FormsController {
         return FormsModel::mdlDetailsCorrect($data);
     }
 
+    static public function ctrGetPlans($plan){
+        return FormsModel::mdlGetPlans($plan);
+    }
+
+    static public function ctrAddPlans($data){
+        $response = FormsModel::mdlAddPlans($data);
+        return FormsController::ctrGetPlans($response);
+    }
+
 }

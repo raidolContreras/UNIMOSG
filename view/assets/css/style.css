@@ -2782,7 +2782,7 @@ textarea.form-control-lg {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  border-radius: 2rem;
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   -o-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2791,6 +2791,16 @@ textarea.form-control-lg {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+option {
+  font-weight: normal;
+  display: block;
+  min-height: 1.2em;
+  padding: 0px 2px 1px;
+  white-space: nowrap;
+  border-radius: 2rem;
+  background-color: #b6effb;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -15710,10 +15720,6 @@ body {
 .navbar {
   background-color: #01643D;
   border-radius: 0px 0px 20px 0px;
-}
-
-.image-nav{
-  display: none;
 }
 
 .sidebar {

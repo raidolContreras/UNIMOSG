@@ -98,6 +98,13 @@ if (!isset($_SESSION['logged'])) {
                 includeUserPages('principal/plan/'.$pagina);
             }
             break;
+        case 'planSupervisor':
+            if ($_SESSION['level'] == 0) {
+                includeError404();
+            } else {
+                includeUserPages('principal/plan/'.$pagina);
+            }
+            break;
         default:
             // Si la página solicitada no se encuentra en el menú, mostrar error 404
             includeError404();

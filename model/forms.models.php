@@ -503,4 +503,63 @@ class FormsModel {
 		}        
 	}
 
+	static public function mdlGetPlans($idPlan) {
+		try {
+			$pdo = Conexion::conectar();
+			if ($idPlan == null) {
+				$sql = 'SELECT p.idPlan, s.nameSchool, z.nameZone, a.nameArea, u.name, p.datePlan
+						FROM servicios_plan p
+							LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
+							LEFT JOIN servicios_zones z ON z.idZone = p.idZone
+							LEFT JOIN servicios_areas a ON a.idArea = p.idArea
+							LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor;';
+				$stmt = $pdo->prepare($sql);
+				if ($stmt->execute() && $stmt->rowCount() > 0) {
+					return $stmt->fetchAll();
+				} else {
+					return false;
+				}
+			} else {
+				$sql = 'SELECT p.idPlan, s.nameSchool, z.nameZone, a.nameArea, u.name, p.datePlan
+						FROM servicios_plan p
+							LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
+							LEFT JOIN servicios_zones z ON z.idZone = p.idZone
+							LEFT JOIN servicios_areas a ON a.idArea = p.idArea
+							LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor
+						WHERE p.idPlan = :idPlan';
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindParam(':idPlan', $idPlan, PDO::PARAM_INT);
+				if ($stmt->execute() && $stmt->rowCount() > 0) {
+					return $stmt->fetch();
+				} else {
+					return false;
+				}
+			}
+		} catch (PDOException $e) {
+			error_log("Error al buscar el evento: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlAddPlans($data) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = 'INSERT INTO servicios_plan (idSchool, idZone, idArea, idSupervisor, datePlan) VALUES (:idSchool, :idZone, :idArea, :idSupervisor, :datePlan)';
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
+			$stmt->bindParam(':idZone', $data['idZone'], PDO::PARAM_INT);
+			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
+			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
+			if ($stmt->execute()) {
+                return $pdo->lastInsertId();
+            } else {
+                return 'error';
+            }
+		} catch (PDOException $e) {
+			error_log("Error al buscar el evento: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
 }
