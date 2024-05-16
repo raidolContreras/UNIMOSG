@@ -520,7 +520,7 @@ class FormsModel {
 					return false;
 				}
 			} else {
-				$sql = 'SELECT p.idPlan, s.nameSchool, z.nameZone, a.nameArea, u.name, p.datePlan
+				$sql = 'SELECT p.*, s.nameSchool, z.nameZone, a.nameArea, u.name
 						FROM servicios_plan p
 							LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
 							LEFT JOIN servicios_zones z ON z.idZone = p.idZone
@@ -553,6 +553,28 @@ class FormsModel {
 			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
                 return $pdo->lastInsertId();
+            } else {
+                return 'error';
+            }
+		} catch (PDOException $e) {
+			error_log("Error al buscar el evento: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlEditPlans($data) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = 'UPDATE servicios_plan SET idSchool = :idSchool, idZone = :idZone, idArea = :idArea, idSupervisor = :idSupervisor, datePlan = :datePlan WHERE idPlan = :idPlan';
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idPlan', $data['idPlan'], PDO::PARAM_INT);
+			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
+			$stmt->bindParam(':idZone', $data['idZone'], PDO::PARAM_INT);
+			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
+			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
+			if ($stmt->execute()) {
+                return $data['idPlan'];
             } else {
                 return 'error';
             }

@@ -10,4 +10,4 @@
     <div id='calendar' class="p-3"></div>
 </div>
     
-<script src="view/assets/js/ajax/General/getPlans.js"></script>
+<script src="view/assets/js/ajax/General/getPlansSupervisor.js"></script>

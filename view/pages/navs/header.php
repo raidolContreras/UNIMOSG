@@ -1,9 +1,24 @@
 <header>
 	<nav class="navbar">
 		<div class="container">
-			<a class="navbar-brand" href="./">
-				<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
-			</a>
+			<?php if ($_SESSION['level'] == 2):?>
+				<div class="navbar-brand">
+					<img src="view/assets/images/logo.png" alt="Logo" class="logo">
+					<div class="divider"></div>
+					<ul class="list-group list-group-horizontal">
+						<li class="nav-item">
+							<a class="nav-link menu-top" href="./">Inicio</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link menu-top" href="planSupervisor">Plan de Supervisión</a>
+						</li>
+					</ul>
+				</div>
+				<?php else: ?>
+				<a class="navbar-brand" href="./"></a>
+					<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
+				</a>
+				<?php endif ?>
 			<button class="navbar-toggler boton-sombra" type="button" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon one"></span>
 				<span class="navbar-toggler-icon two"></span>

@@ -92,7 +92,11 @@ class FormsController {
     }
 
     static public function ctrAddPlans($data){
-        $response = FormsModel::mdlAddPlans($data);
+        if ($data['idPlan'] == '') {
+            $response = FormsModel::mdlAddPlans($data);
+        } else {
+            $response = FormsModel::mdlEditPlans($data);
+        }
         return FormsController::ctrGetPlans($response);
     }
 

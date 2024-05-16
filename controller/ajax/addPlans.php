@@ -3,6 +3,7 @@
     require_once "../forms.controller.php";
     require_once "../../model/forms.models.php";
     $data = array(
+        "idPlan" => $_POST['plan'],
         "idSchool" => $_POST['school'],
         "idZone" => $_POST['zone'],
         "idArea" => $_POST['area'],

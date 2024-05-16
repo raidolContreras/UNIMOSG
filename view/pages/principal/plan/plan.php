@@ -47,7 +47,8 @@
                         </div>
                         <div class="form-group">
                             <label for="eventDate">Fecha del Evento</label>
-                            <input type="text" class="form-control" id="eventDate" readonly>
+                            <input type="date" class="form-control" id="eventDate" readonly>
+                            <input type="hidden" id="plan">
                         </div>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-danger" onclick="closeModal()">Cancelar</button>
