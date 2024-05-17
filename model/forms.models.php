@@ -750,7 +750,7 @@ class FormsModel
 		<body>
 			<div class="container">
 				<div class="header">
-					<img src="http://127.0.0.1/UNIMOSG/view/assets/images/logo.png" alt="UNIMO Logo">
+					<img src="/view/assets/images/logo.png" alt="UNIMO Logo">
 					<h1>Informe de Pendientes</h1>
 					<p>Universidad Montrer (UNIMO)</p>
 				</div>
@@ -787,15 +787,15 @@ class FormsModel
 		try {
 			// Configuración del servidor SMTP
 			$mail->isSMTP();
-			$mail->Host = 'smtp.example.com'; // Cambia esto al servidor SMTP que estés usando
+			$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
 			$mail->SMTPAuth = true;
-			$mail->Username = 'tu-email@example.com'; // Cambia esto a tu dirección de correo electrónico
-			$mail->Password = 'tu-contraseña'; // Cambia esto a tu contraseña de correo electrónico
+			$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
+			$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 			$mail->Port = 587;
 
 			// Configuración del remitente y destinatario
-			$mail->setFrom('tu-email@example.com', 'UNIMO');
+			$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
 			$mail->addAddress('oscarcontrerasf91@gmail.com');
 
 			// Contenido del correo
