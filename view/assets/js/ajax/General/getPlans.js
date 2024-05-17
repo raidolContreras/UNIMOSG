@@ -40,9 +40,9 @@ $(document).ready(function () {
                     arg.event.remove(); // Elimina el evento del calendario
                     // Aquí puedes agregar una llamada AJAX para eliminar el evento del servidor si es necesario
                     $.ajax({
-                        url: 'controller/ajax/deletePlan.php', // Asegúrate de crear este endpoint en tu servidor
+                        url: 'controller/ajax/deletePlans.php', // Asegúrate de crear este endpoint en tu servidor
                         type: 'POST',
-                        data: { id: arg.event.id },
+                        data: { idPlan: arg.event.id },
                         success: function(response) {
                             alert('Evento eliminado correctamente.');
                         }

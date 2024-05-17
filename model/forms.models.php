@@ -584,4 +584,20 @@ class FormsModel {
 		}
 	}
 
+	static public function mdlDeletePlans($idPlan){
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare('DELETE FROM servicios_plan WHERE idPlan = :idPlan');
+            $stmt->bindParam(':idPlan', $idPlan, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 }

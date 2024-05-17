@@ -100,4 +100,8 @@ class FormsController {
         return FormsController::ctrGetPlans($response);
     }
 
+    static public function ctrDeletePlans($idPlan){
+        return FormsModel::mdlDeletePlans($idPlan);
+    }
+
 }
