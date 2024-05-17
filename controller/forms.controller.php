@@ -104,4 +104,8 @@ class FormsController {
         return FormsModel::mdlDeletePlans($idPlan);
     }
 
+    static public function ctrSendMail($data){
+        return FormsModel::mdlSendMail($data);
+    }
+
 }
