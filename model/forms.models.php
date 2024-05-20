@@ -805,9 +805,9 @@ class FormsModel
 			$mail->AltBody = 'Este es el contenido del correo electrónico en texto plano para los clientes de correo que no soportan HTML.';
 
 			$mail->send();
-			echo 'El correo ha sido enviado correctamente';
+			return 'El correo ha sido enviado correctamente';
 		} catch (Exception $e) {
-			echo "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
+			return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
 		}
 	}
 
@@ -815,7 +815,7 @@ class FormsModel
 		try {
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("	SELECT 
-										i.idIncidente, i.dateCreated, i.description, i.importancia, o.nameObject, a.nameArea, z.nameZone 
+										i.idIncidente, i.dateCreated AS fecha, i.description, i.importancia, o.nameObject, a.nameArea AS area, z.nameZone,
 										GROUP_CONCAT(u.email SEPARATOR ', ') AS emails
 									FROM 
 										servicios_incidentes i

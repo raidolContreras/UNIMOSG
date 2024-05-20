@@ -35,3 +35,12 @@ $(document).ready(function () {
         }
     });
 });
+
+function seeInspectionsback() {
+    $.ajax({
+        url: 'controller/ajax/searchIncidentsDaily.php',
+        dataType: 'json',
+        success: function(data) {
+        }
+    });
+}
