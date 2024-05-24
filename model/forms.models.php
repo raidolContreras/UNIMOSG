@@ -631,7 +631,7 @@ class FormsModel
 		}
 	}
 
-	static function mdlSendMail($response)
+	static function mdlSendMail($responses)
 	{
 		// Configuración del correo HTML
 		$email = '
@@ -755,20 +755,20 @@ class FormsModel
 				</div>
 				<div class="content">
 					<div class="section">';
-
-					$email .= '
-						<h2>' . htmlspecialchars($response['area']) . '</h2>
-						<ul class="task-list">';
+					foreach ($responses as $response) {
 						$email .= '
-							<li>
-								' . htmlspecialchars($response['descripcion']) . '
-								<div class="task-details">
-									<span>Fecha solicitada: ' . htmlspecialchars($response['fecha']) . '</span>
-									<span class="importance">' . htmlspecialchars($response['importancia']) . '</span>
-								</div>
-							</li>';
-					$email .= '
-						</ul>';
+							<h2>' . htmlspecialchars($response['area']) . '</h2>
+							<ul class="task-list">';
+							$email .= '
+								<li>
+									' . htmlspecialchars($response['descripcion']) . '
+									<div class="task-details">
+										<span>Fecha solicitada: ' . htmlspecialchars($response['fecha']) . '</span>  <span class="importance">' . htmlspecialchars($response['importancia']) . '</span>
+									</div>
+								</li>';
+						$email .= '
+							</ul>';
+					}
 
 				$email .= '
 					</div>
