@@ -640,7 +640,6 @@ class FormsModel
 		<head>
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Informe de Pendientes - UNIMO</title>
 			<style>
 				body {
 					font-family: Arial, sans-serif;
@@ -832,7 +831,7 @@ class FormsModel
 									i.idIncidente;
 								");
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
