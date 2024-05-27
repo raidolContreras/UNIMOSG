@@ -111,5 +111,12 @@ function verArea(idZone) {
 }
 
 function deleteZone(idZone) {
-    $('#actionModal').modal('show');
+    var html = `
+        <p>
+            ¿Está seguro de eliminar la zona?
+        </p>
+    `;
+    $('.titleEvent').html(html);
+    $('.contentDeleteModal').html('Esta acción no se puede revertir');
+    $('#deleteModal').modal('show');
 }
