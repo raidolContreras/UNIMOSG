@@ -16,7 +16,7 @@ $(document).ready(function(){
                 if (data == 'ok'){
                     $('#editArea').val('');
                     closeMenu('modalNavUpdate');
-                    $('#zones').DataTable().ajax.reload();
+                    $('#areas').DataTable().ajax.reload();
                 }
             }
         });   
