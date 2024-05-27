@@ -86,6 +86,7 @@ $(document).ready(function () {
                 },
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data); // Verifica la respuesta del servidor
                     if (plan != '') {
                         // Eliminar el evento existente si es necesario
                         var existingEvent = calendar.getEventById(data.idPlan);
@@ -100,10 +101,13 @@ $(document).ready(function () {
                         });
                     }
                     $('#eventModal').modal('hide');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al añadir el evento:", error);
                 }
             });
         }
-    });
+    });    
 
     // Load initial events
     $.ajax({
