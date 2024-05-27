@@ -91,8 +91,9 @@ function solicitud(school, importancia){
                     // Convertir la diferencia de milisegundos a días
                     var daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
                     
+                    var message = (daysDiff > 0) ? `${daysDiff} días desde el levantamiento del reporte` : '0 días';
                     // Retornar la diferencia en días
-                    return `${daysDiff} días desde el levantamiento del reporte`;
+                    return message;
                 }
             },            
             {
