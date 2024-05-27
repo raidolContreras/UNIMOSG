@@ -837,4 +837,20 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlDeleteZone($idZone) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_zones SET status = 0 WHERE idZone = :idZone");
+            $stmt->bindParam(":idZone", $idZone, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar la zona: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }

@@ -214,3 +214,8 @@ if (isset($_POST['detailsCorrect']) && isset($_POST['idIncidente']) && isset($_P
     );
     echo FormsController::ctrDetailsCorrect($data);
 }
+
+if (isset($_POST['deleteZone'])) {
+    $idZone = $_POST['deleteZone'];
+    echo FormsController::ctrDeleteZone($idZone);
+}

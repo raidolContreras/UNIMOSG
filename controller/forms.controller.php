@@ -113,4 +113,8 @@ class FormsController {
         return FormsModel::mdlSendMail($data);
     }
 
+    static public function ctrDeleteZone($idZone){
+        return FormsModel::mdlDeleteZone($idZone);
+    }
+
 }
