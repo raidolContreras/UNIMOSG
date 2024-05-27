@@ -41,7 +41,7 @@
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
     <ul class="modal-nav">
-        <?php include "view/pages/admin/zones/editAreas.php"; ?>
+        <?php include "view/pages/admin/areas/editAreas.php"; ?>
     </ul>
 </div>
 
