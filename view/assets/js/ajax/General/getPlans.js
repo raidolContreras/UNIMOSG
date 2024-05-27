@@ -86,7 +86,6 @@ $(document).ready(function () {
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data); // Verifica la respuesta del servidor
                     if (plan != '') {
                         // Eliminar el evento existente si es necesario
                         var existingEvent = calendar.getEventById(data.idPlan);
@@ -99,6 +98,7 @@ $(document).ready(function () {
                             title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
                             start: data.datePlan
                         });
+                        console.log(data.nameSchool); // Verifica la respuesta del servidor
                     }
                     $('#eventModal').modal('hide');
                 },
