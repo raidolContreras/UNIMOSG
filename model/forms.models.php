@@ -773,7 +773,6 @@ class FormsModel
 				.task-list li {
 					padding: 10px 0;
 					border-bottom: 1px solid #ddd;
-					display: flex;
 					flex-direction: column;
 				}
 				.task-list li:last-child {
