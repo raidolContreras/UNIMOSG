@@ -106,9 +106,9 @@ class FormsModel
 			$pdo = Conexion::conectar();
 			if ($item == null) {
 				if ($idSchool == null || $idSchool == 0) {
-					$stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool');
+					$stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool WHERE z.status = 1');
 				} else {
-					$stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool WHERE zone_idSchool = :idSchool');
+					$stmt = $pdo->prepare('SELECT * FROM servicios_zones z LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool WHERE zone_idSchool = :idSchool AND z.status = 1');
 					$stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
 				}
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
