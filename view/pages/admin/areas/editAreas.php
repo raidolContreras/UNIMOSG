@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-danger me-2" onclick="closeMenu('modalNavUpdate')">Cancelar</button>
             <button type="button" class="btn btn-success update">Aceptar</button>
         </div>
-        <input type="hidden" id="edit">
+        <input type="hidden" id="editArea">
     </form>
 </div>
 <script src="view/assets/js/ajax/editAreas.js"></script>
