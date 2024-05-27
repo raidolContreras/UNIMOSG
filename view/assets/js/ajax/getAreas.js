@@ -60,7 +60,7 @@ $(document).ready(function() {
                             <button class="btn btn-primary items-center mr-3 button-custom" onclick="agregarObjetos(${data.idArea})">
 								Ver objetos <i class="fa-duotone fa-right-from-bracket"></i>
                             </button>
-                            <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editZones', ${data.idArea})">
+                            <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editAreas ', ${data.idArea})">
                                 <i class="fa-duotone fa-pen-to-square"></i> Editar
                             </button>
                             <button class="btn btn-danger items-center button-custom" onclick="">
@@ -84,7 +84,7 @@ function openMenuEdit(collapse, idForm, id) {
         type: "POST",
         url: "controller/ajax/ajax.form.php",
         data: {
-            searchZone: id
+            searchArea: id
             },
         dataType: 'json',
         success: function(data) {
@@ -97,6 +97,7 @@ function openMenuEdit(collapse, idForm, id) {
             document.body.appendChild(modalBackdrop);
         }
     });
+
 }
 
 function verArea(idArea) {
