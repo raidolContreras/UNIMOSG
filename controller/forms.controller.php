@@ -40,6 +40,10 @@ class FormsController {
         return FormsModel::mdlGetArea($item, $value);
     }
 
+    static public function ctrEditArea($data){
+        return FormsModel::mdlEditArea($data);
+    }
+
     static public function ctrSearchObject($idArea, $item, $value){
         return FormsModel::mdlSearchObject($idArea, $item, $value);
     }

@@ -224,3 +224,13 @@ if (isset($_POST['deleteZone'])) {
     $idZone = $_POST['deleteZone'];
     echo FormsController::ctrDeleteZone($idZone);
 }
+
+if (isset($_POST['idAreaEdit'])) {
+    $nameAreaEdit = $_POST['nameAreaEdit'];
+    $idArea = $_POST['idAreaEdit'];
+    $data = array(
+        "nameArea" => $nameAreaEdit,
+        "idArea" => $idArea
+    );
+    echo FormsController::ctrEditArea($data);
+}

@@ -224,6 +224,23 @@ class FormsModel
         }
 	}
 
+	static public function mdlEditArea($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_areas SET nameArea = :nameArea WHERE idArea = :idArea");
+			$stmt->bindParam(':nameArea', $data['nameArea'], PDO::PARAM_STR);
+			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
+			if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al buscar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 	static public function mdlSearchObject($idArea, $item, $value)
 	{
 		try {
