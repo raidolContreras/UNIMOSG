@@ -103,7 +103,6 @@ function showForms(idArea) {
         success: function(data) {
             if (data != false) {
                 data.forEach(object => {
-                    if (object.status != 0) {
                         html += `
                             <tr class="${object.idObject}">
                                 <th>${object.nameObject}</th>
@@ -129,10 +128,11 @@ function showForms(idArea) {
                                 </td>
                             </tr>
                         `;
-                    }
                 });
             }
             $('.tbodyObjects').html(html);
+            // Inicializa el DataTable
+            $('#objects').DataTable();
 
             // Agregar control de eventos para verificar campos antes de enviar
             $('.form-control, input[type=radio]').on('change keyup', function() {
