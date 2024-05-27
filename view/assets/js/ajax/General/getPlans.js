@@ -86,20 +86,18 @@ $(document).ready(function () {
                 },
                 dataType: 'json',
                 success: function(data) {
-                    if (plan != '') {
-                        // Eliminar el evento existente si es necesario
-                        var existingEvent = calendar.getEventById(data.idPlan);
-                        if (existingEvent) {
-                            existingEvent.remove();
-                        }
-                        // Crear un nuevo evento
-                        calendar.addEvent({
-                            id: data.idPlan,
-                            title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
-                            start: data.datePlan
-                        });
-                        console.log(data.nameSchool); // Verifica la respuesta del servidor
+                    // Eliminar el evento existente si es necesario
+                    var existingEvent = calendar.getEventById(data.idPlan);
+                    if (existingEvent) {
+                        existingEvent.remove();
                     }
+                    // Crear un nuevo evento
+                    calendar.addEvent({
+                        id: data.idPlan,
+                        title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
+                        start: data.datePlan
+                    });
+                    console.log(data.nameSchool); // Verifica la respuesta del servidor
                     $('#eventModal').modal('hide');
                 },
                 error: function(xhr, status, error) {
