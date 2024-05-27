@@ -76,7 +76,13 @@ class FormsController {
     }
 
     static public function ctrSendForm($idObject, $estado, $description, $importancia){
-        return FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+        $response = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+        if($importancia != 'Pendiente'){
+            $object = FormsModel::mdlSearchObject(null, 'idObject', $idObject);
+            $area = FormsModel::mdlSearchArea(null, 'idArea', $object['objects_idArea']);
+            FormsModel::mdlSendImportantMail($area, $estado, $description, $importancia);
+        }
+        return $response;
     }
 
     static public function ctrSearchSolicitudes($idSchool,$importancia){

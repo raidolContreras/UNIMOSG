@@ -184,17 +184,30 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			if ($item == null) {
-				$stmt = $pdo->prepare('SELECT * FROM servicios_areas WHERE area_idZones = :idZone');
-				$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
-				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
+			if ( $idZone != null) {
+				if ($item == null) {
+					$stmt = $pdo->prepare('SELECT * FROM servicios_areas WHERE area_idZones = :idZone');
+					$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+					if ($stmt->execute() && $stmt->rowCount() > 0) {
+						return $stmt->fetchAll();
+					} else {
+						return false;
+					}
 				} else {
-					return false;
+					$stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE area_idZones = :idZone AND $item = :$item");
+					$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+					$stmt->bindParam(":$item", $value);
+					if ($stmt->execute() && $stmt->rowCount() > 0) {
+						return $stmt->fetch();
+					} else {
+						return false;
+					}
 				}
 			} else {
-				$stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE area_idZones = :idZone AND $item = :$item");
-				$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
+				$stmt = $pdo->prepare("	SELECT a.*, s.nameSchool, z.nameZone FROM servicios_areas a
+											LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+											LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+										WHERE $item = :$item");
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
 					return $stmt->fetch();
@@ -261,23 +274,33 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			if ($item == null) {
-				$stmt = $pdo->prepare('SELECT * FROM servicios_objects WHERE objects_idArea = :idArea');
-				$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
-				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
+			if	($idArea != null) {
+				if ($item == null) {
+					$stmt = $pdo->prepare('SELECT * FROM servicios_objects WHERE objects_idArea = :idArea');
+					$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+					if ($stmt->execute() && $stmt->rowCount() > 0) {
+						return $stmt->fetchAll();
+					} else {
+						return false;
+					}
 				} else {
-					return false;
+					$stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE objects_idArea = :idArea AND $item = :$item");
+					$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+					$stmt->bindParam(":$item", $value);
+					if ($stmt->execute() && $stmt->rowCount() > 0) {
+						return $stmt->fetch();
+					} else {
+						return false;
+					}
 				}
 			} else {
-				$stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE objects_idArea = :idArea AND $item = :$item");
-				$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
-				$stmt->bindParam(":$item", $value);
-				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetch();
-				} else {
-					return false;
-				}
+				$stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE $item = :$item");
+                $stmt->bindParam(":$item", $value);
+                if ($stmt->execute() && $stmt->rowCount() > 0) {
+                    return $stmt->fetch();
+                } else {
+                    return false;
+                }
 			}
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
@@ -799,7 +822,7 @@ class FormsModel
 		<body>
 			<div class="container">
 				<div class="header">
-					<img src="/view/assets/images/logo.png" alt="UNIMO Logo">
+					<img src="https://unimosg.contreras-flota.click/view/assets/images/logo.png" alt="UNIMO Logo">
 					<h1>Informe de Pendientes</h1>
 					<p>Universidad Montrer (UNIMO)</p>
 				</div>
@@ -849,7 +872,7 @@ class FormsModel
 
 			// Contenido del correo
 			$mail->isHTML(true);
-			$mail->Subject = 'Correo de prueba';
+			$mail->Subject = 'Reporte diario UNIMO';
 			$mail->Body    = $email;
 			$mail->AltBody = 'Este es el contenido del correo electrónico en texto plano para los clientes de correo que no soportan HTML.';
 
@@ -857,6 +880,193 @@ class FormsModel
 			return 'El correo ha sido enviado correctamente';
 		} catch (Exception $e) {
 			return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
+		}
+	}
+
+	static public function mdlSendImportantMail($area, $estado, $description, $importancia) {
+		{
+			// Crear un objeto DateTime con la fecha y hora actual
+			$currentDateTime = new DateTime();
+
+			// Añadir 6 horas al objeto DateTime
+			$currentDateTime->modify('+6 hours');
+
+			// Formatear la fecha y hora para que se muestre en el formato deseado
+			$futureDateTime = $currentDateTime->format('Y-m-d H:i:s');
+			// Configuración del correo HTML
+			$email = '
+			<!DOCTYPE html>
+			<html lang="es">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						margin: 0;
+						padding: 0;
+						background-color: #f4f4f4;
+						color: #333;
+					}
+					.container {
+						width: 100%;
+						max-width: 600px;
+						margin: 20px auto;
+						background-color: #ffffff;
+						border: 1px solid #ddd;
+						border-radius: 8px;
+						overflow: hidden;
+						box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+					}
+					.header {
+						background-color: #01643d;
+						color: #ffffff;
+						padding: 20px;
+						text-align: center;
+					}
+					.header img {
+						width: 120px;
+						max-width: 100%;
+						height: auto;
+						margin-bottom: 10px;
+					}
+					.header h1 {
+						margin: 0;
+						font-size: 24px;
+						font-weight: bold;
+					}
+					.header p {
+						margin: 0;
+						font-size: 16px;
+					}
+					.content {
+						padding: 20px;
+					}
+					.section {
+						margin-bottom: 20px;
+					}
+					.section h2 {
+						color: #01643d;
+						font-size: 20px;
+						margin-bottom: 10px;
+						border-bottom: 2px solid #01643d;
+						padding-bottom: 5px;
+					}
+					.task-list {
+						list-style: none;
+						padding: 0;
+						margin: 0;
+					}
+					.task-list li {
+						padding: 10px 0;
+						border-bottom: 1px solid #ddd;
+						display: flex;
+						flex-direction: column;
+					}
+					.task-list li:last-child {
+						border-bottom: none;
+					}
+					.task-details {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						font-size: 14px;
+						margin-top: 5px;
+					}
+					.task-details span {
+						display: block;
+					}
+					.importance {
+						font-weight: bold;
+						color: #01643d;
+					}
+					.footer {
+						background-color: #01643d;
+						color: #ffffff;
+						text-align: center;
+						padding: 15px;
+						font-size: 14px;
+					}
+					@media screen and (max-width: 600px) {
+						.header, .content, .footer {
+							padding: 15px;
+						}
+						.section h2 {
+							margin: 0 -15px 10px -15px;
+							padding: 10px 15px;
+							border-bottom-width: 1px;
+						}
+						.task-list li {
+							padding: 10px 0;
+						}
+						.task-details {
+							flex-direction: column;
+							align-items: flex-start;
+						}
+					}
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<div class="header">
+						<img src="https://unimosg.contreras-flota.click/view/assets/images/logo.png" alt="UNIMO Logo">
+						<h1>Informe de ' . htmlspecialchars($importancia) . '</h1>
+						<p>Universidad Montrer (UNIMO)</p>
+					</div>
+					<div class="content">
+						<div class="section">';
+							$email .= '
+								<h2>' . htmlspecialchars($area['nameSchool']) . ' ' . htmlspecialchars($area['nameZone']) . '' . htmlspecialchars($area['nameArea']) . '</h2>
+								<ul class="task-list">';
+								$email .= '
+									<li>
+										' . htmlspecialchars($description) . '
+										<div class="task-details">
+											<span>Fecha solicitada: ' . htmlspecialchars($futureDateTime) . '</span> 
+											<span class="importance">' . htmlspecialchars($importancia) . '</span>
+										</div>
+									</li>';
+							$email .= '
+								</ul>';
+	
+					$email .= '
+						</div>
+					</div>
+					<div class="footer">
+						<p>&copy; 2024 Universidad Montrer. Todos los derechos reservados.</p>
+					</div>
+				</div>
+			</body>
+			</html>';
+	
+			// Configuración del correo
+			$mail = new PHPMailer(true);
+	
+			try {
+				// Configuración del servidor SMTP
+				$mail->isSMTP();
+				$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
+				$mail->SMTPAuth = true;
+				$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
+				$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				$mail->Port = 587;
+	
+				// Configuración del remitente y destinatario
+				$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
+				$mail->addAddress('oscarcontrerasf91@gmail.com');
+	
+				// Contenido del correo
+				$mail->isHTML(true);
+				$mail->Subject = 'Reporte diario UNIMO';
+				$mail->Body    = $email;
+				$mail->AltBody = 'Este es el contenido del correo electrónico en texto plano para los clientes de correo que no soportan HTML.';
+	
+				$mail->send();
+				return 'El correo ha sido enviado correctamente';
+			} catch (Exception $e) {
+				return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
+			}
 		}
 	}
 
@@ -868,13 +1078,13 @@ class FormsModel
 										GROUP_CONCAT(u.email SEPARATOR ', ') AS emails
 									FROM 
 										servicios_incidentes i
-									LEFT JOIN 
-										servicios_objects o ON o.idObject = i.incidente_idObject
-									LEFT JOIN 
-										servicios_areas a ON a.idArea = o.objects_idArea
-									LEFT JOIN 
-										servicios_zones z ON z.idZone = a.area_idZones
-									LEFT JOIN 
+										LEFT JOIN 
+											servicios_objects o ON o.idObject = i.incidente_idObject
+										LEFT JOIN 
+											servicios_areas a ON a.idArea = o.objects_idArea
+										LEFT JOIN 
+											servicios_zones z ON z.idZone = a.area_idZones
+										LEFT JOIN 
 										servicios_users u ON u.level = 1
 									WHERE i.status = 0
 									GROUP BY 
