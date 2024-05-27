@@ -63,7 +63,7 @@ $(document).ready(function() {
                             <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editAreas ', ${data.idArea})">
                                 <i class="fa-duotone fa-pen-to-square"></i> Editar
                             </button>
-                            <button class="btn btn-danger items-center button-custom" onclick="">
+                            <button class="btn btn-danger items-center button-custom" onclick="deleteArea(${data.idArea})">
                                 <i class="fa-duotone fa-trash"></i> Eliminar 
                             </button>
                         </div>
@@ -133,4 +133,32 @@ function agregarObjetos(idArea){
         submitButton.disabled = true;
     }
     $('#idArea').val(idArea);
+}
+
+function deleteArea(idArea){
+    var html = `
+        <p>
+            ¿Está seguro de eliminar el area?
+        </p>
+    `;
+    $('.titleEvent').html(html);
+    $('.contentDeleteModal').html('Esta acción no se puede revertir');
+    $('#deleteModal').modal('show');
+    $('#modalDeleteButton').attr('onclick', 'confirmDeleteZone(' + idArea + ')');
+}
+
+
+function confirmDeleteZone(idArea) {
+    $.ajax({
+        type: "POST",
+        url: "controller/ajax/ajax.form.php",
+        data: {
+            deleteArea: idArea
+            },
+        dataType: 'json',
+        success: function(data) {
+            $('#deleteModal').modal('hide');
+            $('#areas').DataTable().ajax.reload();
+        }
+    });
 }

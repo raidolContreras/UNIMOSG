@@ -241,6 +241,22 @@ class FormsModel
         }
 	}
 
+	static public function mdlDeleteArea($idArea) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_areas SET statusArea = 0 WHERE idArea = :idArea");
+			$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+			if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al buscar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 	static public function mdlSearchObject($idArea, $item, $value)
 	{
 		try {
@@ -424,12 +440,13 @@ class FormsModel
 				if ($idZone == null) {
 					$stmt = $pdo->prepare('SELECT * FROM servicios_areas a 
 											LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
-											LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool');
+											LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool
+											WHERE a.statusArea = 1');
 				} else {
 					$stmt = $pdo->prepare('SELECT * FROM servicios_areas a 
 											LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
 											LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool
-											WHERE area_idZones = :idZone');
+											WHERE area_idZones = :idZone AND a.statusArea = 1');
 					$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
 				}
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
@@ -439,12 +456,12 @@ class FormsModel
 				}
 			} else {
 				if ($idZone == null) {
-					$stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item");
+					$stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item AND statusArea = 1");
 				} else {
 					$stmt = $pdo->prepare("SELECT * FROM servicios_areas a 
 											LEFT JOIN servicios_zones z ON a.area_idZones = z.idZone
 											LEFT JOIN servicios_schools s ON z.zone_idSchool = s.idSchool
-											WHERE area_idZones = :idZone AND $item = :$item");
+											WHERE area_idZones = :idZone AND $item = :$item AND a.statusArea = 1");
 					$stmt->bindParam(':idZone', $idZone, PDO::PARAM_INT);
 				}
 				$stmt->bindParam(":$item", $value);

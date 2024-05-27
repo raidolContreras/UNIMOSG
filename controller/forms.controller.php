@@ -125,4 +125,8 @@ class FormsController {
         return FormsModel::mdlDeleteZone($idZone);
     }
 
+    static public function ctrDeleteArea($idArea){
+        return FormsModel::mdlDeleteArea($idArea);
+    }
+
 }
