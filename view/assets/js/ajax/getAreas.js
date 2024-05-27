@@ -89,7 +89,7 @@ function openMenuEdit(collapse, idForm, id) {
         dataType: 'json',
         success: function(data) {
             $('#nameAreaEdit').val(data.nameArea);
-            $('#edit').val(data.idArea);
+            $('#editArea').val(data.idArea);
 
             document.querySelector('#' + collapse).classList.add('show');
             var modalBackdrop = document.createElement('div');
