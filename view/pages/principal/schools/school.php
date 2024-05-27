@@ -13,7 +13,7 @@
                 <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Importante')" class="btn btn-success w-100">Incidencias importantes<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Inmediata')" class="btn btn-success w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
         </div>
     </div>
