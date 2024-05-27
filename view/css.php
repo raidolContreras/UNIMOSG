@@ -17,4 +17,4 @@
 <link rel="stylesheet" href="view/assets/css/aos.css" />
 
 <link rel="stylesheet" href="view/assets/css/style.css" />
-<link href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.2-web/css/all.min.css" rel="stylesheet">
+<link href="https://contreras-flota.click/fontawesome/css/all.min.css" rel="stylesheet">
