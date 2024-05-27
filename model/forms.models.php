@@ -208,6 +208,22 @@ class FormsModel
 		}
 	}
 
+	static public function mdlGetArea($item, $value) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item");
+            $stmt->bindParam(":$item", $value);
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetch();
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al buscar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 	static public function mdlSearchObject($idArea, $item, $value)
 	{
 		try {
