@@ -3,7 +3,7 @@ $(document).ready(function(){
     $('.update').click(function(e){
         e.preventDefault();
         var name = $('#nameAreaEdit').val();
-        var idArea = $('#edit').val();
+        var idArea = $('#editArea').val();
 
         $.ajax({
             type: "POST",
@@ -14,7 +14,7 @@ $(document).ready(function(){
                 },
             success: function(data) {
                 if (data == 'ok'){
-                    $('#edit').val('');
+                    $('#editArea').val('');
                     closeMenu('modalNavUpdate');
                     $('#zones').DataTable().ajax.reload();
                 }
