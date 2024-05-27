@@ -119,4 +119,5 @@ function deleteZone(idZone) {
     $('.titleEvent').html(html);
     $('.contentDeleteModal').html('Esta acción no se puede revertir');
     $('#deleteModal').modal('show');
+    $('#modalDeleteButton').attr('onclick', 'confirmDeleteZone(' + idZone + ')');
 }
