@@ -80,7 +80,20 @@ class FormsController {
         $object = FormsModel::mdlSearchObject(null, 'idObject', $idObject);
         $area = FormsModel::mdlSearchArea(null, 'idArea', $object['objects_idArea']);
 
-        $response = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+        $informe = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+        $nameSchool = $area['nameSchool'];
+
+        // Extraer los primeros dos caracteres del nombre de la escuela
+        $schoolInitials = strtoupper(substr($nameSchool, 0, 1)) . strtoupper(substr($nameSchool, strpos($nameSchool, ' ') + 1, 1));
+
+        // Formatear el valor del informe a tres dígitos con ceros a la izquierda
+        $informeFormatted = str_pad($informe, 3, '0', STR_PAD_LEFT);
+
+        // Concatenar las iniciales de la escuela con el informe formateado
+        $pedido = $schoolInitials . $informeFormatted;
+
+        $response = FormsModel::mdlPedido($pedido, $informe);
+
         if($importancia != 'Pendiente'){
             FormsModel::mdlSendImportantMail($area, $object, $estado, $description, $importancia);
         }

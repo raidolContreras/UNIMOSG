@@ -510,7 +510,7 @@ class FormsModel
 			$stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
 			$stmt->bindParam(':idObject', $idObject, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				return $pdo->lastInsertId();
 			} else {
 				return 'error';
 			}
@@ -518,6 +518,23 @@ class FormsModel
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
 		}
+	}
+
+	static public function mdlPedido($pedido, $informe) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('UPDATE servicios_incidentes SET nPedido = :nPedido WHERE idIncidente = :idIncidente');
+            $stmt->bindParam(':nPedido', $pedido, PDO::PARAM_STR);
+            $stmt->bindParam(':idIncidente', $informe, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
 	}
 
 	static public function mdlSearchSolicitudes($idSchool, $importancia)
