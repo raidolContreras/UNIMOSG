@@ -52,7 +52,7 @@ $(document).ready(function() {
                             <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editZones', ${data.idZone})">
                                 <i class="fa-duotone fa-pen-to-square"></i> Editar
                             </button>
-                            <button class="btn btn-danger items-center button-custom" onclick="">
+                            <button class="btn btn-danger items-center button-custom" onclick="deleteZone(${data.idZone})">
                                 <i class="fa-duotone fa-trash"></i> Eliminar 
                             </button>
                         </div>
@@ -108,4 +108,8 @@ function verArea(idZone) {
 
     // Enviar el formulario
     form.submit();
+}
+
+function deleteZone(idZone) {
+    $('#actionModal').modal('show');
 }

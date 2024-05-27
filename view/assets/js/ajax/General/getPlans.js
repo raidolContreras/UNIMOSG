@@ -97,7 +97,6 @@ $(document).ready(function () {
                         title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
                         start: data.datePlan
                     });
-                    console.log(data.nameSchool); // Verifica la respuesta del servidor
                     $('#eventModal').modal('hide');
                 },
                 error: function(xhr, status, error) {
