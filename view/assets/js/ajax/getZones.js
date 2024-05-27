@@ -121,3 +121,20 @@ function deleteZone(idZone) {
     $('#deleteModal').modal('show');
     $('#modalDeleteButton').attr('onclick', 'confirmDeleteZone(' + idZone + ')');
 }
+
+function confirmDeleteZone(idZone) {
+    $.ajax({
+        type: "POST",
+        url: "controller/ajax/ajax.form.php",
+        data: {
+            deleteZone: idZone
+            },
+        dataType: 'json',
+        success: function(data) {
+            if (data.status == 1) {
+                $('#zones').DataTable().ajax.reload();
+                $('#deleteModal').modal('hide');
+            }
+        }
+    });
+}
