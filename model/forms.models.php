@@ -844,9 +844,9 @@ class FormsModel
             $stmt = $pdo->prepare("UPDATE servicios_zones SET status = 0 WHERE idZone = :idZone");
             $stmt->bindParam(":idZone", $idZone, PDO::PARAM_INT);
             if ($stmt->execute()) {
-                return true;
+                return 'ok';
             } else {
-                return false;
+                return 'error';
             }
         } catch (PDOException $e) {
             error_log("Error al eliminar la zona: ". $e->getMessage());
