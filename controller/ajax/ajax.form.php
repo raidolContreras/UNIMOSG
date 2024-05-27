@@ -186,6 +186,11 @@ if (isset($_POST['searchZone'])) {
     echo json_encode(FormsController::ctrSearchZones(null,'idZone', $searchZone));
 }
 
+if (isset($_POST['searchArea'])) {
+    $searchArea = $_POST['searchArea'];
+    echo json_encode(FormsController::ctrSearchAreas(null,'idZone', $searchArea));
+}
+
 if (isset($_POST['nameZoneEdit'])) {
     $nameZone = $_POST['nameZoneEdit'];
     $idZone = $_POST['idZoneEdit'];
