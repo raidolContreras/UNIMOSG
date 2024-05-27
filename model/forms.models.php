@@ -874,7 +874,7 @@ class FormsModel
 			$mail->isHTML(true);
 			$mail->Subject = 'Reporte diario UNIMO';
 			$mail->Body    = $email;
-			$mail->AltBody = 'Este es el contenido del correo electrónico en texto plano para los clientes de correo que no soportan HTML.';
+			$mail->AltBody = '';
 
 			$mail->send();
 			return 'El correo ha sido enviado correctamente';
@@ -960,7 +960,6 @@ class FormsModel
 					.task-list li {
 						padding: 10px 0;
 						border-bottom: 1px solid #ddd;
-						display: flex;
 						flex-direction: column;
 					}
 					.task-list li:last-child {
@@ -1010,20 +1009,19 @@ class FormsModel
 				<div class="container">
 					<div class="header">
 						<img src="https://unimosg.contreras-flota.click/view/assets/images/logo.png" alt="UNIMO Logo">
-						<h1>Informe de ' . htmlspecialchars($importancia) . '</h1>
+						<h1>Reporte ' . htmlspecialchars($importancia) . '</h1>
 						<p>Universidad Montrer (UNIMO)</p>
 					</div>
 					<div class="content">
 						<div class="section">';
 							$email .= '
-								<h2>' . htmlspecialchars($area['nameSchool']) . ' ' . htmlspecialchars($area['nameZone']) . '' . htmlspecialchars($area['nameArea']) . '</h2>
+								<h2>' . htmlspecialchars($area['nameSchool']) . ' - ' . htmlspecialchars($area['nameZone']) . ' - ' . htmlspecialchars($area['nameArea']) . '</h2>
 								<ul class="task-list">';
 								$email .= '
 									<li>
 										' . htmlspecialchars($description) . '
 										<div class="task-details">
-											<span>Fecha solicitada: ' . htmlspecialchars($futureDateTime) . '</span> 
-											<span class="importance">' . htmlspecialchars($importancia) . '</span>
+											<span>Fecha solicitada: ' . htmlspecialchars($futureDateTime) . '</span> - <span class="importance">' . htmlspecialchars($importancia) . '</span>
 										</div>
 									</li>';
 							$email .= '
@@ -1058,9 +1056,9 @@ class FormsModel
 	
 				// Contenido del correo
 				$mail->isHTML(true);
-				$mail->Subject = 'Reporte diario UNIMO';
+				$mail->Subject = 'Reporte con importancia - ' . htmlspecialchars($importancia);
 				$mail->Body    = $email;
-				$mail->AltBody = 'Este es el contenido del correo electrónico en texto plano para los clientes de correo que no soportan HTML.';
+				$mail->AltBody = '';
 	
 				$mail->send();
 				return 'El correo ha sido enviado correctamente';
