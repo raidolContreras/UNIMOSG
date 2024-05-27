@@ -131,9 +131,9 @@ function confirmDeleteZone(idZone) {
             },
         dataType: 'json',
         success: function(data) {
-            if (data.status == 1) {
-                $('#zones').DataTable().ajax.reload();
+            if (data.status == 'ok') {
                 $('#deleteModal').modal('hide');
+                $('#zones').DataTable().ajax.reload();
             }
         }
     });
