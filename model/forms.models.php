@@ -882,7 +882,7 @@ class FormsModel
 		}
 	}
 
-	static public function mdlSendImportantMail($area, $estado, $description, $importancia) {
+	static public function mdlSendImportantMail($area, $objeto, $estado, $description, $importancia) {
 		{
 			// Crear un objeto DateTime con la fecha y hora actual
 			$currentDateTime = new DateTime();
@@ -1018,7 +1018,7 @@ class FormsModel
 								<ul class="task-list">';
 								$email .= '
 									<li>
-										' . htmlspecialchars($description) . '
+									' . htmlspecialchars($objeto['nameObject']) . ' - ' . htmlspecialchars($description) . '
 										<div class="task-details">
 											<span>Fecha solicitada: ' . htmlspecialchars($futureDateTime) . '</span> - <span class="importance">' . htmlspecialchars($importancia) . '</span>
 										</div>

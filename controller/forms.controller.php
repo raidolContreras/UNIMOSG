@@ -82,7 +82,7 @@ class FormsController {
 
         $response = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
         if($importancia != 'Pendiente'){
-            FormsModel::mdlSendImportantMail($area, $estado, $description, $importancia);
+            FormsModel::mdlSendImportantMail($area, $object, $estado, $description, $importancia);
         }
         return $response;
     }

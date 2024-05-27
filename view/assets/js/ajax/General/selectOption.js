@@ -131,6 +131,7 @@ function showForms(idArea) {
                 });
             }
             $('.tbodyObjects').html(html);
+            $('#modalListLabel').html(data[0].nameSchool + ' - ' + data[0].nameZone + ' - ' + data[0].nameArea);
             // Inicializa el DataTable
             $('#objects').DataTable();
 
