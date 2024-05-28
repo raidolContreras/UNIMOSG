@@ -26,11 +26,11 @@ $(document).ready(function() {
                             break;
                     
                         case 2:
-                            level = 'Director';
+                            level = 'Supervisor';
                             break;
                 
                         case 1:
-                            level = 'Supervisor';
+                            level = 'Director';
                             break;
                         
                         default:
