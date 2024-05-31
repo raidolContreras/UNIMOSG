@@ -122,7 +122,7 @@ function verArea(idArea) {
     form.submit();
 }
 
-function agregarObjetos(idArea){
+function agregarObjetos(idArea) {
     openMenu('modalObjects', 'newObjets');
     // Borrar archivos cargados en el Dropzone
     var myDropzone = Dropzone.forElement("#addObjectsDropzone");
@@ -132,7 +132,143 @@ function agregarObjetos(idArea){
         var submitButton = document.querySelector('.sendObjects');
         submitButton.disabled = true;
     }
+
     $('#idArea').val(idArea);
+
+    // Verificar si el DataTable ya está inicializado y destruirlo si es necesario
+    if ($.fn.DataTable.isDataTable('#objects')) {
+        $('#objects').DataTable().clear().destroy();
+    }
+
+    var table = $('#objects').DataTable({
+        ajax: {
+            type: "POST",
+            url: "controller/ajax/getObjetos.php",
+            data: {
+                idArea: idArea
+            },
+            dataSrc: '',
+        },
+        columns: [
+            {
+                data: null,
+                render: function (data, type, row, meta) {
+                    return `<center class="table-columns">${meta.row + 1}</center>`;
+                }
+            },
+            {
+                data: 'nameObject',
+                render: function (data, type, row, meta) {
+                    return `<center class="table-columns">
+                                <span class="editable row" data-name="nameObject" data-type="text" data-pk="${row.idObject}" data-text="${data}">${data}</span>
+                            </center>`;
+                }
+            },
+            {
+                data: 'cantidad',
+                render: function (data, type, row, meta) {
+                    return `<center class="table-columns">
+                                <span class="editable row" data-name="cantidad" data-type="text" data-pk="${row.idObject}" data-text="${data}">${data}</span>
+                            </center>`;
+                }
+            },
+        ]
+    });
+
+    // Hacer los campos editables una vez que la tabla ha sido dibujada
+    $('#objects').on('draw.dt', function () {
+        $('.editable').each(function() {
+            var $this = $(this);
+            $this.on('click', function() {
+                var currentValue = $this.data('text');
+                var inputType = $this.data('type');
+                var inputName = $this.data('name');
+                var pk = $this.data('pk');
+
+                var $input = $('<input>', {
+                    type: inputType,
+                    name: inputName,
+                    value: currentValue,
+                    class: 'form-control col-8'
+                });
+
+                var $acceptButton = $('<button>', {
+                    html: '<i class="fa-solid fa-check"></i>',
+                    class: 'btn btn-primary btn-sm editable-accept'
+                });
+
+                var $cancelButton = $('<button>', {
+                    html: '<i class="fa-solid fa-xmark"></i>',
+                    class: 'btn btn-danger btn-sm editable-cancel'
+                });
+
+                var $buttons = $('<div>', {
+                    class: 'editable-buttons col-4'
+                }).append($acceptButton, $cancelButton);
+
+                $this.html($input).append($buttons);
+
+                $acceptButton.on('click', function() {
+                    var newValue = $input.val();
+
+                    $.ajax({
+                        url: 'controller/ajax/updateObject.php',
+                        type: 'POST',
+                        data: {
+                            pk: pk,
+                            name: inputName,
+                            value: newValue
+                        },
+                        success: function(response) {
+                            if (response === 'success') {
+                                $this.data('text', newValue);
+                                $this.html(newValue);
+                            } else {
+                                $this.html(currentValue);
+                                alert('Error al actualizar el valor.');
+                            }
+                        },
+                        error: function() {
+                            $this.html(currentValue);
+                            alert('Error en la solicitud AJAX.');
+                        }
+                    });
+                });
+
+                $cancelButton.on('click', function() {
+                    $.ajax({
+                        url: 'controller/ajax/updateObject.php',
+                        type: 'POST',
+                        data: {
+                            pk: pk,
+                            name: inputName,
+                            value: currentValue
+                        },
+                        success: function(response) {
+                            if (response === 'success') {
+                                $this.data('text', currentValue);
+                                $this.html(currentValue);
+                            } else {
+                                $this.html(currentValue);
+                                alert('Error al actualizar el valor.');
+                            }
+                        },
+                        error: function() {
+                            $this.html(currentValue);
+                            alert('Error en la solicitud AJAX.');
+                        }
+                    });
+                });
+
+                // Para prevenir que el click se propague al span padre
+                $input.add($buttons).on('click', function(e) {
+                    e.stopPropagation();
+                });
+
+                $input.focus();
+            });
+        });
+    });
 }
 
 function deleteArea(idArea){

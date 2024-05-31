@@ -1127,4 +1127,21 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlUpdateObject($idObject, $name, $value) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_objects SET $name = :value WHERE idObject = :idObject");
+            $stmt->bindParam(":value", $value, PDO::PARAM_STR);
+            $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'success';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }

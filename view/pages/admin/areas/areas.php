@@ -36,6 +36,17 @@
     <ul class="modal-nav">
         <?php include "view/pages/admin/areas/addObjects.php"; ?>
     </ul>
+    <div class="table-responsive">
+        <table class="table" id="objects">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Objeto</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalNavUpdate">

@@ -1,5 +1,6 @@
 <script src="view/assets/vendor/dropzone/dropzone-min.js"></script>
 <link href="view/assets/vendor/dropzone/dropzone.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jeditable/1.7.3/jquery.jeditable.min.js"></script>
 
 <div class="intro-y box">
     <form class="p-5" id="newObjets">

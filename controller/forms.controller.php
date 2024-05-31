@@ -149,5 +149,7 @@ class FormsController {
     static public function ctrDeleteArea($idArea){
         return FormsModel::mdlDeleteArea($idArea);
     }
-
+    static public function ctrUpdateObject($idObject, $name, $value) {
+        return FormsModel::mdlUpdateObject($idObject, $name, $value);
+    }
 }
