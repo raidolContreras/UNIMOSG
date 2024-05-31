@@ -172,7 +172,10 @@ function agregarObjetos(idArea) {
                             </center>`;
                 }
             },
-        ]
+        ],
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        }
     });
 
     // Hacer los campos editables una vez que la tabla ha sido dibujada

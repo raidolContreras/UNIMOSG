@@ -24,4 +24,14 @@
     </form>
 </div>
 
+<div>
+    Para editar un objeto, sigue estos pasos:
+    <ol>
+        <li>Haz clic en el objeto de la lista que deseas editar.</li>
+        <li>Modifica el nombre del objeto en el campo de texto que aparece.</li>
+        <li>Haz clic en el botón verde (✔) para guardar los cambios o en el botón rojo (✖) para cancelar.</li>
+    </ol>
+</div>
+
+
 <script src="view/assets/js/ajax/addObjects.js"></script>

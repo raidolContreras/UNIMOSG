@@ -658,6 +658,45 @@ class FormsModel
 			throw $e;
 		}
 	}
+	
+	static public function mdlGetDaySupervision($idSupervisionDays)
+	{
+		try {
+			$pdo = Conexion::conectar();
+			if ($idSupervisionDays == null) {
+				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.day
+							FROM servicios_supervision_days sd
+								LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+								LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
+								LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+								LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor;';
+				$stmt = $pdo->prepare($sql);
+				if ($stmt->execute() && $stmt->rowCount() > 0) {
+					return $stmt->fetchAll();
+				} else {
+					return false;
+				}
+			} else {
+				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.*
+						FROM servicios_supervision_days sd
+							LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+							LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
+							LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+							LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor
+						WHERE sd.idSupervisionDays = :idSupervisionDays';
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindParam(':idSupervisionDays', $idSupervisionDays, PDO::PARAM_INT);
+				if ($stmt->execute() && $stmt->rowCount() > 0) {
+					return $stmt->fetch();
+				} else {
+					return false;
+				}
+			}
+		} catch (PDOException $e) {
+			error_log("Error al buscar el evento: " . $e->getMessage());
+			throw $e;
+		}
+	}
 
 	static public function mdlAddPlans($data)
 	{
@@ -1141,6 +1180,27 @@ class FormsModel
             }
         } catch (PDOException $e) {
             error_log("Error al actualizar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlAddDaySupervision($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$sql = "INSERT INTO servicios_supervision_days(idSchool, idZone, idArea, day, idSupervisor) VALUES (:idSchool, :idZone, :idArea, :day, :idSupervisor)";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(":idSchool", $data['idSchool'], PDO::PARAM_INT);
+			$stmt->bindParam(":idZone", $data['idZone'], PDO::PARAM_INT);
+			$stmt->bindParam(":idArea", $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(":day", $data['day'], PDO::PARAM_STR);
+			$stmt->bindParam(":idSupervisor", $data['idSupervisor'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return $pdo->lastInsertId();
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al agregar el día de supervisión: ". $e->getMessage());
             throw $e;
         }
 	}

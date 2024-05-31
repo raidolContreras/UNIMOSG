@@ -67,6 +67,7 @@ $(document).ready(function(){
             closeMenu('modalObjects');
             myDropzone.removeAllFiles();
             showAlertBootstrap('Éxito', 'Archivo cargado excitosamente.');
+            $('#objects').DataTable().ajac().reload();
         } else {
             myDropzone.removeAllFiles();
             showAlertBootstrap('¡Alerta!', 'El archivo no se pudo cargar, intentalo más tarde.');

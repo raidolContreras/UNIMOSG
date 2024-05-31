@@ -129,6 +129,15 @@ class FormsController {
         return FormsController::ctrGetPlans($response);
     }
 
+    static public function ctrAddDaySupervision($data){
+        $response = FormsModel::mdlAddDaySupervision($data);
+        return FormsController::ctrGetDaySupervision($response);
+    }
+
+    static public function ctrGetDaySupervision($idSupervisionDays) {
+        return FormsModel::mdlGetDaySupervision($idSupervisionDays);
+    }
+
     static public function ctrDeletePlans($idPlan){
         return FormsModel::mdlDeletePlans($idPlan);
     }

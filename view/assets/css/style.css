@@ -15208,6 +15208,7 @@ body {
 }
 
 .modal-collapse {
+  overflow-y: auto;
   position: fixed;
   top: 0;
   right: 0;
@@ -15557,8 +15558,22 @@ body {
 }
 
 .table {
-  left: -5px;
+  margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
   position: relative;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.42857143;
+  background-clip: padding-box;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .button-custom {
@@ -15820,4 +15835,44 @@ body {
 
 .event-button {
   overflow: hidden;
+}
+
+.btn-card {
+  cursor: pointer;
+  text-decoration: none !important;
+  border-radius: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-width: 1px;
+  border-color: transparent;
+  border: none !important;
+  top: 0;
+  position: relative;
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease;
+}
+
+.btn-card:hover{
+  background-color: #CECECE !important;
+  border-color: #CECECE !important;
+  transform: translateY(-0.25em);
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-card:active{
+  transform: translateY(-0.25em);
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-card-header {
+    padding: 5px;
+    font-size: 1.25rem;
+    border-top-left-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
