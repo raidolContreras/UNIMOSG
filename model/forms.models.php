@@ -885,7 +885,7 @@ class FormsModel
 					<div class="section">';
 					foreach ($responses as $response) {
 						$email .= '
-							<h2>' . htmlspecialchars($response['area']) . '</h2>
+							<h2>' . htmlspecialchars($response['area']) . ' - ' . htmlspecialchars($response['nameZone']) . ' - ' . htmlspecialchars($response['nameArea']) . '</h2>
 							<ul class="task-list">';
 							$email .= '
 								<li>
@@ -1127,8 +1127,8 @@ class FormsModel
 		try {
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("	SELECT 
-										i.idIncidente, i.dateCreated AS fecha, i.description, i.importancia, o.nameObject, a.nameArea AS area, z.nameZone,
-										GROUP_CONCAT(u.email SEPARATOR ', ') AS emails
+										i.idIncidente, i.incidente_idObject, i.dateCreated AS fecha, i.description, i.importancia, o.nameObject, a.nameArea AS area, z.nameZone,
+										GROUP_CONCAT(u.email SEPARATOR ', ') AS emails, s.nameSchool
 									FROM 
 										servicios_incidentes i
 										LEFT JOIN 
@@ -1138,7 +1138,9 @@ class FormsModel
 										LEFT JOIN 
 											servicios_zones z ON z.idZone = a.area_idZones
 										LEFT JOIN 
-										servicios_users u ON u.level = 1
+											servicios_schools s ON s.idSchool = z.zone_idSchool
+										LEFT JOIN 
+											servicios_users u ON u.level = 1
 									WHERE i.status = 0
 									GROUP BY 
 									i.idIncidente;
