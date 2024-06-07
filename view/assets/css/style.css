@@ -15346,7 +15346,7 @@ body {
 /* Ajustes para el formulario dentro del modal */
 .form-control {
   margin-bottom: 1rem;
-  background-color: #EFEFEF;
+  /* background-color: #EFEFEF; */
   padding: 5px 15px;
   border-radius: 20px;
   color: #ABABAB;

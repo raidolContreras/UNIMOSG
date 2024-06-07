@@ -885,7 +885,7 @@ class FormsModel
 					<div class="section">';
 					foreach ($responses as $response) {
 						$email .= '
-							<h2>' . htmlspecialchars($response['area']) . ' - ' . htmlspecialchars($response['nameZone']) . ' - ' . htmlspecialchars($response['nameArea']) . '</h2>
+							<h2>' . htmlspecialchars($response['nameSchool']) . ' - ' . htmlspecialchars($response['nameZone']) . ' - ' . htmlspecialchars($response['area']) . '</h2>
 							<ul class="task-list">';
 							$email .= '
 								<li>
