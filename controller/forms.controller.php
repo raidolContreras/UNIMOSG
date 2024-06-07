@@ -161,4 +161,7 @@ class FormsController {
     static public function ctrUpdateObject($idObject, $name, $value) {
         return FormsModel::mdlUpdateObject($idObject, $name, $value);
     }
+    static public function ctrDeleteSupervisionDays($idSupervisionDays) {
+        return FormsModel::mdlDeleteSupervisionDays($idSupervisionDays);
+    }
 }

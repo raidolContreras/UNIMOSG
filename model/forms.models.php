@@ -664,7 +664,7 @@ class FormsModel
 		try {
 			$pdo = Conexion::conectar();
 			if ($idSupervisionDays == null) {
-				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.day
+				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.day, sd.idSupervisionDays
 							FROM servicios_supervision_days sd
 								LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
 								LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
@@ -1203,6 +1203,22 @@ class FormsModel
             }
         } catch (PDOException $e) {
             error_log("Error al agregar el día de supervisión: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlDeleteSupervisionDays($idSupervisionDays) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("DELETE FROM servicios_supervision_days WHERE idSupervisionDays = :idSupervisionDays");
+            $stmt->bindParam(":idSupervisionDays", $idSupervisionDays, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar el día de supervisión: ". $e->getMessage());
             throw $e;
         }
 	}
