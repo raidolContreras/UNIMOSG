@@ -164,4 +164,8 @@ class FormsController {
     static public function ctrDeleteSupervisionDays($idSupervisionDays) {
         return FormsModel::mdlDeleteSupervisionDays($idSupervisionDays);
     }
+
+    static public function ctrEstadisticas() {
+        return FormsModel::mdlEstadisticas();
+    }
 }

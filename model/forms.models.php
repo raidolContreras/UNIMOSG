@@ -1222,4 +1222,22 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlEstadisticas() {
+		$pdo = Conexion::conectar();
+		$sql = "SELECT 
+					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 0 THEN 1 ELSE 0 END) AS Urgente,
+					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 0 THEN 1 ELSE 0 END) AS Pendiente,
+					SUM(CASE WHEN i.importancia = 'Inmediato' AND i.status = 0 THEN 1 ELSE 0 END) AS Inmediato,
+					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 1 THEN 1 ELSE 0 END) AS UrgenteComplete,
+					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 1 THEN 1 ELSE 0 END) AS PendienteComplete,
+					SUM(CASE WHEN i.importancia = 'Inmediato' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete
+				FROM 
+					servicios_incidentes i;";
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute();
+		$return = $stmt->fetch(PDO::FETCH_ASSOC);
+		$stmt = null;
+		return $return;
+	}
 }

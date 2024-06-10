@@ -15,6 +15,16 @@
     </div>
 </div>
 <?php elseif($_SESSION['level']== 1): ?>
+    <div class="row justify-content-center">
+        <div class="col-8 card p-3">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="view/assets/js/ajax/principal/getStats.js"></script>
+
 <?php else: 
     include 'view/pages/principal/general/lista.php';
 ?>
