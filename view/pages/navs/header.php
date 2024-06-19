@@ -58,6 +58,23 @@
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
+					<script>		
+						function sendNotify() {
+							$.ajax({
+								url: 'controller/ajax/sendNotify.php',
+								type: 'POST',
+								success: function(response) {
+									console.log('Notificación enviada:', response);
+								},
+								error: function(error) {
+									console.error('Error al enviar la notificación:', error);
+								}
+							});
+						}
+
+						// Ejecutar sendNotify cada 10 segundos
+						setInterval(sendNotify, 10000);
+					</script>
 				<?php else: ?>
 					<a href="lista" class="mt-3 btn btn-success">
 						Supervisión
