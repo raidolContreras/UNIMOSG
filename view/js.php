@@ -117,6 +117,23 @@ function showAlertBootstrap1(title, message, id) {
     $('.modal-footer-extra').html('<button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="showModal(\'' + id + '\')">Aceptar</button>');
     $('#alertModal').modal('show');
 }
+
+function sendNotify() {
+    $.ajax({
+        url: 'controller/ajax/sendNotify.php',
+        type: 'POST',
+        success: function(response) {
+            console.log('Notificación enviada:', response);
+        },
+        error: function(error) {
+            console.error('Error al enviar la notificación:', error);
+        }
+    });
+}
+
+// Ejecutar sendNotify cada 10 segundos
+setInterval(sendNotify, 10000);
+
 </script>
 
 <!-- Bootstrap Modal for Alerts -->

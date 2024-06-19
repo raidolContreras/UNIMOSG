@@ -1240,4 +1240,34 @@ class FormsModel
 		$stmt = null;
 		return $return;
 	}
+
+	static public function mdlSendNotify() {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_notify WHERE status = 0");
+			$stmt->execute();
+			$return = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$stmt = null;
+			return $return;
+        } catch (PDOException $e) {
+            error_log("Error al enviar notificaciones: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateNotify($idNotify) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_notify SET status = 1 WHERE idNotify = :idNotify");
+            $stmt->bindParam(":idNotify", $idNotify, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la notificación: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }

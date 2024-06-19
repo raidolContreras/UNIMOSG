@@ -168,4 +168,12 @@ class FormsController {
     static public function ctrEstadisticas() {
         return FormsModel::mdlEstadisticas();
     }
+
+    static public function ctrSendNotify() {
+        return FormsModel::mdlSendNotify();
+    }
+
+    static public function ctrUpdateNotify($idNotify) {
+        return FormsModel::mdlUpdateNotify($idNotify);
+    }
 }
