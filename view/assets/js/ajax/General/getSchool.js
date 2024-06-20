@@ -1,7 +1,9 @@
 $(document).ready(function () {
     
     $('#results').DataTable({});
+
     var school = $('#school').val();
+
     $.ajax ({
         url: 'controller/ajax/getSchools.php',
         dataSrc: '',
@@ -51,7 +53,7 @@ function solicitud(school, importancia){
                     // Utilizando el contador proporcionado por DataTables
                     return `
                     <center class="table-columns">
-                        ${data.nameArea} - ${data.nameZone} - ${data.nameObject}
+                        ${data.name}
                     </center>
                     `;
                 }

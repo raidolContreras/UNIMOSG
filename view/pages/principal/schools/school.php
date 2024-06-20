@@ -1,19 +1,32 @@
+    <?php
+        $idSchool = (isset($_GET['idSchool']))  ? $_GET['idSchool'] : 0;
+    ?>
     <div class="card-custom">
         <div class="card-header-custom">
-            <strong id='nameSchool'></strong>
+            <?php if ($idSchool != 0):?>
+                <strong id='nameSchool'></strong>
+            <?php else: ?>
+                <strong>Universidad Montrer</strong>
+            <?php endif ?>
         </div>
+        <?php if ($idSchool == 0):?>
+        
+            <div class="schoolsData">
+            </div>
+        
+        <?php endif ?>
     </div>
 
     <div class="card">
         <div class="row justify-content-center p-3">
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Pendiente')" class="btn btn-success w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Pendiente')" class="btn btn-success w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $_GET['idSchool'] ?>, 'Inmediata')" class="btn btn-success w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Inmediata')" class="btn btn-success w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
         </div>
     </div>
@@ -119,6 +132,6 @@
     </div>
 </div>
 
-    <input type="hidden" id="school" value="<?php echo $_GET['idSchool'] ?>">
+    <input type="hidden" id="school" value="<?php echo $idSchool ?>">
 
     <script src="view/assets/js/ajax/General/getSchool.js"></script>
