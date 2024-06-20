@@ -1228,10 +1228,10 @@ class FormsModel
 		$sql = "SELECT 
 					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 0 THEN 1 ELSE 0 END) AS Urgente,
 					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 0 THEN 1 ELSE 0 END) AS Pendiente,
-					SUM(CASE WHEN i.importancia = 'Inmediato' AND i.status = 0 THEN 1 ELSE 0 END) AS Inmediato,
+					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 0 THEN 1 ELSE 0 END) AS Inmediato,
 					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 1 THEN 1 ELSE 0 END) AS UrgenteComplete,
 					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 1 THEN 1 ELSE 0 END) AS PendienteComplete,
-					SUM(CASE WHEN i.importancia = 'Inmediato' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete
+					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete
 				FROM 
 					servicios_incidentes i;";
 		$stmt = $pdo->prepare($sql);
@@ -1285,7 +1285,7 @@ class FormsModel
             } else {
                 return 'error';
             }
-			
+
         } catch (PDOException $e) {
             error_log("Error al actualizar la notificación: ". $e->getMessage());
             throw $e;
