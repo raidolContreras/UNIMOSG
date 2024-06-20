@@ -24,36 +24,20 @@
 				<span class="navbar-toggler-icon two"></span>
 				<span class="navbar-toggler-icon three"></span>
 			</button>
-			<div class="navbar-collapse" id="navbarNav">
-				<span class="close-btn" onclick="closeMenu('navbarNav')">&times;</span>
-				<ul class="navbar-nav">
-					<li class="nav-item mt-5">
-						<?php echo $_SESSION['levelName'] ?>
-						<h5>
-							<?php echo $_SESSION['name'] ?>
-						</h5>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link px-3" href="" onclick="logout()">
-							<i class="fas fa-sign-out-alt"></i> Cerrar sesión
-						</a>
-					</li>
-				</ul>
-			</div>
 		</div>
 		<div class="container navbar-hidden">
 			<div id="schools" style="padding-right: 0 !important;">
-				<a href="./" class="mt-3 btn btn-success">
+				<a href="./" class="mt-3 menu-top py-2">
 				<i class="fa-duotone fa-house"></i> Tablero
 				</a>
 				<?php if ($_SESSION['level'] == 0): ?>
-					<a href="users" class="mt-3 btn btn-success">
+					<a href="users" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-users"></i> Usuarios
 					</a>
-					<a href="schools" class="mt-3 btn btn-success">
+					<a href="schools" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-school"></i> Escuelas
 					</a>
-					<a href="zones" class="mt-3 btn btn-success">
+					<a href="zones" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-location-dot"></i> Zonas
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
@@ -77,4 +61,25 @@
 			</div>
 		</div>
 	</nav>
+	
+	<div class="navbar-collapse" id="navbarNav">
+		<span class="close-btn" onclick="closeMenu('navbarNav')">&times;</span>
+			<?php if ($_SESSION['level'] != 2):?>
+				<ul class="navbar-nav">
+			<?php else: ?>
+				<ul class="navbar-nav mt-5">
+			<?php endif ?>
+			<li class="nav-item mt-5">
+				<?php echo $_SESSION['levelName'] ?>
+				<h5>
+					<?php echo $_SESSION['name'] ?>
+				</h5>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link px-3" href="" onclick="logout()">
+					<i class="fas fa-sign-out-alt"></i> Cerrar sesión
+				</a>
+			</li>
+		</ul>
+	</div>
 </header>

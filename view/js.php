@@ -5,12 +5,37 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
 
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
     const navbarToggler = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.getElementById('navbarNav');
+
     navbarToggler.addEventListener('click', function() {
+        const isActive = navbarToggler.classList.contains('active');
+        
         navbarToggler.classList.toggle('active');
         navbarCollapse.classList.toggle('show');
+        
+        if (isActive) {
+            // Si ya está activo, removemos el backdrop
+            const existingBackdrop = document.querySelector('.modal-backdrop');
+            if (existingBackdrop) {
+                existingBackdrop.classList.remove('show');
+                existingBackdrop.remove();
+            }
+        } else {
+            // Si no está activo, creamos y agregamos el backdrop
+            var modalBackdrop = document.createElement('div');
+            modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');
+            document.body.appendChild(modalBackdrop);
+
+            // Agregar el evento de clic al backdrop
+            modalBackdrop.addEventListener('click', function() {
+                navbarToggler.classList.remove('active');
+                navbarCollapse.classList.remove('show');
+                this.classList.remove('show');
+                this.remove();
+            });
+        }
     });
 
     // Cerrar el menú al hacer clic en un enlace del menú
@@ -18,13 +43,19 @@ $(document).ready(function() {
         link.addEventListener('click', () => {
             navbarToggler.classList.remove('active');
             navbarCollapse.classList.remove('show');
+
+            // Remover el backdrop si existe
+            const existingBackdrop = document.querySelector('.modal-backdrop');
+            if (existingBackdrop) {
+                existingBackdrop.classList.remove('show');
+                existingBackdrop.remove();
+            }
         });
     });
-    
-    document.querySelector('.navbar-collapse').addEventListener('click', function() {
-      this.classList.toggle('active');
-    });
 
+    document.querySelector('.navbar-collapse').addEventListener('click', function() {
+        this.classList.toggle('active');
+    });
 });
 
 function logout() {
