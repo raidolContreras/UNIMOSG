@@ -1270,4 +1270,25 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlNewNotify($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$sql = "INSERT INTO servicios_notify(title, body, url) VALUES (:title, :body, :url)";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(":title", $data['title'], PDO::PARAM_STR);
+			$stmt->bindParam(":body", $data['body'], PDO::PARAM_STR);
+			$stmt->bindParam(":url", $data['url'], PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+			
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la notificación: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }

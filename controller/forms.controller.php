@@ -176,4 +176,8 @@ class FormsController {
     static public function ctrUpdateNotify($idNotify) {
         return FormsModel::mdlUpdateNotify($idNotify);
     }
+
+    static public function ctrNewNotify($data) {
+        return FormsModel::mdlNewNotify($data);
+    }
 }

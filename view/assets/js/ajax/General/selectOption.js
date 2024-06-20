@@ -1,6 +1,7 @@
 var schoolName = '';
 var zoneName = '';
 var areaName = '';
+var idSchoolSend = '';
 
 $(document).ready(function() {
     var html = '';
@@ -34,6 +35,7 @@ function searchZones(idSchool, nameSchool) {
         },
         success: function(data) {
             if (data != false) {
+                idSchoolSend = idSchool;
                 schoolName = nameSchool;
                 data.forEach(zone => {
                     html += `
@@ -182,7 +184,11 @@ function sendForm(idObject){
             idObject: idObject,
             estado: estado,
             description: description,
-            importancia: importancia
+            importancia: importancia,
+            schoolName: schoolName,
+            zoneName: zoneName,
+            areaName: areaName,
+            idSchool: idSchoolSend
         },
         success: function(data) {
             if (data == 'ok') {
