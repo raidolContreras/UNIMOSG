@@ -1,3 +1,7 @@
+var schoolName = '';
+var zoneName = '';
+var areaName = '';
+
 $(document).ready(function() {
     var html = '';
     $.ajax({
@@ -30,6 +34,7 @@ function searchZones(idSchool, nameSchool) {
         },
         success: function(data) {
             if (data != false) {
+                schoolName = nameSchool;
                 data.forEach(zone => {
                     html += `
                     <li class="list-group-item group" onclick="searchAreas(${zone.idZone}, '${zone.nameZone}')">
@@ -55,8 +60,8 @@ function searchZones(idSchool, nameSchool) {
     });
 }
 
-function searchAreas(idZone, zoneName) {
-    $('.zoneName').html(' - '+zoneName);
+function searchAreas(idZone, nameZone) {
+    $('.zoneName').html(' - '+nameZone);
     var html = '';
     $.ajax({
         url: 'controller/ajax/getAreas.php',
@@ -69,8 +74,9 @@ function searchAreas(idZone, zoneName) {
             
             if (data != false) {
                 data.forEach(zone => {
+                    zoneName = nameZone;
                     html += `
-                    <li class="list-group-item group" onclick="showForms(${zone.idArea})">
+                    <li class="list-group-item group" onclick="showForms(${zone.idArea}, '${zone.nameArea}')">
                         <div class="d-flex justify-content-between align-items-center">
                             ${zone.nameArea} <i class="fa-duotone fa-chevron-right"></i>
                         </div>
@@ -89,7 +95,7 @@ function searchAreas(idZone, zoneName) {
     });
 }
 
-function showForms(idArea) {
+function showForms(idArea, nameArea) {
     var html = '';
     $('#modalList').modal('show');
 
@@ -101,6 +107,7 @@ function showForms(idArea) {
             idArea: idArea
         },
         success: function(data) {
+            areaName = nameArea;
             if (data != false) {
                 data.forEach(object => {
                         html += `
@@ -131,7 +138,7 @@ function showForms(idArea) {
                 });
             }
             $('.tbodyObjects').html(html);
-            $('#modalListLabel').html(data[0].nameSchool + ' - ' + data[0].nameZone + ' - ' + data[0].nameArea);
+            $('#modalListLabel').html(schoolName + ' - ' + zoneName + ' - ' + areaName);
             // Inicializa el DataTable
             $('#objects').DataTable();
 
