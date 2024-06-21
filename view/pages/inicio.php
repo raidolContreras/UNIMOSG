@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-3">
         <div class="col-8 card p-3">
             <canvas id="myChart"></canvas>
         </div>
