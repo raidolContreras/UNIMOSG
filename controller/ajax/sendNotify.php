@@ -8,6 +8,6 @@
     foreach ($notifys as $notify) {
         $response = Notify::sendNotify($notify);
         if ($response == 'ok') {
-            FormsController::ctrUpdateNotify($notify['idNotify']);
+            echo FormsController::ctrUpdateNotify($notify['idNotify']);
         }
     }
