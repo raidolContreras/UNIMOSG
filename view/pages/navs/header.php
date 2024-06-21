@@ -68,6 +68,11 @@
 							// Solicitar permiso para notificaciones
 							$('#allowNotifications').on('click', function() {
 								Notification.requestPermission().then(function(permission) {
+									if (permission === 'granted') {
+										console.log('Gracias por permitir las notificaciones.');
+									} else if (permission === 'denied') {
+										console.log('Ha bloqueado las notificaciones para este sitio.');
+									}
 									$('#notificationModal').modal('hide');
 								});
 							});
