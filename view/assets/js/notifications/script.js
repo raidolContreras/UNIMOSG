@@ -2,7 +2,7 @@ if ('serviceWorker' in navigator) {
     console.log('Service Worker es soportado.');
     if ('PushManager' in window) {
         console.log('Push Manager es soportado.');
-        navigator.serviceWorker.register('./service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
             .then(function(swReg) {
                 console.log('Service Worker registrado:', swReg);
 
@@ -40,7 +40,7 @@ function subscribeUser(swReg) {
     })
     .then(function(subscription) {
         // Enviar la suscripción al servidor
-        return fetch('./subscribe.php', {
+        return fetch('/subscribe.php', {
             method: 'POST',
             body: JSON.stringify(subscription),
             headers: {
