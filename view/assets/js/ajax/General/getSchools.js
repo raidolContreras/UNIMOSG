@@ -16,6 +16,9 @@ $(document).ready(function () {
                 </a>
                 <a href="school" class="mt-3 menu-top py-2">
                     <div class="d-flex align-items-center">
+                        <div class="col-2">
+                            <i class="fa-duotone fa-cabinet-filing"></i>
+                        </div>
                         <div style="font-size: 14px;">Registro de incidentes</div>
                     </div>
                 </a>
@@ -40,6 +43,9 @@ $(document).ready(function () {
                     </a>
                     <a href="school" class="mt-3 mx-1 menu-top py-2 col-3">
                         <div class="d-flex align-items-center">
+                            <div class="col-2">
+                                <i class="fa-duotone fa-cabinet-filing"></i>
+                            </div>
                             <div style="font-size: 14px;">Registro de incidentes</div>
                         </div>
                     </a>
