@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/view/assets/vendor/autoload.php';
-include 'vapid_keys.php'
+include 'vapid_keys.php';
 
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
