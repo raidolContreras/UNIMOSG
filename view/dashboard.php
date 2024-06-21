@@ -16,11 +16,11 @@
 ?>
 
 <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="notificationModalLabel">Permitir Notificaciones</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn btn-danger" id="denegateNotify" onclick="closeModal('notificationModal')">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -28,7 +28,7 @@
                 Este sitio web desea enviarle notificaciones. ¿Desea permitirlas?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="denyNotifications" onclick="closeModal('notificationModal')">Denegar</button>
                 <button type="button" class="btn btn-success" id="allowNotifications">Permitir</button>
             </div>
         </div>
@@ -136,26 +136,9 @@
         loaderSection.classList.add('loaded');
     }
 
-    $(document).ready(function() {
-        // Verificar el permiso de notificaciones
-        if (Notification.permission === 'default') {
-            $('#notificationModal').modal('show');
-        } else if (Notification.permission === 'denied') {
-            alert('Ha bloqueado las notificaciones para este sitio. Por favor, habilítelas en la configuración de su navegador.');
-        }
-
-        // Solicitar permiso para notificaciones
-        $('#allowNotifications').on('click', function() {
-            Notification.requestPermission().then(function(permission) {
-                if (permission === 'granted') {
-                    alert('Gracias por permitir las notificaciones.');
-                } else {
-                    alert('Ha bloqueado las notificaciones para este sitio.');
-                }
-                $('#notificationModal').modal('hide');
-            });
-        });
-    });
+    function closeModal(modal) {
+        $('#' + modal).modal('hide');
+    }
 
 </script>
 

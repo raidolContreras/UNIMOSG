@@ -42,7 +42,7 @@
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
-					<script>		
+					<script>
 						function sendNotify() {
 							$.ajax({
 								url: 'controller/ajax/sendNotify.php',
@@ -50,8 +50,40 @@
 							});
 						}
 
-						// Ejecutar sendNotify cada 10 segundos
-						setInterval(sendNotify, 10000);
+						if (Notification.permission === 'granted'){
+							// Ejecutar sendNotify cada 10 segundos
+							setInterval(sendNotify, 10000);
+						}
+						
+						$(document).ready(function() {
+							// Verificar el permiso de notificaciones
+							<?php
+								if ($_SESSION['notify'] == 0) {
+									echo  "if (Notification.permission === 'default') {
+												$('#notificationModal').modal('show');
+											}";
+								}
+							?>
+
+							// Solicitar permiso para notificaciones
+							$('#allowNotifications').on('click', function() {
+								Notification.requestPermission().then(function(permission) {
+									$('#notificationModal').modal('hide');
+								});
+							});
+
+							$('#denegateNotify').on('click', function() {
+								<?php
+									$_SESSION['notify'] = 1;
+								?>
+							});
+
+							$('#denyNotifications').on('click', function() {
+								<?php
+									$_SESSION['notify'] = 1;
+								?>
+							});
+						});
 					</script>
 				<?php else: ?>
 					<a href="lista" class="mt-3 btn btn-success">
