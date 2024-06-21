@@ -28,8 +28,8 @@
                 Este sitio web desea enviarle notificaciones. ¿Desea permitirlas?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="allowNotifications">Permitir</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="allowNotifications">Permitir</button>
             </div>
         </div>
     </div>
