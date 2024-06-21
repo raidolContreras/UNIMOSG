@@ -42,54 +42,6 @@
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
-					<script>
-						function sendNotify() {
-							$.ajax({
-								url: 'controller/ajax/sendNotify.php',
-								type: 'POST'
-							});
-						}
-
-						if (Notification.permission === 'granted'){
-							// Ejecutar sendNotify cada 10 segundos
-							setInterval(sendNotify, 10000);
-						}
-						
-						$(document).ready(function() {
-							// Verificar el permiso de notificaciones
-							<?php
-								if ($_SESSION['notify'] == 0) {
-									echo  "if (Notification.permission === 'default') {
-												$('#notificationModal').modal('show');
-											}";
-								}
-							?>
-
-							// Solicitar permiso para notificaciones
-							$('#allowNotifications').on('click', function() {
-								Notification.requestPermission().then(function(permission) {
-									if (permission === 'granted') {
-										console.log('Gracias por permitir las notificaciones.');
-									} else if (permission === 'denied') {
-										console.log('Ha bloqueado las notificaciones para este sitio.');
-									}
-									$('#notificationModal').modal('hide');
-								});
-							});
-
-							$('#denegateNotify').on('click', function() {
-								<?php
-									$_SESSION['notify'] = 1;
-								?>
-							});
-
-							$('#denyNotifications').on('click', function() {
-								<?php
-									$_SESSION['notify'] = 1;
-								?>
-							});
-						});
-					</script>
 				<?php else: ?>
 					<a href="lista" class="mt-3 btn btn-success">
 						Supervisión
