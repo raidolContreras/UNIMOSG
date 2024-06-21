@@ -15,6 +15,26 @@
     include 'whiteList.php';
 ?>
 
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Permitir Notificaciones</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Este sitio web desea enviarle notificaciones. ¿Desea permitirlas?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="allowNotifications">Permitir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="view/assets/js/bootstrap.bundle.min.js"></script>
 <script>
 
@@ -115,6 +135,27 @@
         let loaderSection = document.querySelector('.loader-section');
         loaderSection.classList.add('loaded');
     }
+
+    $(document).ready(function() {
+        // Verificar el permiso de notificaciones
+        if (Notification.permission === 'default') {
+            $('#notificationModal').modal('show');
+        } else if (Notification.permission === 'denied') {
+            alert('Ha bloqueado las notificaciones para este sitio. Por favor, habilítelas en la configuración de su navegador.');
+        }
+
+        // Solicitar permiso para notificaciones
+        $('#allowNotifications').on('click', function() {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    alert('Gracias por permitir las notificaciones.');
+                } else {
+                    alert('Ha bloqueado las notificaciones para este sitio.');
+                }
+                $('#notificationModal').modal('hide');
+            });
+        });
+    });
 
 </script>
 
