@@ -5,5 +5,13 @@ use Minishlink\WebPush\VAPID;
 
 $keys = VAPID::createVapidKeys();
 
-echo "Clave Pública: " . $keys['publicKey'] . "\n";
-echo "Clave Privada: " . $keys['privateKey'] . "\n";
+$publicKey = $keys['publicKey'];
+$privateKey = $keys['privateKey'];
+
+$fileContent = "<?php\n";
+$fileContent .= "\$publicKey = '" . $publicKey . "';\n";
+$fileContent .= "\$privateKey = '" . $privateKey . "';\n";
+
+file_put_contents('vapid_keys.php', $fileContent);
+
+echo "Archivo vapid_keys.php creado con las claves.\n";
