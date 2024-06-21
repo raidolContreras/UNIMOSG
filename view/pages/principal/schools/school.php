@@ -28,6 +28,9 @@
             <div class="col-12 col-md-4 my-3">
                 <button onclick="solicitud(<?php echo $idSchool ?>, 'Inmediata')" class="btn btn-success w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
+            <div class="col-12 col-md-4 my-3">
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Completado')" class="btn btn-success w-100">Incidencias completadas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+            </div>
         </div>
     </div>
 

@@ -63,7 +63,7 @@
 	</nav>
 	
 	<div class="navbar-collapse" id="navbarNav">
-		<span class="close-btn" onclick="closeMenu('navbarNav')">&times;</span>
+		<span class="close-btn" onclick="closeMenu('navbarNav')"></span>
 			<?php if ($_SESSION['level'] != 2):?>
 				<ul class="navbar-nav">
 			<?php else: ?>

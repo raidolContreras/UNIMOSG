@@ -15,7 +15,7 @@
         $data = array(
             'title' => 'Nueva incidencia (' . mb_strtoupper($importancia) . ')',
             'body' => 'Hay una nueva incidencia en '. $schoolName,
-            'url' => 'http://127.0.0.1/UNIMOSG/school&idSchool=' . $idSchool
+            'url' => 'https://unimosg.contreras-flota.click/school&idSchool=' . $idSchool
         );
         FormsController::ctrNewNotify($data);
     }
