@@ -537,31 +537,62 @@ class FormsModel
         }
 	}
 
-	static public function mdlSearchSolicitudes($idSchool, $importancia)
-	{
+	static public function mdlSearchSolicitudes($idSchool, $importancia) {
 		try {
 			$pdo = Conexion::conectar();
-			if ($idSchool != 0){
-				$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
-						FROM servicios_incidentes i 
-							LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
-							LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
-							LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
-							LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-						WHERE i.status = 0 AND s.idSchool = :idSchool AND i.importancia = :importancia;";
+
+			// Verificar si la importancia es "Completado"
+			$completado = ($importancia == 'Completado') ? true : false;
+
+			if ($idSchool != 0) {
+				if ($completado) {
+					// Importancia es "Completado", buscar status igual a 1
+					$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
+							FROM servicios_incidentes i 
+								LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+							WHERE i.status = 1 AND s.idSchool = :idSchool;";
+				} else {
+					// Importancia no es "Completado", usar importancia proporcionada
+					$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
+							FROM servicios_incidentes i 
+								LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+							WHERE i.status = 0 AND s.idSchool = :idSchool AND i.importancia = :importancia;";
+				}
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
 			} else {
-				$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
-                        FROM servicios_incidentes i 
-                            LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
-                            LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
-                            LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
-                            LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-                        WHERE i.status = 0 AND i.importancia = :importancia;";
+				if ($completado) {
+					// Importancia es "Completado", buscar status igual a 1
+					$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
+							FROM servicios_incidentes i 
+								LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+							WHERE i.status = 1;";
+				} else {
+					// Importancia no es "Completado", usar importancia proporcionada
+					$sql = "SELECT i.*, o.nameObject, o.idObject, CONCAT(s.nameSchool, ' - ', z.nameZone, ' - ', a.nameArea) AS name, a.idArea, z.idZone, s.idSchool
+							FROM servicios_incidentes i 
+								LEFT JOIN servicios_objects o ON o.idObject = i.incidente_idObject
+								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
+								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+							WHERE i.status = 0 AND i.importancia = :importancia;";
+				}
 				$stmt = $pdo->prepare($sql);
 			}
-			$stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
+
+			if (!$completado) {
+				$stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
+			}
+
 			if ($stmt->execute() && $stmt->rowCount() > 0) {
 				return $stmt->fetchAll();
 			} else {
