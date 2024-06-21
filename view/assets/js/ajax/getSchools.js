@@ -21,7 +21,7 @@ $(document).ready(function () {
                 render: function (data) {
                     return `
                     <center class="table-columns school">
-                        <span class="arrow">`+ data.nameSchool + ` <i class="fa-solid fa-angle-right"></i></span>
+                        <span class="arrow">`+ data.nameSchool + `</span>
                     </center>
                     `;
                 }
