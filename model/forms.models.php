@@ -952,11 +952,6 @@ class FormsModel
 
 		// Configuración del correo
 		$mail = new PHPMailer(true);
-		$users = FormsModel::mdlSearchDirector();
-		$emails = '';
-		foreach ($users as $user) {
-            $emails.= $user['email']. ', ';
-        }
 
 		try {
 			// Configuración del servidor SMTP
@@ -970,7 +965,12 @@ class FormsModel
 
 			// Configuración del remitente y destinatario
 			$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
-			$mail->addAddress($emails);
+
+			$users = FormsModel::mdlSearchDirector();
+
+			foreach ($users as $user) {
+				$mail->addAddress($user['email']);
+			}
 
 			// Contenido del correo
 			$mail->isHTML(true);
@@ -1141,11 +1141,6 @@ class FormsModel
 	
 			// Configuración del correo
 			$mail = new PHPMailer(true);
-			$users = FormsModel::mdlSearchDirector();
-			$emails = '';
-			foreach ($users as $user) {
-				$emails.= $user['email']. ', ';
-			}
 
 			try {
 				// Configuración del servidor SMTP
@@ -1159,7 +1154,12 @@ class FormsModel
 	
 				// Configuración del remitente y destinatario
 				$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
-				$mail->addAddress($emails);
+				
+				$users = FormsModel::mdlSearchDirector();
+
+				foreach ($users as $user) {
+					$mail->addAddress($user['email']);
+				}
 	
 				// Contenido del correo
 				$mail->isHTML(true);
