@@ -180,4 +180,8 @@ class FormsController {
     static public function ctrNewNotify($data) {
         return FormsModel::mdlNewNotify($data);
     }
+
+    static public function ctrSearchDirector() {
+        return FormsModel::mdlSearchDirector();
+    }
 }

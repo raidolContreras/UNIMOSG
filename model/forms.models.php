@@ -952,6 +952,11 @@ class FormsModel
 
 		// Configuración del correo
 		$mail = new PHPMailer(true);
+		$users = FormsModel::mdlSearchDirector();
+		$emails = '';
+		foreach ($users as $user) {
+            $emails.= $user['email']. ', ';
+        }
 
 		try {
 			// Configuración del servidor SMTP
@@ -965,7 +970,7 @@ class FormsModel
 
 			// Configuración del remitente y destinatario
 			$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
-			$mail->addAddress('oscarcontrerasf91@gmail.com');
+			$mail->addAddress($emails);
 
 			// Contenido del correo
 			$mail->isHTML(true);
@@ -1136,7 +1141,12 @@ class FormsModel
 	
 			// Configuración del correo
 			$mail = new PHPMailer(true);
-	
+			$users = FormsModel::mdlSearchDirector();
+			$emails = '';
+			foreach ($users as $user) {
+				$emails.= $user['email']. ', ';
+			}
+
 			try {
 				// Configuración del servidor SMTP
 				$mail->isSMTP();
@@ -1149,7 +1159,7 @@ class FormsModel
 	
 				// Configuración del remitente y destinatario
 				$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
-				$mail->addAddress('oscarcontrerasf91@gmail.com');
+				$mail->addAddress($emails);
 	
 				// Contenido del correo
 				$mail->isHTML(true);
@@ -1330,6 +1340,18 @@ class FormsModel
 
         } catch (PDOException $e) {
             error_log("Error al actualizar la notificación: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlSearchDirector() {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_users WHERE level = 1 AND status = 1");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al buscar el director: ". $e->getMessage());
             throw $e;
         }
 	}
