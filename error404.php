@@ -119,6 +119,6 @@
         var errorImage = document.getElementById('errorImage');
         errorImage.src = 'view/assets/images/error404/' + images[randomNumber];
         function home(){
-            window.location.href = 'inicio';
+            window.location.href = '?pagina=inicio';
         }
     </script>

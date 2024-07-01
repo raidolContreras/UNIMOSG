@@ -17,7 +17,7 @@ $(document).ready(function() {
             success: function(response) {
                 // Manejar la respuesta del servidor
                 if (response === 'ok') {
-                    window.location.href = 'inicio'; // Redirigir a la página de inicio de sesión exitoso
+                    window.location.href = '?pagina=inicio'; // Redirigir a la página de inicio de sesión exitoso
                 } else if(response === 'status') {
                     // Si el inicio de sesión falló, mostrar un mensaje de error
                     alert('Cuenta Deshabilitada, consulta con el administrador.');
