@@ -92,6 +92,8 @@ if (!isset($_SESSION['logged'])) {
             }
             break;
         case 'plan':
+            echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
+
             if ($_SESSION['level'] == 0) {
                 includeError404();
             } else {
@@ -99,6 +101,7 @@ if (!isset($_SESSION['logged'])) {
             }
             break;
         case 'planSupervisor':
+			echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
             if ($_SESSION['level'] == 0) {
                 includeError404();
             } else {

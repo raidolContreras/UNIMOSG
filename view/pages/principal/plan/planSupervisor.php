@@ -1,4 +1,3 @@
-<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>
 
 <style>
     
