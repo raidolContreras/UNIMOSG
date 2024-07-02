@@ -956,34 +956,33 @@ class FormsModel
 		try {
 			// Configuración del servidor SMTP
 			$mail->isSMTP();
-			$mail->Host = 'smtp.ionos.com'; // Cambia esto al servidor SMTP de IONOS
+			$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
 			$mail->SMTPAuth = true;
-			$mail->Username = 'no-reply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
+			$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
 			$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-			$mail->Port = 587; // Cambia esto al puerto que estés usando (587 para TLS)
-		
+			$mail->Port = 587;
+
 			// Configuración del remitente y destinatario
-			$mail->setFrom('no-reply@unimontrer.edu.mx', 'UNIMO');
-		
+			$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
+
 			$users = FormsModel::mdlSearchDirector();
-		
+
 			foreach ($users as $user) {
 				$mail->addAddress($user['email']);
 			}
-		
+
 			// Contenido del correo
 			$mail->isHTML(true);
 			$mail->Subject = 'Reporte diario UNIMO';
 			$mail->Body    = $email;
-			$mail->AltBody = 'Este es el texto alternativo para clientes de correo que no soportan HTML';
-		
+			$mail->AltBody = '';
+
 			$mail->send();
 			return 'El correo ha sido enviado correctamente';
 		} catch (Exception $e) {
 			return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
 		}
-		
 	}
 
 	static public function mdlSendImportantMail($area, $objeto, $estado, $description, $importancia) {
@@ -1146,15 +1145,15 @@ class FormsModel
 			try {
 				// Configuración del servidor SMTP
 				$mail->isSMTP();
-				$mail->Host = 'smtp.ionos.com'; // Cambia esto al servidor SMTP de IONOS
+				$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
 				$mail->SMTPAuth = true;
-				$mail->Username = 'no-reply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
+				$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
 				$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
 				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-				$mail->Port = 587; // Cambia esto al puerto que estés usando (587 para TLS)
-			
+				$mail->Port = 587;
+	
 				// Configuración del remitente y destinatario
-				$mail->setFrom('no-reply@unimontrer.edu.mx', 'UNIMO');
+				$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
 				
 				$users = FormsModel::mdlSearchDirector();
 

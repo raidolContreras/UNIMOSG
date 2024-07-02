@@ -16,7 +16,7 @@ $(document).ready(function(){
                 if (data == 'ok'){
                     $('#edit-1').val('');
                     closeMenu('modalNavUpdate');
-                    $('#schools').DataTable().ajax.reload();
+                    $('#schoolsActive').DataTable().ajax.reload();
                 }
             }
         });   

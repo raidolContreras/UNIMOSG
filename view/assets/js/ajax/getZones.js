@@ -92,7 +92,7 @@ function verArea(idZone) {
     // Crear un formulario oculto
     var form = document.createElement('form');
     form.method = 'post';
-    form.action = 'areas'; // Coloca la URL a la que quieres enviar los datos
+    form.action = '?pagina=areas'; // Coloca la URL a la que quieres enviar los datos
 
     // Crear un input oculto para enviar el valor
     var input = document.createElement('input');

@@ -10,7 +10,7 @@
 							<a class="nav-link menu-top" href="./">Inicio</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link menu-top" href="planSupervisor">Plan de Supervisión</a>
+							<a class="nav-link menu-top" href="?pagina=planSupervisor">Plan de Supervisión</a>
 						</li>
 					</ul>
 				</div>

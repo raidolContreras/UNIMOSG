@@ -31,6 +31,6 @@
     <div id='calendar' class="p-3"></div>
 </div>
 
-<BUTTON onclick="seeInspectionsback()"></BUTTON>
+<BUTTON style="display: none" onclick="seeInspectionsback()"></BUTTON>
     
 <script src="view/assets/js/ajax/General/getPlansSupervisor.js"></script>

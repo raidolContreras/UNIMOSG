@@ -10,8 +10,8 @@ $(document).ready(function(){
             },
             success: function(response){
                 if (response = 'ok') {
-                    closeMenu('modal-collapse');
-                    $('#schools').DataTable().ajax.reload();
+                    closeMenu('modalCollapse');
+                    $('#schoolsActive').DataTable().ajax.reload();
                 }
             },
             error: function(xhr, status, error){
