@@ -75,30 +75,34 @@ class FormsController {
         return FormsModel::mdlSearchAreas($idZone, $item, $value);
     }
 
-    static public function ctrSendForm($idObject, $estado, $description, $importancia){
-        
+    static public function ctrSendForm($idObject, $estado, $description, $importancia, $filesJson){
+        // Busca el objeto y el área asociados
         $object = FormsModel::mdlSearchObject(null, 'idObject', $idObject);
         $area = FormsModel::mdlSearchArea(null, 'idArea', $object['objects_idArea']);
-
-        $informe = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia);
+    
+        // Envía el formulario y obtiene el número del informe
+        $informe = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia, $filesJson);
         $nameSchool = $area['nameSchool'];
-
-        // Extraer los primeros dos caracteres del nombre de la escuela
+    
+        // Extraer las iniciales de la escuela
         $schoolInitials = strtoupper(substr($nameSchool, 0, 1)) . strtoupper(substr($nameSchool, strpos($nameSchool, ' ') + 1, 1));
-
-        // Formatear el valor del informe a tres dígitos con ceros a la izquierda
+    
+        // Formatear el número del informe a tres dígitos
         $informeFormatted = str_pad($informe, 3, '0', STR_PAD_LEFT);
-
-        // Concatenar las iniciales de la escuela con el informe formateado
+    
+        // Crear el código del pedido
         $pedido = $schoolInitials . $informeFormatted;
-
+    
+        // Guardar el pedido en la base de datos
         $response = FormsModel::mdlPedido($pedido, $informe);
-
-        if($importancia != 'Pendiente'){
+    
+        // Enviar un correo si la importancia no es "Pendiente"
+        if ($importancia != 'Pendiente') {
             FormsModel::mdlSendImportantMail($area, $object, $estado, $description, $importancia);
         }
+    
         return $response;
-    }
+    }    
 
     static public function ctrSearchSolicitudes($idSchool,$importancia){
         return FormsModel::mdlSearchSolicitudes($idSchool,$importancia);

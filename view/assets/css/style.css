@@ -2335,6 +2335,7 @@ progress {
   border-bottom-width: 1px;
   -webkit-box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+  font-family: roboto;
 }
 
 .table>tbody {
@@ -15404,9 +15405,9 @@ body {
 
 /* Ajustes para el formulario dentro del modal */
 .form-control {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   /* background-color: #EFEFEF; */
-  padding: 5px 15px;
+  /* padding: 5px 15px; */
   border-radius: 20px;
   color: #ABABAB;
 }
@@ -15940,4 +15941,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.datetime, .sorting_1 {
+  text-align: center;
 }

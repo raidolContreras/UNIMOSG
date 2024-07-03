@@ -129,13 +129,13 @@ function solicitud(school, importancia){
 }
 
 function lookOrder(idIncidente, importancia){
-    $.ajax ({
+    $.ajax({
         url: 'controller/ajax/getOrder.php',
         dataSrc: '',
         type: 'POST',
         dataType: 'json',
         data: {searchIncidente: idIncidente},
-        success: function (data) {
+        success: function(data) {
 
             $('#idIncidente').val(data.idIncidente);
             $('#nPedido').val(data.nPedido);
@@ -145,7 +145,7 @@ function lookOrder(idIncidente, importancia){
             $('#Estado').val(data.estado);
 
             $('#details').html(data.detallesCorregidos);
-            $('#shopping').html((data.compra == 1) ? 'Si': 'No');
+            $('#shopping').html((data.compra == 1) ? 'Si' : 'No');
             $('#specific').html(data.detalleCompra);
             
             $('#posponerRazonContainer').css('display', 'none');
@@ -155,19 +155,37 @@ function lookOrder(idIncidente, importancia){
 
             if (importancia != 'Completado') {
                 $('.posponer').attr('onclick', 'posponerCorreccion()');
-                $('.corregido').attr('onclick',`corregido(${data.idIncidente})`);
-                $('.corregido').css('display','block');
-                $('.details').css('display','none');
-                $('.shopping').css('display','none');
-                $('.specific').css('display','none');
+                $('.corregido').attr('onclick', `corregido(${data.idIncidente})`);
+                $('.corregido').css('display', 'block');
+                $('.details').css('display', 'none');
+                $('.shopping').css('display', 'none');
+                $('.specific').css('display', 'none');
             } else {
-                $('.corregido').attr('onclick',``);
-                $('.corregido').css('display','none');
-                $('.posponer').css('display','none');
+                $('.corregido').attr('onclick', ``);
+                $('.corregido').css('display', 'none');
+                $('.posponer').css('display', 'none');
                 $('.posponer').attr('onclick', '');
-                $('.details').css('display','block');
-                $('.shopping').css('display','block');
-                $('.specific').css('display','block');
+                $('.details').css('display', 'block');
+                $('.shopping').css('display', 'block');
+                $('.specific').css('display', 'block');
+            }
+
+            if (!data.files || data.files.length === 0) {
+                $('.evidence').css('display', 'none');
+            } else {
+                var files = JSON.parse(data.files);
+                var evidenceContainer = $('#evidence');
+                evidenceContainer.html('');
+                for (var i = 0; i < files.length; i++) {
+                    evidenceContainer.append(`
+                        <div class="col-md-3">
+                            <a href="view/evidences/${files[i].name}" target="_blank">
+                                <img src="view/evidences/${files[i].name}" class="img-fluid" alt="evidence">
+                            </a>
+                        </div>
+                    `);
+                }
+                $('.evidence').css('display', 'block');
             }
         
             $('#lookOrder').modal('show');

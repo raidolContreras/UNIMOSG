@@ -168,25 +168,39 @@ function updateDateTime() {
     return formattedDate;
 }
 
-function sendForm(idObject){
+function sendForm(idObject) {
     var estado = 2;
     var description = $('#description_' + idObject).val();
+    var files = $('#file_' + idObject).get(0).files;
     var importancia = $('input[name=concepto_' + idObject + ']:checked').val();
+
+    var formData = new FormData();
+    formData.append('idObject', idObject);
+    formData.append('estado', estado);
+    formData.append('description', description);
+    formData.append('importancia', importancia);
+    formData.append('schoolName', schoolName);
+    formData.append('zoneName', zoneName);
+    formData.append('areaName', areaName);
+    formData.append('idSchool', idSchoolSend);
+
+    var filesData = [];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        formData.append('files[]', file);
+        filesData.push({
+            name: file.name,
+            type: file.type
+        });
+    }
+    formData.append('filesData', JSON.stringify(filesData));
 
     $.ajax({
         url: 'controller/ajax/sendForm.php',
         type: 'POST',
-        dataSrc: '',
-        data: {
-            idObject: idObject,
-            estado: estado,
-            description: description,
-            importancia: importancia,
-            schoolName: schoolName,
-            zoneName: zoneName,
-            areaName: areaName,
-            idSchool: idSchoolSend
-        },
+        data: formData,
+        processData: false,
+        contentType: false,
         success: function(data) {
             if (data == 'ok') {
                 $('.'+idObject).remove();

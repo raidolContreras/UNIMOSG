@@ -100,6 +100,10 @@
                             <strong>Especifique el gasto</strong>
                             <label class="form-check-label" id="specific"></label>
                         </div>
+                        <div class="col-12 evidence">
+                            <strong>Evidencia</strong>
+                            <label class="form-check-label" id="evidence"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

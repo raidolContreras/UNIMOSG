@@ -147,11 +147,11 @@ class FormsModel
 											LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
 											LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool;');
 				} else {
-					$stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool, i.* FROM servicios_objects o
+					$stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool
+												FROM servicios_objects o
 												LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
 												LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
 												LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-												LEFT JOIN servicios_incidentes i ON i.incidente_idObject = o.idObject
 											WHERE objects_idArea = :idArea');
 					$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
 				}
@@ -500,15 +500,16 @@ class FormsModel
 		}
 	}
 
-	static public function mdlSendForm($idObject, $estado, $description, $importancia)
-	{
+	static public function mdlSendForm($idObject, $estado, $description, $importancia, $filesJson) {
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('INSERT INTO servicios_incidentes (estado, description, importancia, incidente_idObject ) VALUES (:estado, :description, :importancia, :idObject)');
+			$stmt = $pdo->prepare('INSERT INTO servicios_incidentes (estado, description, importancia, incidente_idObject, files) VALUES (:estado, :description, :importancia, :idObject, :files)');
 			$stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
 			$stmt->bindParam(':description', $description, PDO::PARAM_STR);
-			$stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
 			$stmt->bindParam(':idObject', $idObject, PDO::PARAM_INT);
+			$stmt->bindParam(':importancia', $importancia, PDO::PARAM_STR);
+			$stmt->bindParam(':files', $filesJson, PDO::PARAM_STR);
+
 			if ($stmt->execute()) {
 				return $pdo->lastInsertId();
 			} else {
