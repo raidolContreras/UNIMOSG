@@ -15272,7 +15272,7 @@ body {
   box-shadow: none !important;
 }
 
-.card-custom {
+.card-custom, .card-custom-xl {
   background-color: #fff;
   /* Fondo blanco para la tarjeta */
   border-radius: 20px;
@@ -15283,41 +15283,49 @@ body {
   /* Asegura que los hijos no sobresalgan de los bordes redondeados */
   margin: 20px auto;
   /* Centrar la tarjeta con un margen */
+  padding: 0 !important;
+}
+
+.card-custom {
   max-width: 600px;
+  /* Ancho máximo de la tarjeta */
+}
+
+.card-custom-xl {
+  max-width: 800px;
   /* Ancho máximo de la tarjeta */
 }
 
 /* Media Queries para hacerlo responsivo */
 @media (max-width: 1200px) {
-  .card-custom {
+  .card-custom, .card-custom-xl {
     max-width: 80%;
     /* Ancho máximo del 80% en pantallas grandes */
   }
 }
 
 @media (max-width: 992px) {
-  .card-custom {
+  .card-custom, .card-custom-xl {
     max-width: 90%;
     /* Ancho máximo del 90% en pantallas medianas */
   }
 }
 
 @media (max-width: 768px) {
-  .card-custom {
+  .card-custom, .card-custom-xl {
     max-width: 95%;
     /* Ancho máximo del 95% en pantallas pequeñas */
   }
 }
 
 @media (max-width: 576px) {
-  .card-custom {
+  .card-custom, .card-custom-xl {
     max-width: 100%;
     /* Ancho máximo del 100% en pantallas extra pequeñas */
     margin: 10px;
     /* Reducir margen para pantallas más pequeñas */
   }
 }
-
 
 .card-header-custom {
   background-color: #f8f9fa; /* Color de fondo del encabezado */

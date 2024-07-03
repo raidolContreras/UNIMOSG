@@ -94,6 +94,14 @@ function solicitud(school, importancia){
                     var daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
                     
                     var message = (daysDiff > 0) ? `${daysDiff} días desde el levantamiento del reporte` : '0 días';
+                    if ( data.status == 2) {
+                        message = `Pospuesto hasta el: ${data.fechaAsignada}`;
+                        $('.posponer').css('display', 'none');
+                    } else if ( data.status == 1) {
+                        message = `Solucionado el: ${data.solutionDate}`;
+                    } else {
+                        $('.posponer').css('display','block');
+                    }
                     // Retornar la diferencia en días
                     return message;
                 }
@@ -104,7 +112,7 @@ function solicitud(school, importancia){
                     // Utilizando el contador proporcionado por DataTables
                     return `
                     <center class="table-columns">
-                        <button class="btn btn-success" onclick="lookOrder(${data.idIncidente})">
+                        <button class="btn btn-success" onclick="lookOrder(${data.idIncidente}, '${importancia}')">
                             <div class="row">
                                 <div class="col-9">Ver orden</div> 
                                 <div class="col-2">
@@ -120,8 +128,7 @@ function solicitud(school, importancia){
     });
 }
 
-function lookOrder(idIncidente){
-    $('#lookOrder').modal('show');
+function lookOrder(idIncidente, importancia){
     $.ajax ({
         url: 'controller/ajax/getOrder.php',
         dataSrc: '',
@@ -136,16 +143,41 @@ function lookOrder(idIncidente){
             $('#Observaciones').val(data.description);
             $('#dateRevition').val(data.dateCreated);
             $('#Estado').val(data.estado);
+
+            $('#details').html(data.detallesCorregidos);
+            $('#shopping').html((data.compra == 1) ? 'Si': 'No');
+            $('#specific').html(data.detalleCompra);
             
-            $('.corregido').attr('onclick',`corregido(${data.idIncidente})`);
+            $('#posponerRazonContainer').css('display', 'none');
+            $('#fechaAsignadaContainer').css('display', 'none');
+
+            $('.specific').css('display', 'none');
+
+            if (importancia != 'Completado') {
+                $('.posponer').attr('onclick', 'posponerCorreccion()');
+                $('.corregido').attr('onclick',`corregido(${data.idIncidente})`);
+                $('.corregido').css('display','block');
+                $('.details').css('display','none');
+                $('.shopping').css('display','none');
+                $('.specific').css('display','none');
+            } else {
+                $('.corregido').attr('onclick',``);
+                $('.corregido').css('display','none');
+                $('.posponer').css('display','none');
+                $('.posponer').attr('onclick', '');
+                $('.details').css('display','block');
+                $('.shopping').css('display','block');
+                $('.specific').css('display','block');
+            }
         
+            $('#lookOrder').modal('show');
         }
     });
 }
 
 function corregido(idIncidente){
-    $('#lookOrder').modal('hide');
     $('#corregidoModal').modal('show');
+    $('#lookOrder').modal('hide');
 }
 
 function cancelCorreccion(){
@@ -174,3 +206,30 @@ $('.marcarCorreccion').click(function () {
         }
     });
 });
+
+function posponerCorreccion() {
+    $('#posponerRazonContainer').css('display', 'block');
+    $('#fechaAsignadaContainer').css('display', 'block');
+    
+    $('.posponer').attr('onclick', 'posponer()');
+    
+}
+
+function posponer() {
+    idIncidente = $('#idIncidente').val();
+    razon = $('#posponerRazon').val();
+    fechaAsignada = $('#fechaAsignada').val();
+    $.ajax({
+        type: "POST",
+        url: "controller/ajax/ajax.form.php",
+        data: {
+            idIncidente: idIncidente,
+            razon: razon,
+            fechaAsignada: fechaAsignada
+            },
+        success: function(data) {
+            $('#lookOrder').modal('hide');
+            $('#results').DataTable().ajax.reload();
+        }
+    });
+}

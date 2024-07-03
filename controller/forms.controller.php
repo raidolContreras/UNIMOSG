@@ -184,4 +184,8 @@ class FormsController {
     static public function ctrSearchDirector() {
         return FormsModel::mdlSearchDirector();
     }
+
+    static public function ctrAsignarFecha($data) {
+        return FormsModel::mdlAsignarFecha($data);
+    }
 }

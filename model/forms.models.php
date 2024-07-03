@@ -562,7 +562,7 @@ class FormsModel
 								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
 								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
 								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-							WHERE i.status = 0 AND s.idSchool = :idSchool AND i.importancia = :importancia;";
+							WHERE i.status <> 1 AND s.idSchool = :idSchool AND i.importancia = :importancia;";
 				}
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
@@ -584,7 +584,7 @@ class FormsModel
 								LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
 								LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
 								LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-							WHERE i.status = 0 AND i.importancia = :importancia;";
+							WHERE i.status <> 1 AND i.importancia = :importancia;";
 				}
 				$stmt = $pdo->prepare($sql);
 			}
@@ -1193,7 +1193,7 @@ class FormsModel
 											servicios_schools s ON s.idSchool = z.zone_idSchool
 										LEFT JOIN 
 											servicios_users u ON u.level = 1
-									WHERE i.status = 0
+									WHERE i.status <> 1
 									GROUP BY 
 									i.idIncidente;
 								");
@@ -1352,6 +1352,24 @@ class FormsModel
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error al buscar el director: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlAsignarFecha($data) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_incidentes SET fechaAsignada = :fechaAsignada, posponerRazon = :posponerRazon, status = 2 WHERE idIncidente = :idIncidente");
+            $stmt->bindParam(":fechaAsignada", $data['fechaAsignada'], PDO::PARAM_STR);
+			$stmt->bindParam(":posponerRazon", $data['razon'], PDO::PARAM_STR);
+            $stmt->bindParam(":idIncidente", $data['idIncidente'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la fecha de asignación: ". $e->getMessage());
             throw $e;
         }
 	}

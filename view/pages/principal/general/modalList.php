@@ -4,6 +4,8 @@ td, th {
 }
 
 </style>
+<script src="view/assets/vendor/dropzone/dropzone-min.js"></script>
+<link href="view/assets/vendor/dropzone/dropzone.css" rel="stylesheet">
 <!-- Modal -->
 <div class="modal fade" id="modalList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalListLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -19,8 +21,8 @@ td, th {
                     <th></th>
                     <th>Cantidad</th>
                     <th>Hora</th>
-                    <th>Estado</th>
                     <th>Observaciones</th>
+                    <th>Evidencia</th>
                     <th>Nivel de importancia</th>
                     <th></th>
                 </tr>

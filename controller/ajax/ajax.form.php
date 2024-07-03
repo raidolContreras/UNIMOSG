@@ -239,3 +239,15 @@ if (isset($_POST['idAreaEdit'])) {
     );
     echo FormsController::ctrEditArea($data);
 }
+
+if (isset($_POST['fechaAsignada']) && isset($_POST['idIncidente']) && isset($_POST['razon'])) {
+    $fechaAsignada = $_POST['fechaAsignada'];
+    $idIncidente = $_POST['idIncidente'];
+    $razon = $_POST['razon'];
+    $data = array(
+        "fechaAsignada" => $fechaAsignada,
+        "idIncidente" => $idIncidente,
+        "razon" => $razon
+    );
+    echo FormsController::ctrAsignarFecha($data);
+}

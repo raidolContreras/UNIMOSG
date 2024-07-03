@@ -17,18 +17,18 @@
         <?php endif ?>
     </div>
 
-    <div class="card">
+    <div class="card-custom-xl">
         <div class="row justify-content-center p-3">
-            <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Pendiente')" class="btn btn-success w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+            <div class="col-12 col-md-6 my-3">
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Pendiente')" class="btn btn-info w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
-            <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Urgente')" class="btn btn-success w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+            <div class="col-12 col-md-6 my-3">
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Urgente')" class="btn btn-warning w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
-            <div class="col-12 col-md-4 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Inmediata')" class="btn btn-success w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+            <div class="col-12 col-md-6 my-3">
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'Inmediata')" class="btn btn-danger w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
-            <div class="col-12 col-md-4 my-3">
+            <div class="col-12 col-md-6 my-3">
                 <button onclick="solicitud(<?php echo $idSchool ?>, 'Completado')" class="btn btn-success w-100">Incidencias completadas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
         </div>
@@ -42,7 +42,7 @@
                         <th class="localitation">Localización</th>
                         <th class="observations">Observaciónes</th>
                         <th class="reportDate">Fecha del reporte</th>
-                        <th class="days">Días transcurridos</th>
+                        <th class="days"></th>
                         <th whith="10%"></th>
                     </tr>
                 </thead>
@@ -54,38 +54,59 @@
     <div class="modal fade" id="lookOrder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Orden de reparación: </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label" for="nPedido">N° de pedido</label>
-                        <input type="text" id="nPedido" disabled class="form-control">
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label" for="Cantidad">Cantidad</label>
-                        <input type="text" id="Cantidad" disabled class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label" for="Observaciones">Observaciones</label>
-                        <input type="text" id="Observaciones" disabled class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label" for="dateRevition">Fecha de revision</label>
-                        <input type="text" id="dateRevition" disabled class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label" for="Estado">Estado</label>
-                        <input type="text" id="Estado" disabled class="form-control">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Orden de reparación: </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="nPedido">N° de pedido</label>
+                            <input type="text" id="nPedido" disabled class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="Cantidad">Cantidad</label>
+                            <input type="text" id="Cantidad" disabled class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="Observaciones">Observaciones</label>
+                            <input type="text" id="Observaciones" disabled class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="dateRevition">Fecha de revisión</label>
+                            <input type="text" id="dateRevition" disabled class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="Estado">Estado</label>
+                            <input type="text" id="Estado" disabled class="form-control">
+                        </div>
+                        <div class="col-12" id="posponerRazonContainer" style="display: none;">
+                            <label class="form-label" for="posponerRazon">Razón de posposición</label>
+                            <input type="text" id="posponerRazon" class="form-control">
+                        </div>
+                        <div class="col-12" id="fechaAsignadaContainer" style="display: none;">
+                            <label class="form-label" for="fechaAsignada">Fecha asignada para reparación</label>
+                            <input type="date" id="fechaAsignada" class="form-control">
+                        </div>
+                        <div class="col-12 details">
+                            <strong>Detalles corregidos</strong>
+                            <label class="form-check-label" id="details"></label>
+                        </div>
+                        <div class="col-12 shopping">
+                            <strong>¿Se realizó alguna compra o gasto?</strong>
+                            <label class="form-check-label" id="shopping"></label>
+                        </div>
+                        <div class="col-12 specific">
+                            <strong>Especifique el gasto</strong>
+                            <label class="form-check-label" id="specific"></label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success corregido">Corregido</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success corregido" style="display: none;">Corregido</button>
+                    <button type="button" class="btn btn-warning posponer" onclick="posponerCorreccion()">Posponer</button>
+                </div>
             </div>
         </div>
     </div>
