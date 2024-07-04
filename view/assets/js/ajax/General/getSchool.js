@@ -55,7 +55,21 @@ function solicitud(school, importancia) {
             { data: null, render: data => createTableColumn(data.dateCreated) },
             { data: null, render: data => calculateDaysDiff(data) },
             { data: null, render: data => createOrderButton(data.idIncidente, importancia) },
-        ]
+        ],
+		language: {
+			"paginate": {
+				"first":      "<<",
+				"last":       ">>",
+				"next":       ">",
+				"previous":   "<"
+			},
+			"search":         "Buscar:",
+			"lengthMenu":     "Ver _MENU_ resultados",
+			"loadingRecords": "Cargando...",
+			"info":           "Mostrando _START_ de _END_ en _TOTAL_ resultados",
+			"infoEmpty":      "Mostrando 0 resultados",
+			"emptyTable":	  "Ningún dato disponible en esta tabla"
+		}
     });
 }
 

@@ -19,6 +19,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 				$_SESSION['email'] = $users['email'];
 				$_SESSION['name'] = $users['name'];
 				$_SESSION['level'] = $users['level'];
+				$_SESSION['idUser'] = $users['idUsers'];
 				$_SESSION['notify'] = 0;
 
 				switch ($users['level']) {

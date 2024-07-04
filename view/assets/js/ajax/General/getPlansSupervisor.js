@@ -1,53 +1,53 @@
+var idUser = $('#idUser').val();
+
 function getSupervisionDays(calendar) {
     $.ajax({
         url: "controller/ajax/getSupervisionDays.php",
         type: "POST",
         dataType: "json",
+        data: {user: idUser},
         success: function (data) {
-            let events = data.flatMap(event => {
-                return generateWeeklyEvents(event);
-            });
-            calendar.addEventSource(events);
+            if (data) {
+                const events = data.flatMap(generateWeeklyEvents);
+                calendar.addEventSource(events);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching supervision days:", error);
         }
     });
 }
 
-// Helper function to generate weekly events
 function generateWeeklyEvents(event) {
-    let events = [];
-    let today = new Date();
+    const events = [];
+    const today = new Date();
     let currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    // Loop through the next 52 weeks
     for (let i = 0; i < 52; i++) {
-        let eventDate = getNextDate(currentDate, event.day);
+        const eventDate = getNextDate(currentDate, event.day);
         events.push({
             title: `${event.nameSchool} - ${event.nameZone} - ${event.nameArea}`,
-            start: eventDate.toISOString().split('T')[0], // format as YYYY-MM-DD
-            id: event.id, // Assuming each event has a unique id
-            deletable: false, // Mark these events as non-deletable
-            backgroundColor: 'green' // Set the color to green
+            start: eventDate.toISOString().split('T')[0],
+            id: event.id,
+            deletable: false,
+            backgroundColor: 'green'
         });
-        // Move to the next week
         currentDate.setDate(currentDate.getDate() + 7);
     }
     return events;
 }
 
-// Helper function to get the next occurrence of a specific day of the week
 function getNextDate(startDate, dayOfWeek) {
-    let date = new Date(startDate);
-    let day = date.getDay();
-    let diff = (dayOfWeek - day + 7) % 7;
-    if (diff === 0 && dayOfWeek !== day) {
-        diff += 7; // ensure the next occurrence is in the future
-    }
+    const date = new Date(startDate);
+    const day = date.getDay();
+    const diff = (dayOfWeek - day + 7) % 7 || 7; // Simplified
     date.setDate(date.getDate() + diff);
     return date;
 }
+
 $(document).ready(function () {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 600,
         contentHeight: 300,
@@ -57,30 +57,31 @@ $(document).ready(function () {
             $('#eventDate').val(info.dateStr);
         },
         eventClick: function(info) {
-            // Mostrar alerta con el título del evento
             alert('Evento: ' + info.event.title);
         }
     });
 
-    // Render the calendar
     calendar.render();
 
-    // Load initial events
     $.ajax({
         url: 'controller/ajax/getPlans.php',
         type: 'POST',
         dataType: 'json',
+        data: {user: idUser},
         success: function(data) {
-            var events = [];
-            for (var i = 0; i < data.length; i++) {
-                events.push({
-                    title: data[i].nameSchool + ' - ' + data[i].nameZone + ' - ' + data[i].nameArea,
-                    start: data[i].datePlan
-                });
+            if (data) {
+                const events = data.map(item => ({
+                    title: `${item.nameSchool} - ${item.nameZone} - ${item.nameArea}`,
+                    start: item.datePlan
+                }));
+                calendar.addEventSource(events);
             }
-            calendar.addEventSource(events);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching plans:", error);
         }
     });
+
     getSupervisionDays(calendar);
 });
 
@@ -89,6 +90,10 @@ function seeInspectionsback() {
         url: 'controller/ajax/searchIncidentsDaily.php',
         dataType: 'json',
         success: function(data) {
+            // Handle the response data here if needed
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching incidents:", error);
         }
     });
 }

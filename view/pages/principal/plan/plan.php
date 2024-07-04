@@ -93,6 +93,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Localización</th>
+                                    <th scope="col">Supervisor asignado</th>
                                     <th scope="col">Días</th>
                                 </tr>
                             </thead>

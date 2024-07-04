@@ -663,18 +663,24 @@ class FormsModel
 		}
 	}
 
-	static public function mdlGetPlans($idPlan)
+	static public function mdlGetPlans($idPlan, $user)
 	{
 		try {
 			$pdo = Conexion::conectar();
 			if ($idPlan == null) {
 				$sql = 'SELECT p.idPlan, s.nameSchool, z.nameZone, a.nameArea, u.name, p.datePlan
 						FROM servicios_plan p
-							LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
-							LEFT JOIN servicios_zones z ON z.idZone = p.idZone
-							LEFT JOIN servicios_areas a ON a.idArea = p.idArea
-							LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor;';
+						LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
+						LEFT JOIN servicios_zones z ON z.idZone = p.idZone
+						LEFT JOIN servicios_areas a ON a.idArea = p.idArea
+						LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor';
+				if ($user != null) {
+					$sql .= ' WHERE u.idUsers = :idUsers';
+				}
 				$stmt = $pdo->prepare($sql);
+				if ($user != null) {
+					$stmt->bindParam(':idUsers', $user, PDO::PARAM_INT);
+				}
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
 					return $stmt->fetchAll();
 				} else {
@@ -683,10 +689,10 @@ class FormsModel
 			} else {
 				$sql = 'SELECT p.*, s.nameSchool, z.nameZone, a.nameArea, u.name
 						FROM servicios_plan p
-							LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
-							LEFT JOIN servicios_zones z ON z.idZone = p.idZone
-							LEFT JOIN servicios_areas a ON a.idArea = p.idArea
-							LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor
+						LEFT JOIN servicios_schools s ON s.idSchool = p.idSchool
+						LEFT JOIN servicios_zones z ON z.idZone = p.idZone
+						LEFT JOIN servicios_areas a ON a.idArea = p.idArea
+						LEFT JOIN servicios_users u ON u.idUsers = p.idSupervisor
 						WHERE p.idPlan = :idPlan';
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(':idPlan', $idPlan, PDO::PARAM_INT);
@@ -702,44 +708,56 @@ class FormsModel
 		}
 	}
 	
-	static public function mdlGetDaySupervision($idSupervisionDays)
-	{
-		try {
-			$pdo = Conexion::conectar();
-			if ($idSupervisionDays == null) {
-				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.day, sd.idSupervisionDays
-							FROM servicios_supervision_days sd
-								LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
-								LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
-								LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
-								LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor;';
-				$stmt = $pdo->prepare($sql);
-				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
-				} else {
-					return false;
-				}
-			} else {
-				$sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.*
-						FROM servicios_supervision_days sd
-							LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
-							LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
-							LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
-							LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor
-						WHERE sd.idSupervisionDays = :idSupervisionDays';
-				$stmt = $pdo->prepare($sql);
-				$stmt->bindParam(':idSupervisionDays', $idSupervisionDays, PDO::PARAM_INT);
-				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetch();
-				} else {
-					return false;
-				}
-			}
-		} catch (PDOException $e) {
-			error_log("Error al buscar el evento: " . $e->getMessage());
-			throw $e;
-		}
-	}
+	static public function mdlGetDaySupervision($idSupervisionDays, $user)
+{
+    try {
+        $pdo = Conexion::conectar();
+        if ($idSupervisionDays == null) {
+            $sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.day, sd.idSupervisionDays
+                    FROM servicios_supervision_days sd
+                    LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+                    LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
+                    LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+                    LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor';
+            if ($user != null) {
+                $sql .= ' WHERE u.idUsers = :idUsers';
+            }
+            $stmt = $pdo->prepare($sql);
+            if ($user != null) {
+                $stmt->bindParam(':idUsers', $user, PDO::PARAM_INT);
+            }
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetchAll();
+            } else {
+                return false;
+            }
+        } else {
+            $sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.*
+                    FROM servicios_supervision_days sd
+                    LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+                    LEFT JOIN servicios_zones z ON z.idZone = sd.idZone
+                    LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+                    LEFT JOIN servicios_users u ON u.idUsers = sd.idSupervisor
+                    WHERE sd.idSupervisionDays = :idSupervisionDays';
+            if ($user != null) {
+                $sql .= ' AND u.idUsers = :idUsers';
+            }
+            $stmt = $pdo->prepare($sql);
+            if ($user != null) {
+                $stmt->bindParam(':idUsers', $user, PDO::PARAM_INT);
+            }
+            $stmt->bindParam(':idSupervisionDays', $idSupervisionDays, PDO::PARAM_INT);
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetch();
+            } else {
+                return false;
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error al buscar el evento: " . $e->getMessage());
+        throw $e;
+    }
+}
 
 	static public function mdlAddPlans($data)
 	{

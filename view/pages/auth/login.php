@@ -24,7 +24,7 @@
     }
 
     .btn-primary {
-        margin-top: 3rem; /* Ajusta el margen superior del botón */
+        margin-top: 1.1rem; /* Ajusta el margen superior del botón */
     }
 </style>
 <div class="container py-5">
@@ -42,9 +42,9 @@
                     Iniciar sesión
                 </div>
                 <div class="card-body">
-                    <form class="my-5">
+                    <form class="my-4">
                         <div class="form-group ">
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Correo electrónico" aria-label="Correo electrónico">
+                            <input type="email" class="form-control mb-3" id="email" aria-describedby="emailHelp" placeholder="Correo electrónico" aria-label="Correo electrónico">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" id="password" placeholder="Contraseña" aria-label="Contraseña">

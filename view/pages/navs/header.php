@@ -14,6 +14,7 @@
 						</li>
 					</ul>
 				</div>
+				<input type="hidden" id="idUser" value="<?php echo $_SESSION['idUser'] ?>">
 				<?php else: ?>
 				<a class="navbar-brand" href="./"></a>
 					<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
@@ -43,7 +44,7 @@
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
 				<?php else: ?>
-					<a href="?pagina=lista" class="mt-3 btn btn-success">
+					<a href="?pagina=lista" class="mt-3 menu-top">
 						Supervisión
 					</a>
 				<?php endif ?>

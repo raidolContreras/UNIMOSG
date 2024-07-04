@@ -4,8 +4,10 @@ function getSupervisionDays(calendar) {
         type: "POST",
         dataType: "json",
         success: function (data) {
-            const events = data.flatMap(generateWeeklyEvents);
-            calendar.addEventSource(events);
+            if (data) {
+                const events = data.flatMap(event => generateWeeklyEvents(event));
+                calendar.addEventSource(events);
+            }
         },
         error: function (xhr, status, error) {
             console.error("Error fetching supervision days:", error);
@@ -21,7 +23,7 @@ function generateWeeklyEvents(event) {
     for (let i = 0; i < 52; i++) {
         const eventDate = getNextDate(currentDate, event.day);
         events.push({
-            title: `${event.nameSchool} - ${event.nameZone} - ${event.nameArea}`,
+            title: `${event.nameSchool} - ${event.nameZone} - ${event.nameArea}: ${event.name}`,
             start: eventDate.toISOString().split('T')[0],
             id: event.id,
             deletable: false,
@@ -35,122 +37,20 @@ function generateWeeklyEvents(event) {
 function getNextDate(startDate, dayOfWeek) {
     const date = new Date(startDate);
     const day = date.getDay();
-    let diff = (dayOfWeek - day + 7) % 7;
-    if (diff === 0 && dayOfWeek !== day) {
-        diff += 7;
-    }
+    const diff = (dayOfWeek - day + 7) % 7 || 7; // Simplified
     date.setDate(date.getDate() + diff);
     return date;
 }
 
 $(document).ready(function () {
+    initCalendar();
+
     getSchools();
     getSupervisor();
 
-    const calendarEl = document.getElementById("calendar");
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        height: 600,
-        contentHeight: 300,
-        aspectRatio: 5,
-        hiddenDays: [0, 6],
-        dateClick: function (info) {
-            $("#eventDate").val(info.dateStr);
-            $("#eventModal").modal("show");
-            $("#plan").val("");
-            $("#school").val("");
-            $("#zone").val("");
-            $("#area").val("");
-            $("#zone").prop("disabled", true);
-            $("#area").prop("disabled", true);
-            $("#eventDate").prop("readonly", true);
-            $("#supervisor").val("");
-        },
-        eventContent: function (arg) {
-            const eventEl = document.createElement("div");
-            eventEl.className = "custom-event";
-
-            const buttonEl = document.createElement("div");
-            buttonEl.className = "event-button col-11";
-            buttonEl.textContent = arg.event.title;
-            buttonEl.onclick = function () {
-                getPlan(arg.event.id);
-            };
-
-            eventEl.appendChild(buttonEl);
-
-            if (arg.event.extendedProps.deletable !== false) {
-                const deleteButtonEl = document.createElement("button");
-                deleteButtonEl.className = "delete-button col-3";
-                deleteButtonEl.innerHTML = "&times;";
-                deleteButtonEl.onclick = function () {
-                    if (confirm("¿Estás seguro de que deseas eliminar este evento?")) {
-                        arg.event.remove();
-                        $.ajax({
-                            url: "controller/ajax/deletePlans.php",
-                            type: "POST",
-                            data: { idPlan: arg.event.id },
-                            success: function () {
-                                alert("Evento eliminado correctamente.");
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("Error al eliminar el evento:", error);
-                            }
-                        });
-                    }
-                };
-                eventEl.appendChild(deleteButtonEl);
-            }
-
-            return { domNodes: [eventEl] };
-        }
-    });
-
-    calendar.render();
-    getSupervisionDays(calendar);
-
     $("#eventForm").on("submit", function (e) {
         e.preventDefault();
-
-        const school = $("#school").val();
-        const plan = $("#plan").val();
-        const zone = $("#zone").val();
-        const area = $("#area").val();
-        const supervisor = $("#supervisor").val();
-        const eventDate = $("#eventDate").val();
-
-        if (!school || !zone || !area || !supervisor) {
-            alert("Todos los campos son obligatorios.");
-        } else {
-            $.ajax({
-                url: "controller/ajax/addPlans.php",
-                type: "POST",
-                data: {
-                    plan,
-                    school,
-                    zone,
-                    area,
-                    supervisor,
-                    eventDate
-                },
-                dataType: "json",
-                success: function (data) {
-                    const existingEvent = calendar.getEventById(data.idPlan);
-                    if (existingEvent) {
-                        existingEvent.remove();
-                    }
-                    calendar.addEvent({
-                        id: data.idPlan,
-                        title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
-                        start: data.datePlan
-                    });
-                    $("#eventModal").modal("hide");
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error al añadir el evento:", error);
-                }
-            });
-        }
+        submitEventForm();
     });
 
     $.ajax({
@@ -158,22 +58,159 @@ $(document).ready(function () {
         type: "POST",
         dataType: "json",
         success: function (data) {
-            const events = data.map(item => ({
-                id: item.idPlan,
-                title: `${item.nameSchool} - ${item.nameZone} - ${item.nameArea}`,
-                start: item.datePlan
-            }));
-            calendar.addEventSource(events);
+            if (data) {
+                const events = data.map(item => ({
+                    id: item.idPlan,
+                    title: `${item.nameSchool} - ${item.nameZone} - ${item.nameArea}`,
+                    start: item.datePlan
+                }));
+                calendar.addEventSource(events);
+            }
         },
         error: function (xhr, status, error) {
             console.error("Error fetching plans:", error);
         }
     });
+
+    $("#supervisionEvent").on("submit", function (e) {
+        e.preventDefault();
+        submitSupervisionEventForm();
+    });
+
+    $("#school, #schoolSupervision").on("change", function () {
+        const idSchool = $(this).val();
+        handleSchoolChange(idSchool, $(this).attr("id"));
+    });
+
+    $("#zone, #zoneSupervision").on("change", function () {
+        const idZone = $(this).val();
+        handleZoneChange(idZone, $(this).attr("id"));
+    });
+
+    $("#openModalBtn").on("click", function () {
+        $("#eventModal").modal("show");
+    });
+
+    initDataTable();
 });
 
-$("#supervisionEvent").on("submit", function (e) {
-    e.preventDefault();
+function initCalendar() {
+    const calendarEl = document.getElementById("calendar");
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        height: 600,
+        contentHeight: 300,
+        aspectRatio: 5,
+        hiddenDays: [0, 6],
+        dateClick: function (info) {
+            showModalForDate(info.dateStr);
+        },
+        eventContent: function (arg) {
+            return createEventContent(arg);
+        }
+    });
+    calendar.render();
+    getSupervisionDays(calendar);
+}
 
+function showModalForDate(dateStr) {
+    $("#eventDate").val(dateStr);
+    $("#eventModal").modal("show");
+    resetEventFormFields();
+}
+
+function resetEventFormFields() {
+    $("#plan, #school, #zone, #area, #supervisor").val("");
+    $("#zone, #area").prop("disabled", true);
+    $("#eventDate").prop("readonly", true);
+}
+
+function createEventContent(arg) {
+    const eventEl = document.createElement("div");
+    eventEl.className = "custom-event";
+
+    const buttonEl = document.createElement("div");
+    buttonEl.className = "event-button col-11";
+    buttonEl.textContent = arg.event.title;
+    buttonEl.onclick = function () {
+        getPlan(arg.event.id);
+    };
+
+    eventEl.appendChild(buttonEl);
+
+    if (arg.event.extendedProps.deletable !== false) {
+        const deleteButtonEl = document.createElement("button");
+        deleteButtonEl.className = "delete-button col-3";
+        deleteButtonEl.innerHTML = "&times;";
+        deleteButtonEl.onclick = function () {
+            deleteEvent(arg.event);
+        };
+        eventEl.appendChild(deleteButtonEl);
+    }
+
+    return { domNodes: [eventEl] };
+}
+
+function deleteEvent(event) {
+    if (confirm("¿Estás seguro de que deseas eliminar este evento?")) {
+        event.remove();
+        $.ajax({
+            url: "controller/ajax/deletePlans.php",
+            type: "POST",
+            data: { idPlan: event.id },
+            success: function () {
+                alert("Evento eliminado correctamente.");
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al eliminar el evento:", error);
+            }
+        });
+    }
+}
+
+function submitEventForm() {
+    const school = $("#school").val();
+    const plan = $("#plan").val();
+    const zone = $("#zone").val();
+    const area = $("#area").val();
+    const supervisor = $("#supervisor").val();
+    const eventDate = $("#eventDate").val();
+
+    if (!school || !zone || !area || !supervisor) {
+        alert("Todos los campos son obligatorios.");
+    } else {
+        $.ajax({
+            url: "controller/ajax/addPlans.php",
+            type: "POST",
+            data: {
+                plan,
+                school,
+                zone,
+                area,
+                supervisor,
+                eventDate
+            },
+            dataType: "json",
+            success: function (data) {
+                const existingEvent = calendar.getEventById(data.idPlan);
+                if (existingEvent) {
+                    existingEvent.remove();
+                }
+                calendar.addEvent({
+                    id: data.idPlan,
+                    title: `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`,
+                    start: data.datePlan
+                });
+                $("#eventModal").modal("hide");
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al añadir el evento:", error);
+            }
+        });
+    }
+}
+
+function submitSupervisionEventForm() {
     const school = $("#schoolSupervision").val();
     const zone = $("#zoneSupervision").val();
     const area = $("#areaSupervision").val();
@@ -203,49 +240,25 @@ $("#supervisionEvent").on("submit", function (e) {
             }
         });
     }
-});
+}
 
-$("#school").on("change", function () {
-    const idSchool = $(this).val();
+function handleSchoolChange(idSchool, elementId) {
     if (idSchool) {
-        getZones(idSchool, "");
+        getZones(idSchool, "", elementId);
     } else {
-        $("#zone").prop("disabled", true).html('<option value="">Selecciona una zona</option>');
-        $("#area").prop("disabled", true).html('<option value="">Selecciona un área</option>');
+        $(`#${elementId.replace("school", "zone")}, #${elementId.replace("school", "area")}`)
+            .prop("disabled", true)
+            .html('<option value="">Selecciona una zona</option><option value="">Selecciona un área</option>');
     }
-});
+}
 
-$("#schoolSupervision").on("change", function () {
-    const idSchool = $(this).val();
-    if (idSchool) {
-        getZones(idSchool, "");
-    } else {
-        $("#zoneSupervision").prop("disabled", true).html('<option value="">Selecciona una zona</option>');
-        $("#areaSupervision").prop("disabled", true).html('<option value="">Selecciona un área</option>');
-    }
-});
-
-$("#zone").on("change", function () {
-    const idZone = $(this).val();
+function handleZoneChange(idZone, elementId) {
     if (idZone) {
-        getAreas(idZone, "");
+        getAreas(idZone, "", elementId);
     } else {
-        $("#area").prop("disabled", true);
+        $(`#${elementId.replace("zone", "area")}`).prop("disabled", true);
     }
-});
-
-$("#zoneSupervision").on("change", function () {
-    const idZone = $(this).val();
-    if (idZone) {
-        getAreas(idZone, "");
-    } else {
-        $("#areaSupervision").prop("disabled", true);
-    }
-});
-
-$("#openModalBtn").on("click", function () {
-    $("#eventModal").modal("show");
-});
+}
 
 function getSchools() {
     $.ajax({
@@ -285,7 +298,7 @@ function getSupervisor() {
     });
 }
 
-function getAreas(idZone, idArea) {
+function getAreas(idZone, idArea, elementIdPrefix) {
     $.ajax({
         url: "controller/ajax/getAreas.php",
         type: "POST",
@@ -297,7 +310,7 @@ function getAreas(idZone, idArea) {
                 const selected = idArea && item.idArea === idArea ? "selected" : "";
                 options += `<option value="${item.idArea}" ${selected}>${item.nameArea}</option>`;
             });
-            $("#area, #areaSupervision").prop("disabled", false).html(options);
+            $(`#${elementIdPrefix.replace("zone", "area")}`).prop("disabled", false).html(options);
         },
         error: function (xhr, status, error) {
             console.error("Error fetching areas:", error);
@@ -305,7 +318,7 @@ function getAreas(idZone, idArea) {
     });
 }
 
-function getZones(idSchool, idZone) {
+function getZones(idSchool, idZone, elementIdPrefix) {
     $.ajax({
         url: "controller/ajax/getZones.php",
         type: "POST",
@@ -317,18 +330,13 @@ function getZones(idSchool, idZone) {
                 const selected = idZone && item.idZone === idZone ? "selected" : "";
                 options += `<option value="${item.idZone}" ${selected}>${item.nameZone}</option>`;
             });
-            $("#zone, #zoneSupervision").prop("disabled", false).html(options);
-
-            $("#area, #areaSupervision").prop("disabled", true).html('<option value="">Selecciona un área</option>');
+            $(`#${elementIdPrefix.replace("school", "zone")}`).prop("disabled", false).html(options);
+            $(`#${elementIdPrefix.replace("school", "area")}`).prop("disabled", true).html('<option value="">Selecciona un área</option>');
         },
         error: function (xhr, status, error) {
             console.error("Error fetching zones:", error);
         }
     });
-}
-
-function closeModal(modal) {
-    $(`#${modal}`).modal("hide");
 }
 
 function getPlan(plan) {
@@ -352,9 +360,9 @@ function getPlan(plan) {
         success: function (data) {
             setTimeout(() => {
                 school.val(data.idSchool);
-                getZones(data.idSchool, data.idZone);
+                getZones(data.idSchool, data.idZone, "school");
                 setTimeout(() => {
-                    getAreas(data.idZone, data.idArea);
+                    getAreas(data.idZone, data.idArea, "zone");
                 }, 100);
                 supervisor.val(data.idSupervisor);
                 eventDate.val(data.datePlan).prop("readonly", false);
@@ -366,11 +374,7 @@ function getPlan(plan) {
     });
 }
 
-$(".eventDailyModal").on("click", function () {
-    $("#eventDailyModal").modal("show");
-});
-
-$(document).ready(function () {
+function initDataTable() {
     $("#supervitionRoute").DataTable({
         ajax: {
             url: "controller/ajax/getSupervisionDays.php",
@@ -378,28 +382,36 @@ $(document).ready(function () {
             dataSrc: ""
         },
         columns: [
-            { data: null,
-				render: function (data, type, row) {
+            { 
+                data: null,
+                render: function (data) {
                     return `${data.nameSchool} - ${data.nameZone} - ${data.nameArea}`;
                 }
-			},
+            },
+            {
+                data: "name"
+            },
             {
                 data: "day",
                 render: function (data) {
                     return numberToDay(data);
                 }
             },
-			{
-				data: null,
+            {
+                data: null,
                 render: function (data) {
-					return `<button class="btn btn-danger btn-sm" onclick="deletePlan(${data.idSupervisionDays})">&times;</button>`;
+                    return `<button class="btn btn-danger btn-sm" onclick="deletePlan(${data.idSupervisionDays})">&times;</button>`;
                 }
-			}
+            }
         ],
         language: {
             url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
         }
     });
+}
+
+$(".eventDailyModal").on("click", function () {
+    $("#eventDailyModal").modal("show");
 });
 
 function numberToDay(number) {
@@ -413,7 +425,7 @@ function deletePlan(idSupervisionDays) {
             url: "controller/ajax/deleteSupervisionDay.php",
             type: "POST",
             data: { deleteSupervisionDays: idSupervisionDays },
-            success: function (response) {
+            success: function () {
                 alert("Plan de supervisión eliminado correctamente.");
                 $("#supervitionRoute").DataTable().ajax.reload();
             },

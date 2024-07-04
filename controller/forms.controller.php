@@ -120,8 +120,8 @@ class FormsController {
         return FormsModel::mdlDetailsCorrect($data);
     }
 
-    static public function ctrGetPlans($plan){
-        return FormsModel::mdlGetPlans($plan);
+    static public function ctrGetPlans($plan, $user){
+        return FormsModel::mdlGetPlans($plan, $user);
     }
 
     static public function ctrAddPlans($data){
@@ -130,16 +130,16 @@ class FormsController {
         } else {
             $response = FormsModel::mdlEditPlans($data);
         }
-        return FormsController::ctrGetPlans($response);
+        return FormsController::ctrGetPlans($response, $data['idSupervisor']);
     }
 
     static public function ctrAddDaySupervision($data){
         $response = FormsModel::mdlAddDaySupervision($data);
-        return FormsController::ctrGetDaySupervision($response);
+        return FormsController::ctrGetDaySupervision($response, null);
     }
 
-    static public function ctrGetDaySupervision($idSupervisionDays) {
-        return FormsModel::mdlGetDaySupervision($idSupervisionDays);
+    static public function ctrGetDaySupervision($idSupervisionDays, $user) {
+        return FormsModel::mdlGetDaySupervision($idSupervisionDays, $user);
     }
 
     static public function ctrDeletePlans($idPlan){
