@@ -15243,6 +15243,18 @@ body {
   transition: transform 0.3s ease-out;
 }
 
+@media (min-width: 1200px) {
+  .modal-collapse {
+    max-width: 40%;
+  }
+}
+
+@media (min-width: 1600px) {
+  .modal-collapse {
+    max-width: 30%;
+  }
+}
+
 .modal-collapse.show {
   transform: translateX(0);
 }
