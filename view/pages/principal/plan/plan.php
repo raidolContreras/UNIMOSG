@@ -143,7 +143,7 @@
                                 <option value="">Selecciona un supervisor</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-4">
                             <label for="eventDate">Fecha del Evento</label>
                             <input type="date" class="form-control" id="eventDate" readonly>
                             <input type="hidden" id="plan">
