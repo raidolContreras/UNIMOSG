@@ -84,8 +84,6 @@ Este documento proporciona instrucciones detalladas para convertir las reglas de
 1. En el panel de acciones (Actions) a la derecha, haga clic en **Import Rules**.
 2. Pegue sus reglas de `.htaccess` en el cuadro de texto **Rewrite rules** y verá sus reglas convertidas a continuación.
 
-### Ejemplo de Conversión de Reglas
-
 #### Reglas en `.htaccess`
 
 ```apache
