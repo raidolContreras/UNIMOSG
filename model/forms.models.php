@@ -954,8 +954,8 @@ class FormsModel
 		<body>
 			<div class="container">
 				<div class="header">
-					<img src="https://unimosg.contreras-flota.click/view/assets/images/logo.png" alt="UNIMO Logo">
-					<h1>Informe de Pendientes</h1>
+					<img src="https://servicios.unimontrer.edu.mx/view/assets/images/logo.png" alt="UNIMO Logo">
+					<h1>Informe en espera</h1>
 					<p>Universidad Montrer (UNIMO)</p>
 				</div>
 				<div class="content">
@@ -993,13 +993,13 @@ class FormsModel
 			$mail->isSMTP();
 			$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
 			$mail->SMTPAuth = true;
-			$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
+			$mail->Username = 'noreply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
 			$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 			$mail->Port = 587;
 
 			// Configuración del remitente y destinatario
-			$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
+			$mail->setFrom('noreply@unimontrer.edu.mx', 'UNIMO');
 
 			$users = FormsModel::mdlSearchDirector();
 
@@ -1182,13 +1182,13 @@ class FormsModel
 				$mail->isSMTP();
 				$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
 				$mail->SMTPAuth = true;
-				$mail->Username = 'unimontrer@contreras-flota.click'; // Cambia esto a tu dirección de correo electrónico
+				$mail->Username = 'noreply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
 				$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
 				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 				$mail->Port = 587;
 	
 				// Configuración del remitente y destinatario
-				$mail->setFrom('unimontrer@contreras-flota.click', 'UNIMO');
+				$mail->setFrom('noreply@unimontrer.edu.mx', 'UNIMO');
 				
 				$users = FormsModel::mdlSearchDirector();
 
@@ -1314,10 +1314,10 @@ class FormsModel
 		$pdo = Conexion::conectar();
 		$sql = "SELECT 
 					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 0 THEN 1 ELSE 0 END) AS Urgente,
-					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 0 THEN 1 ELSE 0 END) AS Pendiente,
+					SUM(CASE WHEN i.importancia = 'En espera' AND i.status = 0 THEN 1 ELSE 0 END) AS Espera,
 					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 0 THEN 1 ELSE 0 END) AS Inmediato,
 					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 1 THEN 1 ELSE 0 END) AS UrgenteComplete,
-					SUM(CASE WHEN i.importancia = 'Pendiente' AND i.status = 1 THEN 1 ELSE 0 END) AS PendienteComplete,
+					SUM(CASE WHEN i.importancia = 'En espera' AND i.status = 1 THEN 1 ELSE 0 END) AS EsperaComplete,
 					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete
 				FROM 
 					servicios_incidentes i;";

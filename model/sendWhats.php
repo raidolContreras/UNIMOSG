@@ -1,9 +1,9 @@
 <?php
-require_once ('vendor/autoload.php'); // if you use Composer
+require_once ('../vendor/autoload.php'); // if you use Composer
 // require_once('ultramsg.class.php'); // if you download ultramsg.class.php
 
 // Cargar las variables del archivo .env
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
 $dotenv->load();
 
 // Obtener las variables de entorno con $_ENV
