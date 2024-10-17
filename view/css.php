@@ -17,4 +17,4 @@
 <link rel="stylesheet" href="view/assets/css/aos.css" />
 
 <link rel="stylesheet" href="view/assets/css/style.css" />
-<link href="https://contreras-flota.click/fontawesome/css/all.min.css" rel="stylesheet">
+<link href="https://devosco.io/fontawesome/css/all.min.css" rel="stylesheet">

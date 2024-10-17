@@ -62,6 +62,9 @@ class FormsController {
     static public function ctrActivateUser($idUsers){
         return FormsModel::mdlActivateUser($idUsers);
     }
+    static public function ctrDeleteUser($idUser){
+        return FormsModel::mdlDeleteUser($idUser);
+    }
 
     static public function ctrEditSchool($data){
         return FormsModel::mdlEditSchool($data);

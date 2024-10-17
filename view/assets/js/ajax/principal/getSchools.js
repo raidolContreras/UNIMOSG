@@ -32,7 +32,7 @@ $(document).ready(function () {
                     return `
                     <center class="table-columns">
                         <div class="flex justify-center items-center">
-                            <a class="btn btn-primary items-center mr-3 button-custom" href="?pagina=zones&school=${data.idSchool}">
+                            <a class="btn btn-primary items-center mr-3 button-custom" href="zones&school=${data.idSchool}">
                                 Ver escuela <i class="fa-duotone fa-right-from-bracket"></i>
                             </a>
                         </div>

@@ -8,13 +8,13 @@ $(document).ready(function(){
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Urgente', 'Pendiente', 'Inmediato'],
+                    labels: ['Urgente', 'En espera', 'Inmediato'],
                     datasets: [
                         {
-                            label: 'Pendiente',
+                            label: 'En espera',
                             data: [
                                 data.Urgente || 0, 
-                                data.Pendiente || 0, 
+                                data.Espera || 0, 
                                 data.Inmediato || 0
                             ],
                             backgroundColor: 'rgba(201, 34, 34, 0.5)',
@@ -27,7 +27,7 @@ $(document).ready(function(){
                             label: 'Completado',
                             data: [
                                 data.UrgenteComplete || 0, 
-                                data.PendienteComplete || 0, 
+                                data.EsperaComplete || 0, 
                                 data.InmediatoComplete || 0
                             ],
                             backgroundColor: 'rgba(11, 110, 74, 0.5)',

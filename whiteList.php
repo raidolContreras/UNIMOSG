@@ -13,7 +13,7 @@ if (!isset($_SESSION['logged'])) {
         include_once 'view/pages/auth/login.php';
     } else {
         // Si intenta acceder a otra página sin loguearse, redirigir al login
-        header("Location: ?pagina=login");
+        header("Location: login");
         exit();
     }
 } else {
@@ -82,7 +82,7 @@ if (!isset($_SESSION['logged'])) {
             }
             break;
         case 'login':
-            header("Location: ?pagina=inicio");
+            header("Location: inicio");
             break;
         case 'lista':
             if ($_SESSION['level'] == 0) {
@@ -92,7 +92,7 @@ if (!isset($_SESSION['logged'])) {
             }
             break;
         case 'plan':
-			echo "<script src='https://unimosg.contreras-flota.click/view/assets/node_modules/fullcalendar/index.global.js'></script>";
+			echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
             if ($_SESSION['level'] == 0) {
                 includeError404();
             } else {
@@ -100,7 +100,7 @@ if (!isset($_SESSION['logged'])) {
             }
             break;
         case 'planSupervisor':
-			echo "<script src='https://unimosg.contreras-flota.click/view/assets/node_modules/fullcalendar/index.global.js'></script>";
+			echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
             if ($_SESSION['level'] == 0) {
                 includeError404();
             } else {

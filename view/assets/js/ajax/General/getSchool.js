@@ -1,25 +1,36 @@
-$(document).ready(function () {
-    $('#results').DataTable({});
 
+$(document).ready(function () {
+    // Inicializar DataTable
+    $('#results').DataTable();
+
+    // Obtener el valor de 'school'
     const school = $('#school').val();
 
+    // Llamar a la función para obtener el nombre de la escuela
     fetchSchoolName(school);
 
-    // Obtener referencia a los radio buttons de "Sí" y "No" y al textarea de especificar el gasto
-    const shoppingYes = document.getElementById('shoppingYes');
-    const shoppingNo = document.getElementById('shoppingNo');
-    const specificShopping = document.getElementById('specificShopping');
+    // Obtener referencias a los radio buttons y campos de texto
+    const $shoppingYes = $('#shoppingYes');
+    const $shoppingNo = $('#shoppingNo');
+    const $specificShopping = $('#specificShopping');
+    const $shopping = $('#shopping');
+    const $shoppingProveedores = $('#shoppingProveedores');
+    const $shoppingEvidence = $('#shoppingEvidence');
 
-    // Función para habilitar o deshabilitar el textarea de especificar el gasto
+    // Función para habilitar o deshabilitar los campos basados en el radio button seleccionado
     function toggleSpecificShopping() {
-        specificShopping.disabled = !shoppingYes.checked;
+        const isYesChecked = $shoppingYes.is(':checked');
+        $specificShopping.prop('disabled', !isYesChecked);
+        $shopping.prop('disabled', !isYesChecked);
+        $shoppingProveedores.prop('disabled', !isYesChecked);
+        $shoppingEvidence.prop('disabled', !isYesChecked);
     }
 
-    // Agregar event listeners para el cambio en los radio buttons
-    shoppingYes.addEventListener('change', toggleSpecificShopping);
-    shoppingNo.addEventListener('change', toggleSpecificShopping);
+    // Asignar los eventos de cambio a los radio buttons
+    $shoppingYes.on('change', toggleSpecificShopping);
+    $shoppingNo.on('change', toggleSpecificShopping);
 
-    // Llamar a la función inicialmente para asegurarse de que el estado del textarea sea correcto al cargar la página
+    // Llamar a la función inicialmente para aplicar el estado correcto al cargar la página
     toggleSpecificShopping();
 });
 

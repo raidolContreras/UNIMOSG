@@ -15,7 +15,7 @@
                         </div>
                     </a>
                     <?php if ($_SESSION['level']== 0):?>
-                        <a href="?pagina=users" class="mt-3 menu-top py-2">
+                        <a href="users" class="mt-3 menu-top py-2">
                             <div class="row">
                                 <div class="col-2">
                                     <i class="fa-duotone fa-users"></i> 
@@ -23,7 +23,7 @@
                                 <div class="col-8">Usuarios</div> 
                             </div>
                         </a>
-                        <a href="?pagina=schools" class="mt-3 menu-top py-2">
+                        <a href="schools" class="mt-3 menu-top py-2">
                             <div class="row">
                                 <div class="col-2">
                                     <i class="fa-duotone fa-school"></i> 
@@ -31,7 +31,7 @@
                                 <div class="col-8">Escuelas</div> 
                             </div>
                         </a>
-                        <a href="?pagina=zones" class="mt-3 menu-top py-2">
+                        <a href="zones" class="mt-3 menu-top py-2">
                             <div class="row">
                                 <div class="col-2">
                                     <i class="fa-duotone fa-location-dot"></i> 
@@ -43,7 +43,7 @@
                     
                         <script src="view/assets/js/ajax/General/getSchools.js"></script>
                     <?php else: ?>
-                        <a href="?pagina=lista" class="mt-3 menu-top py-2">
+                        <a href="lista" class="mt-3 menu-top py-2">
                             <div class="row">
                                 <div class="col-2">
                                     <i class="fa-duotone fa-users"></i> 

@@ -10,7 +10,7 @@
 							<a class="nav-link menu-top" href="./">Inicio</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link menu-top" href="?pagina=planSupervisor">Plan de Supervisión</a>
+							<a class="nav-link menu-top" href="planSupervisor">Plan de Supervisión</a>
 						</li>
 					</ul>
 				</div>
@@ -32,19 +32,19 @@
 				<i class="fa-duotone fa-house"></i> Tablero
 				</a>
 				<?php if ($_SESSION['level'] == 0): ?>
-					<a href="?pagina=users" class="mt-3 menu-top py-2">
+					<a href="users" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-users"></i> Usuarios
 					</a>
-					<a href="?pagina=schools" class="mt-3 menu-top py-2">
+					<a href="schools" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-school"></i> Escuelas
 					</a>
-					<a href="?pagina=zones" class="mt-3 menu-top py-2">
+					<a href="zones" class="mt-3 menu-top py-2">
 					<i class="fa-duotone fa-location-dot"></i> Zonas
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
 				<?php else: ?>
-					<a href="?pagina=lista" class="mt-3 menu-top">
+					<a href="lista" class="mt-3 menu-top">
 						Supervisión
 					</a>
 				<?php endif ?>

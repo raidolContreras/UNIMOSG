@@ -66,22 +66,25 @@ $(document).ready(function() {
 				render: function(data) {
 					html = `
 					<center class="table-columns">
-                        <div class="flex justify-center items-center">
-                            <button class="btn btn-info flex items-center mr-3 editUser" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idUsers})">
-								<i class="fa-duotone fa-pen-to-square"></i> Editar
+                        <div class="flex justify-center items-center btn-group">
+                            <button class="btn btn-info flex items-center editUser" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idUsers})">
+								<i class="fa-duotone fa-pen-to-square"></i>
                             </button>
 					`;
 					if (data.status == 1) {
 						html += `
                             <button class="btn btn-danger flex items-center" onclick="SuspendUsers(${data.idUsers})">
-								<i class="fa-duotone fa-user-slash"></i> Suspender 
+								<i class="fa-duotone fa-user-slash"></i> 
                             </button>
                         </div>
                     </center>`;
 					} else {
 						html += `
                             <button class="btn btn-success flex items-center" onclick="ActivateUsers(${data.idUsers})">
-								<i class="fa-duotone fa-user-plus"></i> Activar 
+								<i class="fa-duotone fa-user-plus"></i> 
+                            </button>
+                            <button class="btn btn-danger flex items-center" onclick="DeleteUsers(${data.idUsers})">
+                                <i class="fa-duotone fa-trash"></i>
                             </button>
                         </div>
                     </center>`;
@@ -133,4 +136,32 @@ function ActivateUsers(idUsers) {
             console.log(error);
         }
     });
+}
+
+function DeleteUsers(idUsers) {
+    // Confirmación antes de eliminar
+    if (confirm('¿Estás seguro de eliminar este usuario permanentemente?')) {
+        $.ajax({
+            url: 'controller/ajax/ajax.form.php',
+            type: 'POST',
+            data: {
+                deleteUsers: idUsers
+            },
+            success: function(response) {
+                if (response == 'ok') {
+                    // Recargar la tabla solo si la respuesta es exitosa
+                    $('#tableUsers').DataTable().ajax.reload();
+                    alert('Usuario eliminado exitosamente.');
+                } else {
+                    // Mostrar el error en consola
+                    console.log('Error:', response);
+                    alert('Hubo un problema al eliminar el usuario.');
+                }
+            },
+            error: function(error) {
+                console.log('Error:', error);
+                alert('Hubo un error en la comunicación con el servidor.');
+            }
+        });
+    }
 }

@@ -112,13 +112,13 @@ function showForms(idArea, nameArea) {
                 data.forEach(object => {
                     html += `
                         <tr class="${object.idObject}">
-                            <th>${object.nameObject}</th>
+                            <th>${object.nameObject.charAt(0).toUpperCase() + object.nameObject.slice(1).toLowerCase()}</th>
                             <td>${object.cantidad}</td>
                             <td class="datetime">${updateDateTime()}</td>
                             <td><input type="text" id="description_${object.idObject}" class="form-control"></td>
                             <td>
-                                <label><input type="radio" id="concepto_${object.idObject}" name="concepto_${object.idObject}" value="Pendiente"> Pendiente</label><br>
-                                <label><input type="radio" id="concepto_${object.idObject}" name="concepto_${object.idObject}" value="Urgente"> Urgente</label><br>
+                                <label><input type="radio" id="concepto_${object.idObject}" name="concepto_${object.idObject}" value="En espera"> No urgente</label><br>
+                                <label><input type="radio" id="concepto_${object.idObject}" name="concepto_${object.idObject}" value="Urgente"> Urgente (24 hrs)</label><br>
                                 <label><input type="radio" id="concepto_${object.idObject}" name="concepto_${object.idObject}" value="Inmediata"> Inmediata</label>
                             </td>
                             <td>
@@ -126,7 +126,7 @@ function showForms(idArea, nameArea) {
                             </td>
                             <td>
                                 <button class="sendButton" id="button_${object.idObject}" onclick="sendForm(${object.idObject})" disabled>
-                                    <i class="fa-duotone fa-paper-plane-top mr-2"></i>
+                                    <i class="fad fa-external-link"></i>
                                 </button>
                             </td>
                         </tr>

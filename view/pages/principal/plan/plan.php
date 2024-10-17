@@ -85,7 +85,7 @@
                             </select>
                         </div>
                         <div class="mt-3">
-                            <button type="submit" class="btn btn-primary">Enviar <i class="fa-duotone fa-paper-plane-top"></i></button>
+                            <button type="submit" class="btn btn-primary">Enviar <i class="fad fa-external-link"></i></button>
                         </div>
                     </form>
                     <div class="table-responsive">

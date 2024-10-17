@@ -166,6 +166,11 @@ if (isset($_POST['activateUsers'])) {
     echo FormsController::ctrActivateUser($idUser);
 }
 
+if (isset($_POST['deleteUsers'])) {
+    $idUser = $_POST['deleteUsers'];
+    echo FormsController::ctrDeleteUser($idUser);
+}
+
 if (isset($_POST['searchSchool'])) {
     $searchSchool = $_POST['searchSchool'];
     echo json_encode(FormsController::ctrSearchSchools('idSchool', $searchSchool));

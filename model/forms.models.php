@@ -382,6 +382,22 @@ class FormsModel
 		}
 	}
 
+	static public function mdlDeleteUser($idUser) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare('DELETE FROM servicios_users WHERE idUsers = :idUsers');
+            $stmt->bindParam(':idUsers', $idUser, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 	static public function mdlEditSchool($data)
 	{
 		try {
@@ -1129,7 +1145,7 @@ class FormsModel
 			<body>
 				<div class="container">
 					<div class="header">
-						<img src="https://unimosg.contreras-flota.click/view/assets/images/logo.png" alt="UNIMO Logo">
+						<img src="https://servicios.unimontrer.edu.mx/view/assets/images/logo.png" alt="UNIMO Logo">
 						<h1>Reporte ' . htmlspecialchars($importancia) . '</h1>
 						<p>Universidad Montrer (UNIMO)</p>
 					</div>

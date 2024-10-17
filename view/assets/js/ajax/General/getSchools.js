@@ -14,7 +14,7 @@ $(document).ready(function () {
                         <div class="col-8" style="font-size: 14px;">Tablero</div> 
                     </div>
                 </a>
-                <a href="?pagina=school" class="mt-3 menu-top py-2">
+                <a href="school" class="mt-3 menu-top py-2">
                     <div class="d-flex align-items-center">
                         <div class="col-2">
                             <i class="fa-duotone fa-cabinet-filing"></i>
@@ -22,7 +22,7 @@ $(document).ready(function () {
                         <div style="font-size: 14px;">Registro de incidentes</div>
                     </div>
                 </a>
-                <a href="?pagina=plan" class="mt-3 menu-top py-2">
+                <a href="plan" class="mt-3 menu-top py-2">
                     <div class="d-flex align-items-center">
                         <div class="col-2">
                             <i class="fa-duotone fa-radar"></i>
@@ -41,7 +41,7 @@ $(document).ready(function () {
                             <div class="col-8" style="font-size: 14px;">Tablero</div> 
                         </div>
                     </a>
-                    <a href="?pagina=school" class="mt-3 mx-1 menu-top py-2 col-3">
+                    <a href="school" class="mt-3 mx-1 menu-top py-2 col-3">
                         <div class="d-flex align-items-center">
                             <div class="col-2">
                                 <i class="fa-duotone fa-cabinet-filing"></i>
@@ -49,7 +49,7 @@ $(document).ready(function () {
                             <div style="font-size: 14px;">Registro de incidentes</div>
                         </div>
                     </a>
-                    <a href="?pagina=plan" class="mt-3 mx-1 menu-top py-2 col-3">
+                    <a href="plan" class="mt-3 mx-1 menu-top py-2 col-3">
                         <div class="d-flex align-items-center">
                             <div class="col-2">
                                 <i class="fa-duotone fa-radar"></i>
@@ -63,7 +63,7 @@ $(document).ready(function () {
             var html3 = '';
             data.forEach(school => {
                 html3 += `
-                <a href="?pagina=school&idSchool=${school.idSchool}" class="dropdown-item">
+                <a href="school&idSchool=${school.idSchool}" class="dropdown-item">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="font-size: 14px;">${school.nameSchool}</div> 
                         <i class="fa-solid fa-chevron-right"></i>

@@ -124,5 +124,5 @@ function verObjetos(idArea, idZone) {
 }
 
 function returnZonas() {
-    window.location.href = '?pagina=zones';
+    window.location.href = 'zones';
 }

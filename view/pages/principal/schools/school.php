@@ -20,7 +20,7 @@
     <div class="card-custom-xl">
         <div class="row justify-content-center p-3">
             <div class="col-12 col-md-6 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Pendiente')" class="btn btn-info w-100">Incidencias pendientes<span class="pendiente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
+                <button onclick="solicitud(<?php echo $idSchool ?>, 'En espera')" class="btn btn-info w-100">Incidencias en espera<span class="Espera position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>
             <div class="col-12 col-md-6 my-3">
                 <button onclick="solicitud(<?php echo $idSchool ?>, 'Urgente')" class="btn btn-warning w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
@@ -142,6 +142,17 @@
                             <label class="form-check-label" for="shoppingNo">No</label>
                         </div>
                     </div>
+                </div>
+                <div class="col-12">
+                    <!-- Opciones para indicar si se realizó alguna compra o gasto -->
+                    <label class="form-label">Especifique el gasto</label>
+                    <label class="form-check-label" for="shopping">Ingrese el gasto</label>
+                    <input type="text" name="shopping" id="shopping" class="form-control">
+                    <label class="form-check-label" for="shoppingProveedores">Ingrese el o los proveedores</label>
+                    <input type="text" name="shoppingProveedores" id="shoppingProveedores" class="form-control">
+                    <label class="form-check-label" for="shoppingEvidence">Adjunte evidencias</label>
+                    <input type="file" id="shoppingEvidence" name="shoppingEvidence" accept="image/*,.pdf" class="form-control">
+
                 </div>
                 <div class="col-12">
                     <input type="hidden" id="idIncidente">

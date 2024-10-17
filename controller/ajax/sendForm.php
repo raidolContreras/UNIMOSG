@@ -42,7 +42,7 @@ if ($response == 'ok') {
     $data = array(
         'title' => 'Nueva incidencia (' . mb_strtoupper($importancia) . ')',
         'body' => 'Hay una nueva incidencia en '. $schoolName,
-        'url' => 'https://unimosg.contreras-flota.click/school&idSchool=' . $idSchool
+        'url' => 'https://servicios.unimontrer.edu.mx/school&idSchool=' . $idSchool
     );
     FormsController::ctrNewNotify($data);
 }
