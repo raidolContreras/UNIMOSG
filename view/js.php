@@ -1,8 +1,9 @@
 
 <script src="view/assets/vendor/Datatables/datatables.js"></script>
 <script src="https://kit.fontawesome.com/f4781c35cc.js" crossorigin="anonymous"></script>
-<!-- Elimina esta línea ya que Popper.js viene incluido con Bootstrap Bundle -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+<!-- Development -->
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
 <script>
     $(document).ready(function() {

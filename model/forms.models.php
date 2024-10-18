@@ -312,10 +312,11 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('INSERT INTO servicios_users (name, email, password, level) VALUES (:name, :email, :password, :level)');
+			$stmt = $pdo->prepare('INSERT INTO servicios_users (name, email, password, phone, level) VALUES (:name, :email, :password, :phone, :level)');
 			$stmt->bindParam(':name', $data['name'], PDO::PARAM_STR);
 			$stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
 			$stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
+			$stmt->bindParam(':phone', $data['phone'], PDO::PARAM_INT);
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
 				return 'ok';
@@ -332,9 +333,10 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('UPDATE servicios_users SET name = :name, email = :email, level = :level WHERE idUsers = :idUsers');
+			$stmt = $pdo->prepare('UPDATE servicios_users SET name = :name, email = :email, phone = :phone, level = :level WHERE idUsers = :idUsers');
 			$stmt->bindParam(':name', $data['name'], PDO::PARAM_STR);
 			$stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
+			$stmt->bindParam(':phone', $data['phone'], PDO::PARAM_INT);
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
 			$stmt->bindParam(':idUsers', $data['idUsers'], PDO::PARAM_INT);
 			if ($stmt->execute()) {

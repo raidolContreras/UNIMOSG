@@ -31,12 +31,12 @@ $(document).ready(function () {
                 render: function (data) {
                     return `
                     <center class="table-columns">
-                        <div class="flex justify-center items-center">
-                            <button class="btn btn-info items-center mr-3 button-custom" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idSchool})">
-                                <i class="fa-duotone fa-pen-to-square"></i> Editar
+                        <div class="flex justify-center items-center btn-group">
+                            <button class="btn btn-info items-center button-custom" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idSchool})" data-tippy-content="Editar">
+                                <i class="fa-duotone fa-pen-to-square"></i>
                             </button>
-                            <button class="btn btn-danger items-center button-custom" onclick="showModal(${data.idSchool})">
-                                <i class="fa-duotone fa-trash"></i> Eliminar 
+                            <button class="btn btn-danger items-center button-custom" onclick="showModal(${data.idSchool})" data-tippy-content="Eliminar">
+                                <i class="fa-duotone fa-trash"></i> 
                             </button>
                         </div>
                     </center>
@@ -46,6 +46,15 @@ $(document).ready(function () {
         ],
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        // Aquí se inicializan los tooltips después de renderizar la tabla
+        drawCallback: function() {
+            tippy('[data-tippy-content]', {
+                duration: 0,
+                arrow: false,
+                delay: [1000, 200],
+                followCursor: true,
+            });            
         }
     });
 

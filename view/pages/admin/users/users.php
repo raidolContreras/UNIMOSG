@@ -14,6 +14,7 @@
             <tr>
                 <th width="20%">Usuario</th>
                 <th width="20%">Puesto</th>
+                <th width="20%">Teléfono</th>
                 <th width="20%">Status</th>
                 <th width="20%"></th>
             </tr>

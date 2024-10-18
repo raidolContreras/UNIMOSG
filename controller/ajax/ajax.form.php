@@ -120,6 +120,7 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password'])
 	$name = $_POST['name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $phone = $_POST['phone'];
     $level = $_POST['level'];
 
     $cryptPassword = crypt($password, '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
@@ -128,6 +129,7 @@ if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password'])
 		"name" => $name,
         "email" => $email,
         "password" => $cryptPassword,
+        "phone" => $phone,
 		"level" => $level
 	);
 
@@ -143,12 +145,14 @@ if (isset($_POST['searchUser'])) {
 if (isset($_POST['nameEdit']) && isset($_POST['emailEdit']) && isset($_POST['levelEdit'])) {
 	$name = $_POST['nameEdit'];
     $email = $_POST['emailEdit'];
+    $phone = $_POST['phoneEdit'];
     $level = $_POST['levelEdit'];
 	$idUser = $_POST['idUser'];
 
     $data = array(
         "name" => $name,
         "email" => $email,
+        "phone" => $phone,
         "level" => $level,
 		"idUsers" => $idUser
     );

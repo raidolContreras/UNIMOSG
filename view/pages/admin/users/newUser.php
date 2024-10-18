@@ -12,6 +12,11 @@
             <label for="regular-form-4" class="form-label">Contraseña</label>
             <input id="regular-form-4" type="password" class="form-control" placeholder="Contraseña">
         </div>
+        <!-- Telefono -->
+        <div class="mb-3">
+            <label for="regular-form-6" class="form-label">Número de Whatsapp</label>
+            <input id="regular-form-6" type="text" class="form-control" placeholder="Número de Whatsapp">
+        </div>
         <div class="mb-3">
             <label for="regular-form-5" class="form-label">Nivel de acceso</label>
             <select class="form-select" aria-label="Default select example" id="regular-form-5">

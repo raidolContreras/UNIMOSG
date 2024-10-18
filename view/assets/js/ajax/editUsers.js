@@ -4,6 +4,7 @@ $(document).ready(function(){
         e.preventDefault();
         var name = $('#edit-1').val();
         var email = $('#edit-3').val();
+        var phone = $('#edit-4').val();
         var level = $('#edit-5').val();
         var idUser = $('#edit').val();
 
@@ -13,6 +14,7 @@ $(document).ready(function(){
             data: {
                 nameEdit: name,
                 emailEdit: email,
+                phoneEdit: phone,
                 levelEdit: level,
                 idUser: idUser
                 },
@@ -42,6 +44,7 @@ function openMenuEdit(collapse, idForm, id) {
         success: function(data) {
             $('#edit-1').val(data.name);
             $('#edit-3').val(data.email);
+            $('#edit-4').val(data.phone);
             $('#edit-5').val(data.level);
             $('#edit').val(data.idUsers);
 

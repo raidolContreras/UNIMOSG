@@ -42,6 +42,15 @@ $(document).ready(function() {
                     </center>`;
 				}
 			},
+            { // telefono y si es 0 saldra un '-'
+                data: null,
+                render: function(data) {
+                    return `
+                    <center class="table-columns">
+                        ${data.phone === 0? '-' : data.phone}
+                    </center>`;
+                }
+            },
 			{
 				data: null,
 				render: function(data) {
@@ -61,41 +70,50 @@ $(document).ready(function() {
 					`;
 				}
 			},
-			{
+			{   // añadir tooltips
 				data: null,
 				render: function(data) {
-					html = `
-					<center class="table-columns">
+                    html = `
+                    <center class="table-columns">
                         <div class="flex justify-center items-center btn-group">
-                            <button class="btn btn-info flex items-center editUser" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idUsers})">
-								<i class="fa-duotone fa-pen-to-square"></i>
+                            <button class="btn btn-info flex items-center editUser" onclick="openMenuEdit('modalNavUpdate', 'editUsers', ${data.idUsers})" data-tippy-content="Editar usuario">
+                                <i class="fa-duotone fa-pen-to-square"></i>
                             </button>
-					`;
-					if (data.status == 1) {
-						html += `
-                            <button class="btn btn-danger flex items-center" onclick="SuspendUsers(${data.idUsers})">
-								<i class="fa-duotone fa-user-slash"></i> 
+                    `;
+                    if (data.status == 1) {
+                        html += `
+                            <button class="btn btn-danger flex items-center" onclick="SuspendUsers(${data.idUsers})" data-tippy-content="Suspender usuario">
+                                <i class="fa-duotone fa-user-slash"></i> 
                             </button>
                         </div>
                     </center>`;
-					} else {
-						html += `
-                            <button class="btn btn-success flex items-center" onclick="ActivateUsers(${data.idUsers})">
-								<i class="fa-duotone fa-user-plus"></i> 
+                    } else {
+                        html += `
+                            <button class="btn btn-success flex items-center" onclick="ActivateUsers(${data.idUsers})" data-tippy-content="Activar usuario">
+                                <i class="fa-duotone fa-user-plus"></i> 
                             </button>
-                            <button class="btn btn-danger flex items-center" onclick="DeleteUsers(${data.idUsers})">
+                            <button class="btn btn-danger flex items-center" onclick="DeleteUsers(${data.idUsers})" data-tippy-content="Eliminar usuario">
                                 <i class="fa-duotone fa-trash"></i>
                             </button>
                         </div>
                     </center>`;
-					}
-					return html;
-				}
+                    }
+                    return html;
+                }                              
 			}
 		],
 		"language": {
 			"url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-		}
+		},
+        // Aquí se inicializan los tooltips después de renderizar la tabla
+        drawCallback: function() {
+            tippy('[data-tippy-content]', {
+                duration: 0,
+                arrow: false,
+                delay: [1000, 200],
+                followCursor: true,
+            });            
+        }
 	});
 });
 

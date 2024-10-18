@@ -17,4 +17,8 @@
 <link rel="stylesheet" href="view/assets/css/aos.css" />
 
 <link rel="stylesheet" href="view/assets/css/style.css" />
+
 <link href="https://devosco.io/fontawesome/css/all.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" />
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@5/animations/shift-away.css" />
