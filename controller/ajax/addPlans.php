@@ -8,7 +8,8 @@
         "idZone" => $_POST['zone'],
         "idArea" => $_POST['area'],
         "idSupervisor" => $_POST['supervisor'],
-        "datePlan" => $_POST['eventDate']
+        "datePlan" => $_POST['eventDate'],
+        "eventTime" => $_POST['eventTime']
     );
     $response = FormsController::ctrAddPlans($data);
     echo json_encode($response);

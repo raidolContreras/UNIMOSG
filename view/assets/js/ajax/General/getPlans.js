@@ -23,7 +23,7 @@ function generateWeeklyEvents(event) {
     for (let i = 0; i < 52; i++) {
         const eventDate = getNextDate(currentDate, event.day);
         events.push({
-            title: `${event.nameSchool} - ${event.nameZone} - ${event.nameArea}: ${event.name}`,
+            title: `${event.name}: (${event.nameZone} - ${event.nameArea})`,
             start: eventDate.toISOString().split('T')[0],
             id: event.id,
             deletable: false,
@@ -175,6 +175,7 @@ function submitEventForm() {
     const area = $("#area").val();
     const supervisor = $("#supervisor").val();
     const eventDate = $("#eventDate").val();
+    const eventTime = $("#eventTime").val();
 
     if (!school || !zone || !area || !supervisor) {
         alert("Todos los campos son obligatorios.");
@@ -188,7 +189,8 @@ function submitEventForm() {
                 zone,
                 area,
                 supervisor,
-                eventDate
+                eventDate,
+                eventTime
             },
             dataType: "json",
             success: function (data) {
@@ -215,9 +217,10 @@ function submitSupervisionEventForm() {
     const zone = $("#zoneSupervision").val();
     const area = $("#areaSupervision").val();
     const dia = $("#diaSupervision").val();
+    const supervisionTime = $("#supervisionTime").val();
     const supervisor = $("#supervisorSupervision").val();
 
-    if (!school || !zone || !area || !dia || !supervisor) {
+    if (!school || !zone || !area || !dia || !supervisor || !supervisionTime) {
         alert("Todos los campos son obligatorios.");
     } else {
         $.ajax({
@@ -228,10 +231,13 @@ function submitSupervisionEventForm() {
                 zone,
                 area,
                 dia,
+                supervisionTime,
                 supervisor
             },
             dataType: "json",
             success: function () {
+                alert("Día de supervisión añadido correctamente.");
+                
                 $("#supervitionRoute").DataTable().ajax.reload();
                 $("#eventModal").modal("hide");
             },
@@ -345,6 +351,7 @@ function getPlan(plan) {
     const zone = $("#zone");
     const area = $("#area");
     const eventDate = $("#eventDate");
+    const eventTime = $("#eventTime");
     const supervisor = $("#supervisor");
 
     $("#plan").val(plan);
@@ -360,13 +367,19 @@ function getPlan(plan) {
         success: function (data) {
             setTimeout(() => {
                 school.val(data.idSchool);
-                getZones(data.idSchool, data.idZone, "school");
+                
                 setTimeout(() => {
-                    getAreas(data.idZone, data.idArea, "zone");
-                }, 100);
+                    getZones(data.idSchool, data.idZone, "school");
+                    
+                    setTimeout(() => {
+                        getAreas(data.idZone, data.idArea, "zone");
+                    }, 50);
+
+                }, 50);
                 supervisor.val(data.idSupervisor);
                 eventDate.val(data.datePlan).prop("readonly", false);
-            }, 100);
+                eventTime.val(data.eventTime);
+            }, 50);
         },
         error: function (xhr, status, error) {
             console.error("Error fetching plan:", error);

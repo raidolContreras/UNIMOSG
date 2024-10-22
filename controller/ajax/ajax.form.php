@@ -85,7 +85,7 @@ if(isset($_POST['uploadAreas'])) {
     }
 }
 
-if(isset($_POST['uploadObjects'])) {
+if (isset($_POST['uploadObjects'])) {
     $result = '';
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK && $_FILES['file']['type'] === 'text/csv') {
         $idArea = $_POST['uploadObjects'];
@@ -93,24 +93,48 @@ if(isset($_POST['uploadObjects'])) {
         $csvData = file_get_contents($fileTmpPath);
         $lines = explode("\n", $csvData);
         $init = false;
+        $data = array();
+
+        $objectsInArea =  FormsController::ctrSelectObjectsbyAreas($idArea);
+        
         foreach ($lines as $line) {
             if (!empty($line)) {
                 if ($init) {
                     $fields = str_getcsv($line);
                     $nameObject = $fields[0];
                     $cantidad = $fields[1];
-                        $area = FormsController::ctrSearchObject($idArea, 'nameObject', $nameObject);
-                        if (empty($area)) {
-                            $result = FormsController::ctrRegisterObject($nameObject, $cantidad, $idArea);
-                        } else {
-                            $result = 'ok';
+                    $isDuplicate = false;
+
+                    if ($objectsInArea) {
+                        foreach ($objectsInArea as $object) {
+                            if ($object['nameObject'] == $nameObject) {
+                                $isDuplicate = true; // Marca como duplicado
+                                break; // Sale del loop
+                            }
                         }
+                    }
+                    
+                    // Si no es duplicado, lo agregamos al arreglo
+                    if (!$isDuplicate) {
+                        $data[] = array(
+                            "nameObject" => $nameObject,
+                            "cantidad" => $cantidad,
+                            "objects_idArea" => $idArea
+                        );
+                    }
                 } else {
                     $init = true;
                 }
             }
         }
-        echo $result;
+        
+        // Envía los datos a la base de datos solo si hay algo que insertar
+        if (!empty($data)) {
+            $result = FormsController::ctrRegisterObjects($data);
+            echo $result;
+        } else {
+            echo 'No hay nuevos objetos para insertar.';
+        }
     } else {
         echo 'Error al cargar el archivo CSV';
     }

@@ -20,8 +20,8 @@ class FormsController {
         return FormsModel::mdlRegisterArea($nameArea, $idSchool);
     }
 
-    static public function ctrRegisterObject($nameObject, $cantidad, $idArea){
-        return FormsModel::mdlRegisterObject($nameObject, $cantidad, $idArea);
+    static public function ctrRegisterObjects($data){
+        return FormsModel::mdlRegisterObjects($data);
     }
 
     static public function ctrSearchZones($idSchool, $item, $value){
@@ -44,6 +44,10 @@ class FormsController {
         return FormsModel::mdlEditArea($data);
     }
 
+    static public function ctrSelectObjectsbyAreas($idArea) {
+        return FormsModel::mdlSelectObjectsbyAreas($idArea);
+    }
+    
     static public function ctrSearchObject($idArea, $item, $value){
         return FormsModel::mdlSearchObject($idArea, $item, $value);
     }

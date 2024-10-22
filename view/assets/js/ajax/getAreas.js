@@ -104,9 +104,14 @@ function openMenuEdit(collapse, idForm, id) {
             var modalBackdrop = document.createElement('div');
             modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');
             document.body.appendChild(modalBackdrop);
+            
+            // Agregar evento para cerrar el modal al hacer clic en el backdrop
+            $('.modal-backdrop').on('click', function() {
+                closeMenu('modalNavUpdate')
+            });
+
         }
     });
-
 }
 
 function verArea(idArea) {
@@ -133,6 +138,12 @@ function verArea(idArea) {
 
 function agregarObjetos(idArea) {
     openMenu('modalObjects', 'newObjets');
+
+    // Agregar evento para cerrar el modal al hacer clic en el backdrop
+    $('.modal-backdrop').on('click', function() {
+        closeMenu('modalObjects'); // Cierra el modal cuando se hace clic en el backdrop
+    });
+
     // Borrar archivos cargados en el Dropzone
     var myDropzone = Dropzone.forElement("#addObjectsDropzone");
     if (myDropzone) {
@@ -303,7 +314,6 @@ function confirmDeleteZone(idArea) {
         data: {
             deleteArea: idArea
             },
-        dataType: 'json',
         success: function(data) {
             $('#deleteModal').modal('hide');
             $('#areas').DataTable().ajax.reload();

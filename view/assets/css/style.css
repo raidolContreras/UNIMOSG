@@ -15958,3 +15958,9 @@ body {
 .datetime, .sorting_1 {
   text-align: center;
 }
+
+.card-body {
+  max-height: 41rem;
+  overflow-y: auto;
+  margin-top: 9px;
+}

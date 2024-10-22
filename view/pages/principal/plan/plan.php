@@ -50,12 +50,12 @@
                 <div class="modal-body">
                     
                     <form id="supervisionEvent" class="row">
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="schoolSupervision">Escuela</label>
                             <select name="schoolSupervision" id="schoolSupervision" class="form-select">
                             </select>
                         </div>
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="zoneSupervision">Zona</label>
                             <select name="zoneSupervision" id="zoneSupervision" class="form-select" disabled>
                                 <option value="">Selecciona una zona</option>
@@ -83,6 +83,10 @@
                                 <option value="4">Jueves</option>
                                 <option value="5">Viernes</option>
                             </select>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="supervisionTime">Hora de supervición</label>
+                            <input type="time" id="supervisionTime" name="supervisionTime" class="form-control">
                         </div>
                         <div class="mt-3">
                             <button type="submit" class="btn btn-primary">Enviar <i class="fad fa-external-link"></i></button>
@@ -120,33 +124,37 @@
                 </div>
                 <div class="modal-body">
                     <form id="eventForm" class="row">
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="school">Escuela</label>
                             <select name="school" id="school" class="form-select">
                             </select>
                         </div>
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="zone">Zona</label>
                             <select name="zone" id="zone" class="form-select" disabled>
                                 <option value="">Selecciona una zona</option>
                             </select>
                         </div>
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="area">Area</label>
                             <select name="area" id="area" class="form-select" disabled>
                                 <option value="">Selecciona un area</option>
                             </select>
                         </div>
-                        <div class="form-group col-6">
+                        <div class="form-group col-4">
                             <label for="supervisor">Supervisor</label>
                             <select name="supervisor" id="supervisor" class="form-select">
                                 <option value="">Selecciona un supervisor</option>
                             </select>
                         </div>
-                        <div class="form-group mb-4">
+                        <div class="form-group col-4">
                             <label for="eventDate">Fecha del Evento</label>
                             <input type="date" class="form-control" id="eventDate" readonly>
                             <input type="hidden" id="plan">
+                        </div>
+                        <div class="form-group col-4 mb-4">
+                            <label for="eventTime">Hora de supervición</label>
+                            <input type="time" id="eventTime" name="eventTime" class="form-control">
                         </div>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-danger" onclick="closeModal('eventModal')">Cancelar</button>

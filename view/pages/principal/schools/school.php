@@ -17,8 +17,9 @@
         <?php endif ?>
     </div>
 
-    <div class="card-custom-xl">
-        <div class="row justify-content-center p-3">
+    <div class="card-custom-xl" style="display: flex;">
+        <div class="justify-content-center p-3" style="display: flex;flex-wrap: wrap;
+    align-items: center;">
             <div class="col-12 col-md-6 my-3">
                 <button onclick="solicitud(<?php echo $idSchool ?>, 'En espera')" class="btn btn-info w-100">Incidencias en espera<span class="Espera position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
             </div>

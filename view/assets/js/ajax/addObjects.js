@@ -68,6 +68,12 @@ $(document).ready(function(){
             myDropzone.removeAllFiles();
             showAlertBootstrap('Éxito', 'Archivo cargado excitosamente.');
             $('#objects').DataTable().ajac().reload();
+        }else if (response = 'No hay nuevos objetos para insertar.') { {
+            closeMenu('modalObjects');
+            myDropzone.removeAllFiles();
+            showAlertBootstrap('Alerta!', response);
+            $('#objects').DataTable().ajac().reload();
+        }
         } else {
             myDropzone.removeAllFiles();
             showAlertBootstrap('¡Alerta!', 'El archivo no se pudo cargar, intentalo más tarde.');

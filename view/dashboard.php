@@ -82,6 +82,11 @@
                 var submitButton = document.querySelector('.sendAreas');
                 submitButton.disabled = true;
             }
+            
+            // Agregar evento para cerrar el modal al hacer clic en el backdrop
+            $('.modal-backdrop').on('click', function() {
+                closeMenu('modalAreas')
+            });
         }
         document.querySelector('#' + collapse).classList.add('show');
         var modalBackdrop = document.createElement('div');

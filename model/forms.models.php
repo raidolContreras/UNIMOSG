@@ -13,9 +13,11 @@ class FormsModel
 	static public function mdlSearchUsers($item, $value)
 	{
 		try {
+			$sql = "SELECT * FROM servicios_users";
 			$pdo = Conexion::conectar();
 			if ($item != null) {
-				$stmt = $pdo->prepare("SELECT * FROM servicios_users WHERE $item = :$item");
+				$sql .+ " WHERE $item = :$item";
+				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
 					return $stmt->fetch();
@@ -23,7 +25,7 @@ class FormsModel
 					return false;
 				}
 			} else {
-				$stmt = $pdo->prepare('SELECT * FROM servicios_users');
+				$stmt = $pdo->prepare($sql);
 
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
 					return $stmt->fetchAll();
@@ -308,6 +310,22 @@ class FormsModel
 		}
 	}
 
+	static public function mdlSelectObjectsbyAreas($idArea) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('SELECT * FROM servicios_objects WHERE objects_idArea = :idArea');
+            $stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return $stmt->fetchAll();
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error al buscar los objetos: " . $e->getMessage());
+            throw $e;
+        }
+	}
+
 	static public function mdlRegisterUser($data)
 	{
 		try {
@@ -436,24 +454,53 @@ class FormsModel
 		}
 	}
 
-	static public function mdlRegisterObject($nameObject, $cantidad, $idArea)
-	{
+	static public function mdlRegisterObjects($data) {
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('INSERT INTO servicios_objects (nameObject, objects_idArea, cantidad) VALUES (:nameObject, :idArea, :cantidad)');
-			$stmt->bindParam(':nameObject', $nameObject, PDO::PARAM_STR);
-			$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
-			$stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
-			if ($stmt->execute()) {
+	
+			// Iniciamos una transacción para asegurar la atomicidad
+			$pdo->beginTransaction();
+	
+			// Construimos la consulta SQL para insertar múltiples registros de una vez
+			$sql = 'INSERT INTO servicios_objects (nameObject, objects_idArea, cantidad) VALUES ';
+			$values = [];
+			$params = [];
+	
+			foreach ($data as $index => $object) {
+				$nameObject = $object['nameObject'];
+				$idArea = $object['objects_idArea'];
+				$cantidad = $object['cantidad'];
+	
+				// Usamos placeholders dinámicos para los valores de cada fila
+				$values[] = "(?, ?, ?)";
+				$params[] = $nameObject;
+				$params[] = $idArea;
+				$params[] = $cantidad;
+			}
+	
+			// Unimos todas las consultas en una sola
+			$sql .= implode(", ", $values);
+	
+			// Preparamos la consulta
+			$stmt = $pdo->prepare($sql);
+	
+			// Ejecutamos la consulta con los valores concatenados
+			if ($stmt->execute($params)) {
+				// Confirmamos la transacción si todo salió bien
+				$pdo->commit();
 				return 'ok';
 			} else {
+				// Si algo falla, hacemos rollback
+				$pdo->rollBack();
 				return 'error';
 			}
 		} catch (PDOException $e) {
-			error_log("Error al registrar el evento: " . $e->getMessage());
+			// En caso de error, hacemos rollback de la transacción
+			$pdo->rollBack();
+			error_log("Error al registrar los objetos: " . $e->getMessage());
 			throw $e;
 		}
-	}
+	}	
 
 	static public function mdlEditZone($data)
 	{
@@ -781,13 +828,14 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$sql = 'INSERT INTO servicios_plan (idSchool, idZone, idArea, idSupervisor, datePlan) VALUES (:idSchool, :idZone, :idArea, :idSupervisor, :datePlan)';
+			$sql = 'INSERT INTO servicios_plan (idSchool, idZone, idArea, idSupervisor, datePlan, eventTime) VALUES (:idSchool, :idZone, :idArea, :idSupervisor, :datePlan, :eventTime)';
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
 			$stmt->bindParam(':idZone', $data['idZone'], PDO::PARAM_INT);
 			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
 			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
 			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
+			$stmt->bindParam(':eventTime', $data['eventTime'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
 				return $pdo->lastInsertId();
 			} else {
@@ -803,7 +851,7 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$sql = 'UPDATE servicios_plan SET idSchool = :idSchool, idZone = :idZone, idArea = :idArea, idSupervisor = :idSupervisor, datePlan = :datePlan WHERE idPlan = :idPlan';
+			$sql = 'UPDATE servicios_plan SET idSchool = :idSchool, idZone = :idZone, idArea = :idArea, idSupervisor = :idSupervisor, datePlan = :datePlan, eventTime = :eventTime WHERE idPlan = :idPlan';
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(':idPlan', $data['idPlan'], PDO::PARAM_INT);
 			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
@@ -811,6 +859,7 @@ class FormsModel
 			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
 			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
 			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
+			$stmt->bindParam(':eventTime', $data['eventTime'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
 				return $data['idPlan'];
 			} else {
@@ -962,6 +1011,7 @@ class FormsModel
 				</div>
 				<div class="content">
 					<div class="section">';
+					$i = 0;
 					foreach ($responses as $response) {
 						$email .= '
 							<h2>' . htmlspecialchars($response['nameSchool']) . ' - ' . htmlspecialchars($response['nameZone']) . ' - ' . htmlspecialchars($response['area']) . '</h2>
@@ -975,6 +1025,7 @@ class FormsModel
 								</li>';
 						$email .= '
 							</ul>';
+						$i++;
 					}
 
 				$email .= '
@@ -986,39 +1037,41 @@ class FormsModel
 			</div>
 		</body>
 		</html>';
+		
+		if ($i > 0) {
+			// Configuración del correo
+			$mail = new PHPMailer(true);
 
-		// Configuración del correo
-		$mail = new PHPMailer(true);
+			try {
+				// Configuración del servidor SMTP
+				$mail->isSMTP();
+				$mail->Host = 'smtp.gmail.com'; // Cambia esto al servidor SMTP que estés usando
+				$mail->SMTPAuth = true;
+				$mail->Username = 'no-reply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico real
+				$mail->Password = 'Unimo2024$'; // Cambia esto a tu contraseña de correo electrónico real
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				$mail->Port = 587;	
 
-		try {
-			// Configuración del servidor SMTP
-			$mail->isSMTP();
-			$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
-			$mail->SMTPAuth = true;
-			$mail->Username = 'noreply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
-			$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
-			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-			$mail->Port = 587;
+				// Configuración del remitente y destinatario
+				$mail->setFrom('no-reply@unimontrer.edu.mx', 'UNIMO');
 
-			// Configuración del remitente y destinatario
-			$mail->setFrom('noreply@unimontrer.edu.mx', 'UNIMO');
+				$users = FormsModel::mdlSearchDirector();
 
-			$users = FormsModel::mdlSearchDirector();
+				foreach ($users as $user) {
+					$mail->addAddress($user['email']);
+				}
 
-			foreach ($users as $user) {
-				$mail->addAddress($user['email']);
+				// Contenido del correo
+				$mail->isHTML(true);
+				$mail->Subject = 'Reporte diario UNIMO';
+				$mail->Body    = $email;
+				$mail->AltBody = '';
+
+				$mail->send();
+				return 'El correo ha sido enviado correctamente';
+			} catch (Exception $e) {
+				return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
 			}
-
-			// Contenido del correo
-			$mail->isHTML(true);
-			$mail->Subject = 'Reporte diario UNIMO';
-			$mail->Body    = $email;
-			$mail->AltBody = '';
-
-			$mail->send();
-			return 'El correo ha sido enviado correctamente';
-		} catch (Exception $e) {
-			return "El correo no pudo ser enviado. Mailer Error: {$mail->ErrorInfo}";
 		}
 	}
 
@@ -1182,15 +1235,15 @@ class FormsModel
 			try {
 				// Configuración del servidor SMTP
 				$mail->isSMTP();
-				$mail->Host = 'smtp.hostinger.com'; // Cambia esto al servidor SMTP que estés usando
+				$mail->Host = 'smtp.gmail.com'; // Cambia esto al servidor SMTP que estés usando
 				$mail->SMTPAuth = true;
-				$mail->Username = 'noreply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico
-				$mail->Password = 'fjz6GG5l7ly{'; // Cambia esto a tu contraseña de correo electrónico
+				$mail->Username = 'no-reply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico real
+				$mail->Password = 'Unimo2024$'; // Cambia esto a tu contraseña de correo electrónico real
 				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-				$mail->Port = 587;
+				$mail->Port = 587;	
 	
 				// Configuración del remitente y destinatario
-				$mail->setFrom('noreply@unimontrer.edu.mx', 'UNIMO');
+				$mail->setFrom('no-reply@unimontrer.edu.mx', 'UNIMO');
 				
 				$users = FormsModel::mdlSearchDirector();
 
@@ -1214,26 +1267,24 @@ class FormsModel
 
 	static public function mdlSearchIncidentsDaily(){
 		try {
+			$sql = "SELECT i.idIncidente, i.incidente_idObject, i.dateCreated AS fecha, i.description, i.importancia, o.nameObject, a.nameArea AS area, z.nameZone,
+						GROUP_CONCAT(u.email SEPARATOR ', ') AS emails, s.nameSchool
+					FROM 
+						servicios_incidentes i
+						LEFT JOIN 
+							servicios_objects o ON o.idObject = i.incidente_idObject
+						LEFT JOIN 
+							servicios_areas a ON a.idArea = o.objects_idArea
+						LEFT JOIN 
+							servicios_zones z ON z.idZone = a.area_idZones
+						LEFT JOIN 
+							servicios_schools s ON s.idSchool = z.zone_idSchool
+						LEFT JOIN 
+							servicios_users u ON u.level = 1
+					WHERE i.status <> 1
+					GROUP BY i.idIncidente;";
             $pdo = Conexion::conectar();
-            $stmt = $pdo->prepare("	SELECT 
-										i.idIncidente, i.incidente_idObject, i.dateCreated AS fecha, i.description, i.importancia, o.nameObject, a.nameArea AS area, z.nameZone,
-										GROUP_CONCAT(u.email SEPARATOR ', ') AS emails, s.nameSchool
-									FROM 
-										servicios_incidentes i
-										LEFT JOIN 
-											servicios_objects o ON o.idObject = i.incidente_idObject
-										LEFT JOIN 
-											servicios_areas a ON a.idArea = o.objects_idArea
-										LEFT JOIN 
-											servicios_zones z ON z.idZone = a.area_idZones
-										LEFT JOIN 
-											servicios_schools s ON s.idSchool = z.zone_idSchool
-										LEFT JOIN 
-											servicios_users u ON u.level = 1
-									WHERE i.status <> 1
-									GROUP BY 
-									i.idIncidente;
-								");
+            $stmt = $pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -1278,12 +1329,13 @@ class FormsModel
 	static public function mdlAddDaySupervision($data) {
 		try {
             $pdo = Conexion::conectar();
-			$sql = "INSERT INTO servicios_supervision_days(idSchool, idZone, idArea, day, idSupervisor) VALUES (:idSchool, :idZone, :idArea, :day, :idSupervisor)";
+			$sql = "INSERT INTO servicios_supervision_days(idSchool, idZone, idArea, day, supervisionTime, idSupervisor) VALUES (:idSchool, :idZone, :idArea, :day, :supervisionTime, :idSupervisor)";
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(":idSchool", $data['idSchool'], PDO::PARAM_INT);
 			$stmt->bindParam(":idZone", $data['idZone'], PDO::PARAM_INT);
 			$stmt->bindParam(":idArea", $data['idArea'], PDO::PARAM_INT);
 			$stmt->bindParam(":day", $data['day'], PDO::PARAM_STR);
+			$stmt->bindParam(":supervisionTime", $data['supervisionTime'], PDO::PARAM_STR);
 			$stmt->bindParam(":idSupervisor", $data['idSupervisor'], PDO::PARAM_INT);
             if ($stmt->execute()) {
                 return $pdo->lastInsertId();

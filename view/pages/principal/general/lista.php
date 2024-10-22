@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row px-5">
     <div class="col-4 p-0">
         <div class="card schoolList">
             <div class="card-header">

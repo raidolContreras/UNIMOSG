@@ -7,6 +7,7 @@
         "idZone" => $_POST['zone'],
         "idArea" => $_POST['area'],
         "day" => $_POST['dia'],
+        "supervisionTime" => $_POST['supervisionTime'],
         "idSupervisor" => $_POST['supervisor']
     );
     $response = FormsController::ctrAddDaySupervision($data);
