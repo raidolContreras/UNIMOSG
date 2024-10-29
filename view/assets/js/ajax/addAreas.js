@@ -1,5 +1,10 @@
 var numCSV = 0;
 $(document).ready(function(){
+    
+    if ($('#zone').val() == '') {
+        window.location.href = 'zones';
+    }
+
     var myDropzone = new Dropzone("#addAreasDropzone", {
         maxFiles: 1,
         url: "controller/ajax/ajax.form.php",
@@ -75,6 +80,23 @@ $(document).ready(function(){
         }
     });
 
+    
+    // Seleccionamos los campos del formulario y el botón
+    const $areaName = $('#areaName');
+    const $saveArea = $('.saveNewArea');
+
+    // Función para verificar si ambos campos tienen valor
+    function checkFormFields() {
+        if ($areaName.val().trim() !== "") {
+            $saveArea.prop('disabled', false);  // Habilitar el botón
+        } else {
+            $saveArea.prop('disabled', true);  // Deshabilitar el botón
+        }
+    }
+
+    // Escuchar los eventos input en ambos campos
+    $areaName.on('input', checkFormFields);
+
 });
 
 function toggleSubmitButton() {
@@ -84,4 +106,54 @@ function toggleSubmitButton() {
     } else {
         submitButton.disabled = true;
     }
+}
+
+$('.saveNewArea').on('click', function(){
+    var areaName = $('#areaName').val();
+    var idZone = $('#idZone').val();
+    $.ajax({
+        url: 'controller/ajax/ajax.form.php',
+        type: 'POST',
+        data: {
+            addNewArea: true,
+            areaName: areaName,
+            idZone: idZone
+        },
+        success: function(response) {
+            if (response == 'ok') {
+                closeMenu('modalAreas');
+                showAlertBootstrap('Éxito', 'Área creada exitosamente.');
+                // resetear el formulario
+                $('#areaName').val('');
+                // resetear el datatable
+                $('#areas').DataTable().ajax.reload();
+
+            } else {
+                showAlertBootstrap('¡Alerta!', 'No se pudo crear la área, intentalo más tarde.');
+            }
+        }
+    });
+});
+
+$('.addMassiveAreas').on('click', function(){
+    $('#newAreaForm').addClass('d-none');
+    $('.addAreas').addClass('d-none');
+    $('#massiveAreasForm').removeClass('d-none');
+
+    $('.cancelMassiveAreas').on('click', function(){
+        returnForm();
+    });
+
+    $('.modal-backdrop').on('click', function(){
+        returnForm();
+    });
+    
+
+});
+
+function returnForm() {
+    $('#massiveAreasForm').addClass('d-none');
+    $('.addAreas').removeClass('d-none');
+    $('#newAreaForm').removeClass('d-none');
+    $('#areaName').val('');
 }

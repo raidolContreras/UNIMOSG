@@ -1,5 +1,5 @@
 <div class="intro-y box">
-    <form class="p-5" id="editUsers">
+    <form class="p-1" id="editUsers">
 
         <div class="mb-3">
             <label for="c-1" class="form-label">Nombre completo</label>

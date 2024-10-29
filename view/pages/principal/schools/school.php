@@ -36,7 +36,7 @@
     </div>
 
     <div class="card resultsSchools" style="display: none;">
-        <div class="p-5 table-responsive" >
+        <div class="p-1 table-responsive" >
             <table class="table" id="results">
                 <thead>
                     <tr>

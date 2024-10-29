@@ -2,7 +2,7 @@
 <link href="view/assets/vendor/dropzone/dropzone.css" rel="stylesheet">
 
 <div class="intro-y box">
-    <form class="p-5" id="newZones">
+    <form class="p-1" id="newZones">
         <center>
             <h3 class="nameschool"></h3>
         </center>

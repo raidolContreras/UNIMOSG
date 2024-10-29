@@ -1,5 +1,5 @@
 <div class="intro-y box">
-    <form class="p-5" id="editSchools">
+    <form class="p-1" id="editSchools">
         <div class="mb-3">
             <label for="nameSchoolEdit" class="form-label">Nombre de la escuela</label>
             <input id="nameSchoolEdit" type="text" class="form-control" placeholder="Nombre de la escuela">

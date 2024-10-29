@@ -85,6 +85,24 @@ $(document).ready(function() {
             });            
         }
 	});
+    
+    // Seleccionamos los campos del formulario y el botón
+    const $objectName = $('#nameObject');
+    const $cantidad = $('#countObjects');
+    const $saveButton = $('.saveNewObject');
+
+    // Función para verificar si ambos campos tienen valor
+    function checkFormFields() {
+        if ($objectName.val().trim() !== "" && $cantidad.val().trim() !== "") {
+            $saveButton.prop('disabled', false);  // Habilitar el botón
+        } else {
+            $saveButton.prop('disabled', true);  // Deshabilitar el botón
+        }
+    }
+
+    // Escuchar los eventos input en ambos campos
+    $objectName.on('input', checkFormFields);
+    $cantidad.on('input', checkFormFields);
 });
 
 function openMenuEdit(collapse, idForm, id) {
@@ -107,7 +125,7 @@ function openMenuEdit(collapse, idForm, id) {
             
             // Agregar evento para cerrar el modal al hacer clic en el backdrop
             $('.modal-backdrop').on('click', function() {
-                closeMenu('modalNavUpdate')
+                closeMenu('modalNavUpdate');
             });
 
         }
@@ -142,7 +160,10 @@ function agregarObjetos(idArea) {
     // Agregar evento para cerrar el modal al hacer clic en el backdrop
     $('.modal-backdrop').on('click', function() {
         closeMenu('modalObjects'); // Cierra el modal cuando se hace clic en el backdrop
+        resetObjectForm();
     });
+
+    $('#newObjectForm2').removeClass('d-none');
 
     // Borrar archivos cargados en el Dropzone
     var myDropzone = Dropzone.forElement("#addObjectsDropzone");
@@ -189,6 +210,16 @@ function agregarObjetos(idArea) {
                 render: function (data, type, row, meta) {
                     return `<center class="table-columns">
                                 <span class="editable row" data-name="cantidad" data-type="text" data-pk="${row.idObject}" data-text="${data}">${data}</span>
+                            </center>`;
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row, meta) {
+                    return `<center class="table-columns">
+                                <button class="btn btn-danger btn-sm" onclick="deleteObject(${row.idObject})">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </center>`;
                 }
             },
@@ -294,6 +325,41 @@ function agregarObjetos(idArea) {
     });
 }
 
+$('.saveNewObject').on('click', function() {
+    //validar el formulario
+    var objectName = $('#nameObject').val();
+    var cantidad = $('#countObjects').val();
+    var idArea = $('#idArea').val();
+
+    $.ajax({
+        url: 'controller/ajax/ajax.form.php',
+        type: 'POST',
+        data: {
+            addNewObject: true,
+            objectName: objectName,
+            cantidad: cantidad,
+            idArea: idArea
+        },
+        success: function(response) {
+            if (response == 'ok') {
+                showAlertBootstrap('Éxito', 'Objeto creado exitosamente.');
+                $('#objects').DataTable().ajax.reload();
+                resetObjectForm();
+            } else {
+                showAlertBootstrap('¡Alerta!', response);
+            }
+        }
+    });
+});
+
+function resetObjectForm() {
+    //mostrar la clase d-none del formulario newObjectForm y mostrar el boton con la clase addNewObject
+    $('.objectsBox').addClass('d-none');
+    $('.addObjects').removeClass('d-none');
+    //limpiar el formulario
+    $('#newObjectForm2')[0].reset();
+}
+
 function deleteArea(idArea){
     var html = `
         <p>
@@ -306,7 +372,6 @@ function deleteArea(idArea){
     $('#modalDeleteButton').attr('onclick', 'confirmDeleteZone(' + idArea + ')');
 }
 
-
 function confirmDeleteZone(idArea) {
     $.ajax({
         type: "POST",
@@ -317,6 +382,33 @@ function confirmDeleteZone(idArea) {
         success: function(data) {
             $('#deleteModal').modal('hide');
             $('#areas').DataTable().ajax.reload();
+        }
+    });
+}
+
+// funcion para eliminar los objetos
+function deleteObject(idObject) {
+    var html = `
+        <p>
+            ¿Está seguro de eliminar el objeto?
+        </p>
+    `;
+    $('.titleEvent').html(html);
+    $('.contentDeleteModal').html('Esta acción no se puede revertir');
+    $('#deleteModal').modal('show');
+    $('#modalDeleteButton').attr('onclick', 'confirmDeleteObject(' + idObject + ')');
+}
+
+function confirmDeleteObject(idObject) {
+    $.ajax({
+        type: "POST",
+        url: "controller/ajax/ajax.form.php",
+        data: {
+            deleteObject: idObject
+            },
+        success: function(data) {
+            $('#deleteModal').modal('hide');
+            $('#objects').DataTable().ajax.reload();
         }
     });
 }

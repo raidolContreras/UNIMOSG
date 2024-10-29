@@ -85,9 +85,10 @@
             
             // Agregar evento para cerrar el modal al hacer clic en el backdrop
             $('.modal-backdrop').on('click', function() {
-                closeMenu('modalAreas')
+                closeMenu('modalAreas');
             });
         }
+
         document.querySelector('#' + collapse).classList.add('show');
         var modalBackdrop = document.createElement('div');
         modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');
@@ -95,6 +96,11 @@
 
         // Restablecer los campos del formulario
         resetFormFields(idForm);
+        
+        // Cerrar el modal cuando se hace clic en el fondo
+        $('.modal-backdrop').on('click', function() {
+            closeMenu(collapse);
+        });
     }
 
     function openMenuZoneSchool(collapse, idForm, idReference, nameschool) {

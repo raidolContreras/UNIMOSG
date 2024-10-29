@@ -24,6 +24,10 @@ class FormsController {
         return FormsModel::mdlRegisterObjects($data);
     }
 
+    static public function ctrAddObject($data) {
+        return FormsModel::mdlAddObject($data);
+    }
+
     static public function ctrSearchZones($idSchool, $item, $value){
         return FormsModel::mdlSearchZones($idSchool, $item, $value);
     }
@@ -172,6 +176,10 @@ class FormsController {
     static public function ctrUpdateObject($idObject, $name, $value) {
         return FormsModel::mdlUpdateObject($idObject, $name, $value);
     }
+    static public function ctrDeleteObject($idObject) {
+        return FormsModel::mdlDeleteObject($idObject);
+    }
+    
     static public function ctrDeleteSupervisionDays($idSupervisionDays) {
         return FormsModel::mdlDeleteSupervisionDays($idSupervisionDays);
     }
@@ -198,5 +206,9 @@ class FormsController {
 
     static public function ctrAsignarFecha($data) {
         return FormsModel::mdlAsignarFecha($data);
+    }
+
+    static public function ctrAddZone($data) {
+        return FormsModel::mdlAddZone($data);
     }
 }

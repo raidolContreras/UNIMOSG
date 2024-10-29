@@ -22,27 +22,28 @@
     </table>
 </main>
 </div>
-<input type="hidden" id="zone" value="<?php echo $_POST['zone'] ?>">
+<input type="hidden" id="zone" value="<?php echo isset($_POST['zone']) ? $_POST['zone'] : '' ?>">
 
 <div class="modal-collapse" id="modalAreas">
     <span class="close-btn" onclick="closeMenu('modalAreas')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/areas/addAreas.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalObjects">
     <span class="close-btn" onclick="closeMenu('modalObjects')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/areas/addObjects.php"; ?>
-    </ul>
+    </div>
     <div class="table-responsive">
         <table class="table" id="objects">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>#</th>
                     <th>Objeto</th>
                     <th>Cantidad</th>
+                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -51,9 +52,9 @@
 
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/areas/editAreas.php"; ?>
-    </ul>
+    </div>
 </div>
 
 

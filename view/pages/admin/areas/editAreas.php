@@ -1,5 +1,5 @@
 <div class="intro-y box">
-    <form class="p-5" id="editAreas">
+    <form class="p-1" id="editAreas">
         <div class="mb-3">
             <label for="nameAreaEdit" class="form-label">Nombre del area</label>
             <input id="nameAreaEdit" type="text" class="form-control" placeholder="Nombre del area">

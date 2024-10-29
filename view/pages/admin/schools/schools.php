@@ -23,23 +23,23 @@
 
 <div class="modal-collapse" id="modalCollapse">
     <span class="close-btn" onclick="closeMenu('modalCollapse')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/schools/newSchool.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalZones">
     <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/schools/addZones.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/schools/editSchool.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <!-- Modal -->

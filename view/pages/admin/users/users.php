@@ -26,16 +26,16 @@
 
 <div class="modal-collapse" id="modalNav">
     <span class="close-btn" onclick="closeMenu('modalNav')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/users/newUser.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/users/editUser.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <script src="view/assets/js/ajax/getUsers.js"></script>

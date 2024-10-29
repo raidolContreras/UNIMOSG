@@ -16,7 +16,7 @@ class FormsModel
 			$sql = "SELECT * FROM servicios_users";
 			$pdo = Conexion::conectar();
 			if ($item != null) {
-				$sql .+ " WHERE $item = :$item";
+				$sql .= " WHERE $item = :$item";  // Corregido el operador de concatenación
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
@@ -147,14 +147,15 @@ class FormsModel
 					$stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool FROM servicios_objects o
 											LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
 											LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
-											LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool;');
+											LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+											WHERE o.statusObject <> 0;');
 				} else {
 					$stmt = $pdo->prepare('SELECT o.idObject, o.nameObject, o.cantidad, o.statusObject, o.objects_idArea, a.nameArea, z.nameZone, s.nameSchool
 												FROM servicios_objects o
 												LEFT JOIN servicios_areas a ON a.idArea = o.objects_idArea
 												LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
 												LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-											WHERE objects_idArea = :idArea');
+											WHERE o.objects_idArea = :idArea AND o.statusObject <> 0');
 					$stmt->bindParam(':idArea', $idArea, PDO::PARAM_INT);
 				}
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
@@ -206,10 +207,10 @@ class FormsModel
 					}
 				}
 			} else {
-				$stmt = $pdo->prepare("	SELECT a.*, s.nameSchool, z.nameZone FROM servicios_areas a
-											LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
-											LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
-										WHERE $item = :$item");
+				$stmt = $pdo->prepare("SELECT a.*, s.nameSchool, z.nameZone FROM servicios_areas a
+													LEFT JOIN servicios_zones z ON z.idZone = a.area_idZones
+													LEFT JOIN servicios_schools s ON s.idSchool = z.zone_idSchool
+												WHERE $item = :$item");
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
 					return $stmt->fetch();
@@ -500,7 +501,25 @@ class FormsModel
 			error_log("Error al registrar los objetos: " . $e->getMessage());
 			throw $e;
 		}
-	}	
+	}
+
+	static public function mdlAddObject($data) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare('INSERT INTO servicios_objects (nameObject, objects_idArea, cantidad) VALUES (:nameObject, :objects_idArea, :cantidad)');
+            $stmt->bindParam(':nameObject', $data['nameObject'], PDO::PARAM_STR);
+            $stmt->bindParam(':objects_idArea', $data['objects_idArea'], PDO::PARAM_INT);
+            $stmt->bindParam(':cantidad', $data['cantidad'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'Error al crear un objeto nuevo';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar el evento: " . $e->getMessage());
+            throw $e;
+        }
+	}
 
 	static public function mdlEditZone($data)
 	{
@@ -1326,6 +1345,23 @@ class FormsModel
         }
 	}
 
+	//borrar objeto
+	static public function mdlDeleteObject($idObject) {
+        try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_objects SET statusObject = 0 WHERE idObject = :idObject");
+            $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+    }
+
 	static public function mdlAddDaySupervision($data) {
 		try {
             $pdo = Conexion::conectar();
@@ -1372,7 +1408,11 @@ class FormsModel
 					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 0 THEN 1 ELSE 0 END) AS Inmediato,
 					SUM(CASE WHEN i.importancia = 'Urgente' AND i.status = 1 THEN 1 ELSE 0 END) AS UrgenteComplete,
 					SUM(CASE WHEN i.importancia = 'En espera' AND i.status = 1 THEN 1 ELSE 0 END) AS EsperaComplete,
-					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete
+					SUM(CASE WHEN i.importancia = 'Inmediata' AND i.status = 1 THEN 1 ELSE 0 END) AS InmediatoComplete,
+					(SELECT COUNT(1) FROM servicios_users WHERE status = 1) AS numberUsers,
+					(SELECT COUNT(1) FROM servicios_schools WHERE status = 1) AS numberSchools,
+					(SELECT COUNT(1) FROM servicios_areas WHERE statusArea = 1) AS numberAreas,
+					(SELECT COUNT(1) FROM servicios_incidentes WHERE status = 0) AS numberPendients
 				FROM 
 					servicios_incidentes i;";
 		$stmt = $pdo->prepare($sql);
@@ -1459,6 +1499,23 @@ class FormsModel
             }
         } catch (PDOException $e) {
             error_log("Error al actualizar la fecha de asignación: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlAddZone($data) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("INSERT INTO servicios_zones(zone_idSchool, nameZone) VALUES (:idSchool, :nameZone)");
+            $stmt->bindParam(":idSchool", $data['idSchool'], PDO::PARAM_INT);
+            $stmt->bindParam(":nameZone", $data['nameZone'], PDO::PARAM_STR);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al agregar la zona: ". $e->getMessage());
             throw $e;
         }
 	}

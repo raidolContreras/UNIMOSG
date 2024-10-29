@@ -24,16 +24,16 @@
 
 <div class="modal-collapse" id="modalZones">
     <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/zones/newZones.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
-    <ul class="modal-nav">
+    <div class="modal-nav">
         <?php include "view/pages/admin/zones/editZones.php"; ?>
-    </ul>
+    </div>
 </div>
 
 <script src="view/assets/js/ajax/getZones.js"></script>

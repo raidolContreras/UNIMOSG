@@ -64,20 +64,32 @@ $(document).ready(function(){
     myDropzone.on("success", function(file, response) {
         
         if (response == 'ok') {
-            closeMenu('modalObjects');
-            myDropzone.removeAllFiles();
             showAlertBootstrap('Éxito', 'Archivo cargado excitosamente.');
-            $('#objects').DataTable().ajac().reload();
-        }else if (response = 'No hay nuevos objetos para insertar.') { {
-            closeMenu('modalObjects');
-            myDropzone.removeAllFiles();
+            $('#objects').DataTable().ajax.reload();
+        } else if (response == 'No hay nuevos objetos para insertar.') {
             showAlertBootstrap('Alerta!', response);
-            $('#objects').DataTable().ajac().reload();
-        }
         } else {
-            myDropzone.removeAllFiles();
             showAlertBootstrap('¡Alerta!', 'El archivo no se pudo cargar, intentalo más tarde.');
         }
+
+        myDropzone.removeAllFiles();
+
+    });
+
+    $('.cancelObject').on('click', function(e) {
+        myDropzone.removeAllFiles();
+        $('.objectsBox').addClass('d-none');
+        $('.addObjects').removeClass('d-none');
+        $('#newObjectForm2').removeClass('d-none');
+    });
+    
+    $('.addMassiveObject').on('click', function() {
+        $('.objectsBox').removeClass('d-none');
+        $('.addObjects').addClass('d-none');
+        $('#newObjectForm2').addClass('d-none');
+        numCSV = 0;
+        toggleSubmitButton(); // Actualizar estado del botón de enviar
+        myDropzone.removeAllFiles(); // Limpiar Dropzone
     });
 
 });

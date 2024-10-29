@@ -85,23 +85,37 @@ if(isset($_POST['uploadAreas'])) {
     }
 }
 
+// Función para normalizar caracteres especiales
+function normalizeString($string) {
+    $unwanted_array = [
+        'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ñ' => 'n',
+        'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U', 'Ñ' => 'N'
+    ];
+    return strtr($string, $unwanted_array);
+}
+
 if (isset($_POST['uploadObjects'])) {
     $result = '';
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK && $_FILES['file']['type'] === 'text/csv') {
         $idArea = $_POST['uploadObjects'];
         $fileTmpPath = $_FILES['file']['tmp_name'];
         $csvData = file_get_contents($fileTmpPath);
+        
+        // Convertimos el archivo a UTF-8
+        $csvData = mb_convert_encoding($csvData, 'UTF-8', 'auto');
+        
         $lines = explode("\n", $csvData);
         $init = false;
         $data = array();
 
-        $objectsInArea =  FormsController::ctrSelectObjectsbyAreas($idArea);
+        $objectsInArea = FormsController::ctrSelectObjectsbyAreas($idArea);
         
         foreach ($lines as $line) {
             if (!empty($line)) {
                 if ($init) {
                     $fields = str_getcsv($line);
-                    $nameObject = $fields[0];
+                    $nameObject = normalizeString($fields[0]); // Normalizar nombre
+                    $nameObject = mb_convert_encoding($nameObject, 'UTF-8', 'auto'); // Forzar UTF-8
                     $cantidad = $fields[1];
                     $isDuplicate = false;
 
@@ -138,6 +152,12 @@ if (isset($_POST['uploadObjects'])) {
     } else {
         echo 'Error al cargar el archivo CSV';
     }
+}
+
+// borrar objetos
+if (isset($_POST['deleteObject'])) {
+    $idObject = $_POST['deleteObject'];
+    echo FormsController::ctrDeleteObject($idObject);
 }
 
 if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['level'])) {
@@ -283,4 +303,32 @@ if (isset($_POST['fechaAsignada']) && isset($_POST['idIncidente']) && isset($_PO
         "razon" => $razon
     );
     echo FormsController::ctrAsignarFecha($data);
+}
+
+if (isset($_POST['addNewObject'])) {
+    $objectName = $_POST['objectName'];
+    $cantidad = $_POST['cantidad'];
+    $idArea = $_POST['idArea'];
+    $data = array(
+        "nameObject" => $objectName,
+        "cantidad" => $cantidad,
+        "objects_idArea" => $idArea
+    );
+    echo FormsController::ctrAddObject($data);
+}
+
+if (isset($_POST['addNewZone'])) {
+    $nameZone = $_POST['nameZone'];
+    $idSchool = $_POST['idSchool'];
+    $data = array(
+        "nameZone" => $nameZone,
+        "idSchool" => $idSchool
+    );
+    echo FormsController::ctrAddZone($data);
+}
+
+if (isset($_POST['addNewArea'])) {
+    $nameArea = $_POST['areaName'];
+    $idZone = $_POST['idZone'];
+    echo FormsController::ctrRegisterArea($nameArea, $idZone);
 }

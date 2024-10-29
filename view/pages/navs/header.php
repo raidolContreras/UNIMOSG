@@ -1,3 +1,7 @@
+<?php
+    // Obtener el nombre del archivo actual sin extensión ni parámetros
+    $current_page = (isset($_GET['pagina'])) ? $_GET['pagina'] : 'inicio';
+?>
 <header>
 	<nav class="navbar">
 		<div class="container">
@@ -27,24 +31,24 @@
 			</button>
 		</div>
 		<div class="container navbar-hidden">
-			<div id="schools" style="padding-right: 0 !important;">
-				<a href="./" class="mt-3 menu-top py-2">
+			<div id="schools" style="display: flex; justify-content: space-evenly;">
+				<a href="./" class="mt-3 menu-top py-2 <?php echo ($current_page == 'inicio') ? 'active' : ''; ?>">
 				<i class="fa-duotone fa-house"></i> Tablero
 				</a>
 				<?php if ($_SESSION['level'] == 0): ?>
-					<a href="users" class="mt-3 menu-top py-2">
+					<a href="users" class="mt-3 menu-top py-2 <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
 					<i class="fa-duotone fa-users"></i> Usuarios
 					</a>
-					<a href="schools" class="mt-3 menu-top py-2">
+					<a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
 					<i class="fa-duotone fa-school"></i> Escuelas
 					</a>
-					<a href="zones" class="mt-3 menu-top py-2">
+					<a href="zones" class="mt-3 menu-top py-2 <?php echo ($current_page == 'zones') ? 'active' : ''; ?>">
 					<i class="fa-duotone fa-location-dot"></i> Zonas
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>
 				<?php else: ?>
-					<a href="lista" class="mt-3 menu-top">
+					<a href="lista" class="mt-3 menu-top <?php echo ($current_page == 'lista') ? 'active' : ''; ?>">
 						Supervisión
 					</a>
 				<?php endif ?>
