@@ -119,6 +119,10 @@ class FormsController {
         return FormsModel::mdlSearchSolicitudes($idSchool,$importancia);
     }
 
+    static public function ctrUpdateOrderSchool($position, $idSchool){
+        return FormsModel::mdlUpdateOrderSchool($position, $idSchool);
+    }
+
     static public function ctrDeleteSchool($idSchool){
         return FormsModel::mdlDeleteSchool($idSchool);
     }

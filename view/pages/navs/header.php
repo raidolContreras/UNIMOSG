@@ -18,17 +18,33 @@
 						</li>
 					</ul>
 				</div>
+				
 				<input type="hidden" id="idUser" value="<?php echo $_SESSION['idUser'] ?>">
 				<?php else: ?>
-				<a class="navbar-brand" href="./"></a>
+				
+					<a class="navbar-brand" href="./"></a>
 					<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
 				</a>
 				<?php endif ?>
-			<button class="navbar-toggler boton-sombra" type="button" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon one"></span>
-				<span class="navbar-toggler-icon two"></span>
-				<span class="navbar-toggler-icon three"></span>
-			</button>
+			<div class="row" style="flex-wrap: nowrap; justify-content: center;">
+					
+			<?php if ($_SESSION['level'] == 2):?>
+			<?php else: ?>
+				<a href="users" class="menu-top py-2 <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
+					<div class="row">
+						<div class="col-2">
+							<i class="fa-duotone fa-users"></i> 
+						</div>
+						<div class="col-8">Usuarios</div> 
+					</div>
+				</a>
+			<?php endif ?>
+				<button class="navbar-toggler boton-sombra" type="button" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon one"></span>
+					<span class="navbar-toggler-icon two"></span>
+					<span class="navbar-toggler-icon three"></span>
+				</button>
+			</div>
 		</div>
 		<div class="container navbar-hidden">
 			<div id="schools" style="display: flex; justify-content: space-evenly;">
@@ -36,9 +52,6 @@
 				<i class="fa-duotone fa-house"></i> Tablero
 				</a>
 				<?php if ($_SESSION['level'] == 0): ?>
-					<a href="users" class="mt-3 menu-top py-2 <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
-					<i class="fa-duotone fa-users"></i> Usuarios
-					</a>
 					<a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
 					<i class="fa-duotone fa-school"></i> Escuelas
 					</a>

@@ -53,32 +53,18 @@ if (!isset($_SESSION['logged'])) {
                 includeError404();
             }
             break;
-        case 'zones':
+        case 'edifices':
             if ($_SESSION['level'] == 0) {
-                includeAdminPages('zones', $pagina);
+                includeAdminPages('edifices', $pagina);
             } else {
-                includeUserPages('principal/zones/'.$pagina);
+                includeUserPages('principal/edifices/'.$pagina);
             }
             break;
-        case 'newZones':
+        case 'newEdifices':
             if ($_SESSION['level'] == 0) {
-                includeAdminPages('zones', $pagina);
+                includeAdminPages('edifices', $pagina);
             } else {
                 includeError404();
-            }
-            break;
-        case 'areas':
-            if ($_SESSION['level'] == 0) {
-                includeAdminPages('areas', $pagina);
-            } else {
-                includeUserPages('principal/areas/'.$pagina);
-            }
-            break;
-        case 'objetos':
-            if ($_SESSION['level'] == 0) {
-                includeAdminPages('objetos', $pagina);
-            } else {
-                includeUserPages('principal/objetos/'.$pagina);
             }
             break;
         case 'login':
@@ -89,22 +75,6 @@ if (!isset($_SESSION['logged'])) {
                 includeError404();
             } else {
                 includeUserPages('principal/general/'.$pagina);
-            }
-            break;
-        case 'plan':
-			echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
-            if ($_SESSION['level'] == 0) {
-                includeError404();
-            } else {
-                includeUserPages('principal/plan/'.$pagina);
-            }
-            break;
-        case 'planSupervisor':
-			echo "<script src='view/assets/node_modules/fullcalendar/index.global.js'></script>";
-            if ($_SESSION['level'] == 0) {
-                includeError404();
-            } else {
-                includeUserPages('principal/plan/'.$pagina);
             }
             break;
         default:

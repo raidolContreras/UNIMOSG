@@ -20,28 +20,12 @@
                         </div>
                     </a>
                     <?php if ($_SESSION['level'] == 0): ?>
-                        <a href="users" class="mt-3 menu-top py-2 <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
-                            <div class="row">
-                                <div class="col-2">
-                                    <i class="fa-duotone fa-users"></i> 
-                                </div>
-                                <div class="col-8">Usuarios</div> 
-                            </div>
-                        </a>
                         <a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
                             <div class="row">
                                 <div class="col-2">
                                     <i class="fa-duotone fa-school"></i> 
                                 </div>
-                                <div class="col-8">Escuelas</div> 
-                            </div>
-                        </a>
-                        <a href="zones" class="mt-3 menu-top py-2 <?php echo ($current_page == 'zones') ? 'active' : ''; ?>">
-                            <div class="row">
-                                <div class="col-2">
-                                    <i class="fa-duotone fa-location-dot"></i> 
-                                </div>
-                                <div class="col-8">Zonas</div> 
+                                <div class="col-8">Planteles</div> 
                             </div>
                         </a>
                     <?php elseif ($_SESSION['level'] == 1): ?>

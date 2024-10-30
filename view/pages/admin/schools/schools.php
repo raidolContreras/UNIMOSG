@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css">
+<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+
 <div class="card-custom">
     <div class="card-header-custom">
         <strong id='namePage'></strong>
@@ -7,14 +10,14 @@
 <main class="container">
     <div class="p-3">
         <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
-            <button class="btn btn-secondary" onclick="openMenu('modalCollapse', 'newSchools')"><i class="fa-duotone fa-plus"></i> Registrar escuela</button>
+            <button class="btn btn-secondary" onclick="openMenu('modalCollapse', 'newSchools')"><i class="fa-duotone fa-plus"></i> Registrar plantel</button>
         </div>
     </div>
 	
     <table id="schoolsActive" class="table table-resposive stripe">
         <thead>
             <th>#</th>
-            <th class="">Nombre de la escuela</th>
+            <th class="">Nombre del plantel</th>
             <th width="30%"></th>
         </thead>
     </table>
@@ -62,4 +65,4 @@
   </div>
 </div>
 
-<script src="view/assets/js/ajax/getSchools.js"></script>
+<script src="view/assets/js/ajax/Schools/getSchools.js"></script>

@@ -54,9 +54,9 @@
             } else if ($pagina === 'users'){
                 echo 'Usuarios registrados';
             } else if ($pagina === 'schools'){
-                echo 'Escuelas registradas';
-            } else if ($pagina === 'zones'){
-                echo 'Zonas registradas';
+                echo 'Planteles registrados';
+            } else if ($pagina === 'edifices'){
+                echo 'Edificios registrados';
             } else {
                 echo $pagina;
             }
@@ -73,22 +73,6 @@
     }
 
     function openMenu(collapse, idForm) {
-        if (collapse == 'modalAreas') {
-            // Borrar archivos cargados en el Dropzone
-            var myDropzone = Dropzone.forElement("#addAreasDropzone");
-            if (myDropzone) {
-                myDropzone.removeAllFiles();
-                numCSV = 0;
-                var submitButton = document.querySelector('.sendAreas');
-                submitButton.disabled = true;
-            }
-            
-            // Agregar evento para cerrar el modal al hacer clic en el backdrop
-            $('.modal-backdrop').on('click', function() {
-                closeMenu('modalAreas');
-            });
-        }
-
         document.querySelector('#' + collapse).classList.add('show');
         var modalBackdrop = document.createElement('div');
         modalBackdrop.classList.add('modal-backdrop', 'fade', 'show');
