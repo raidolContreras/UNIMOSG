@@ -12,50 +12,6 @@ class FormsController {
         return FormsModel::mdlRegisterSchool($nameSchool);
     }
 
-    static public function ctrRegisterZone($nameZone, $idSchool){
-        return FormsModel::mdlRegisterZone($nameZone, $idSchool);
-    }
-
-    static public function ctrRegisterArea($nameArea, $idSchool){
-        return FormsModel::mdlRegisterArea($nameArea, $idSchool);
-    }
-
-    static public function ctrRegisterObjects($data){
-        return FormsModel::mdlRegisterObjects($data);
-    }
-
-    static public function ctrAddObject($data) {
-        return FormsModel::mdlAddObject($data);
-    }
-
-    static public function ctrSearchZones($idSchool, $item, $value){
-        return FormsModel::mdlSearchZones($idSchool, $item, $value);
-    }
-
-    static public function ctrSearchObjects($idArea, $item, $value){
-        return FormsModel::mdlSearchObjects($idArea, $item, $value);
-    }
-
-    static public function ctrSearchArea($idZone, $item, $value){
-        return FormsModel::mdlSearchArea($idZone, $item, $value);
-    }
-
-    static public function ctrGetArea($item, $value){
-        return FormsModel::mdlGetArea($item, $value);
-    }
-
-    static public function ctrEditArea($data){
-        return FormsModel::mdlEditArea($data);
-    }
-
-    static public function ctrSelectObjectsbyAreas($idArea) {
-        return FormsModel::mdlSelectObjectsbyAreas($idArea);
-    }
-    
-    static public function ctrSearchObject($idArea, $item, $value){
-        return FormsModel::mdlSearchObject($idArea, $item, $value);
-    }
-
     static public function ctrRegisterUser($data){
         return FormsModel::mdlRegisterUser($data);
     }
@@ -77,43 +33,6 @@ class FormsController {
     static public function ctrEditSchool($data){
         return FormsModel::mdlEditSchool($data);
     }
-
-    static public function ctrEditZone($data){
-        return FormsModel::mdlEditZone($data);
-    }
-
-    static public function ctrSearchAreas($idZone, $item, $value){
-        return FormsModel::mdlSearchAreas($idZone, $item, $value);
-    }
-
-    static public function ctrSendForm($idObject, $estado, $description, $importancia, $filesJson){
-        // Busca el objeto y el área asociados
-        $object = FormsModel::mdlSearchObject(null, 'idObject', $idObject);
-        $area = FormsModel::mdlSearchArea(null, 'idArea', $object['objects_idArea']);
-    
-        // Envía el formulario y obtiene el número del informe
-        $informe = FormsModel::mdlSendForm($idObject, $estado, $description, $importancia, $filesJson);
-        $nameSchool = $area['nameSchool'];
-    
-        // Extraer las iniciales de la escuela
-        $schoolInitials = strtoupper(substr($nameSchool, 0, 1)) . strtoupper(substr($nameSchool, strpos($nameSchool, ' ') + 1, 1));
-    
-        // Formatear el número del informe a tres dígitos
-        $informeFormatted = str_pad($informe, 3, '0', STR_PAD_LEFT);
-    
-        // Crear el código del pedido
-        $pedido = $schoolInitials . $informeFormatted;
-    
-        // Guardar el pedido en la base de datos
-        $response = FormsModel::mdlPedido($pedido, $informe);
-    
-        // Enviar un correo si la importancia no es "Pendiente"
-        if ($importancia != 'Pendiente') {
-            FormsModel::mdlSendImportantMail($area, $object, $estado, $description, $importancia);
-        }
-    
-        return $response;
-    }    
 
     static public function ctrSearchSolicitudes($idSchool,$importancia){
         return FormsModel::mdlSearchSolicitudes($idSchool,$importancia);
@@ -169,20 +88,6 @@ class FormsController {
         $data = FormsController::ctrSearchIncidentsDaily();
         return FormsModel::mdlSendMail($data);
     }
-
-    static public function ctrDeleteZone($idZone){
-        return FormsModel::mdlDeleteZone($idZone);
-    }
-
-    static public function ctrDeleteArea($idArea){
-        return FormsModel::mdlDeleteArea($idArea);
-    }
-    static public function ctrUpdateObject($idObject, $name, $value) {
-        return FormsModel::mdlUpdateObject($idObject, $name, $value);
-    }
-    static public function ctrDeleteObject($idObject) {
-        return FormsModel::mdlDeleteObject($idObject);
-    }
     
     static public function ctrDeleteSupervisionDays($idSupervisionDays) {
         return FormsModel::mdlDeleteSupervisionDays($idSupervisionDays);
@@ -192,27 +97,11 @@ class FormsController {
         return FormsModel::mdlEstadisticas();
     }
 
-    static public function ctrSendNotify() {
-        return FormsModel::mdlSendNotify();
-    }
-
-    static public function ctrUpdateNotify($idNotify) {
-        return FormsModel::mdlUpdateNotify($idNotify);
-    }
-
-    static public function ctrNewNotify($data) {
-        return FormsModel::mdlNewNotify($data);
-    }
-
     static public function ctrSearchDirector() {
         return FormsModel::mdlSearchDirector();
     }
 
     static public function ctrAsignarFecha($data) {
         return FormsModel::mdlAsignarFecha($data);
-    }
-
-    static public function ctrAddZone($data) {
-        return FormsModel::mdlAddZone($data);
     }
 }
