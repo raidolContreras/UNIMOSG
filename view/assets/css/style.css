@@ -15455,6 +15455,7 @@ body {
   font-size: 1rem;
   background-color: #01643D;
   color: #fefefe;
+  min-height: 54px;
 }
 
 .btn-custom {
@@ -15973,4 +15974,22 @@ body {
   max-height: 41rem;
   overflow-y: auto;
   margin-top: 9px;
+}
+
+.zone-card {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+.zone-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para la tarjeta activa */
+.active-zone {
+  border: 2px solid #007bff; /* Cambia el color según tu preferencia */
+  background-color: #f0f8ff; /* Ligero color de fondo para resaltar */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }

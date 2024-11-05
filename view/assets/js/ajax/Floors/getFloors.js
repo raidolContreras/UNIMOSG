@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const tablaEdificio = $('#edifices').DataTable({
+    const tablaPisos = $('#floors').DataTable({
         rowReorder: {
             dataSrc: 'position',
             selector: 'td:first-child'
@@ -7,14 +7,13 @@ $(document).ready(function () {
         ajax: {
             type: 'POST',
             data: { 
-                action: 'searchEdificer',
-                idSchool: $('#school').val()
+                action: 'searchFloor',
+                idEdificers: $('#edificer').val()
             },
             url: 'controller/forms.ajax.php',
             dataSrc: function (json) {
-                // Muestra el nombre de la escuela en el encabezado o algún lugar de la interfaz
-                $('#namePage').text('Edificios registrados - '+json.schoolName || "Escuela no especificada");
-                return json.edificers || []; // Solo pasa el array 'edificers' a DataTable
+                $('#namePage').text('Pisos registrados - ' + json.nameSchool + ' - ' + json.EdificersName || "Edificio no especificado");
+                return json.floors || [];
             }
         },
         columns: [
@@ -26,8 +25,8 @@ $(document).ready(function () {
                 data: null,
                 render: (data) => `
                     <center>
-                        <button class="btn btn-link" onclick="openEdifices(${data.idEdificers})">
-                            <span class="arrow">${data.nameEdificer}</span>
+                        <button class="btn btn-link" onclick="openFloors(${data.idFloor})">
+                            <span class="arrow">${data.nameFloor}</span>
                         </button>
                     </center>`
             },
@@ -36,10 +35,10 @@ $(document).ready(function () {
                 render: (data) => `
                     <center>
                         <div class="btn-group">
-                            <button class="btn btn-info" onclick="openMenuEdit(${data.idEdificers})" data-tippy-content="Editar">
+                            <button class="btn btn-info" onclick="openMenuEdit(${data.idFloor})" data-tippy-content="Editar">
                                 <i class="fa-duotone fa-pen-to-square"></i>
                             </button>
-                            <button class="btn btn-danger" onclick="showModal(${data.idEdificers})" data-tippy-content="Eliminar">
+                            <button class="btn btn-danger" onclick="showModal(${data.idFloor})" data-tippy-content="Eliminar">
                                 <i class="fa-duotone fa-trash"></i>
                             </button>
                         </div>
@@ -62,46 +61,45 @@ $(document).ready(function () {
     let myDropzone = null;
 
     const toggleAcceptButton = () => {
-        const isNameFilled = $('#edificeName').val().trim();
-        $('.saveNewEdifice').prop('disabled', !isNameFilled);
+        const isNameFilled = $('#floorName').val().trim();
+        $('.saveNewFloor').prop('disabled', !isNameFilled);
     };
 
-    $('.saveNewEdifice').on('click', function () {
-        const edificeName = $('#edificeName').val().trim();
-        const idSchool = $('#school').val();
+    $('.saveNewFloor').on('click', function () {
+        const floorName = $('#floorName').val().trim();
+        const idEdificers = $('#edificer').val();
 
-        if (edificeName) {
+        if (floorName) {
             $.ajax({
                 url: "controller/forms.ajax.php",
                 type: "POST",
                 data: {
-                    action: "registerEdificer",
-                    edificeName,
-                    idSchool
+                    action: "registerFloor",
+                    floorName,
+                    idEdificers
                 },
                 success: function () {
-                    alert("Edificio creado correctamente");
-                    $('#edificeName, #selectSchool').val('');
-                    $('.saveNewEdifice').prop('disabled', true);
-                    tablaEdificio.ajax.reload();
-                    closeMenu('modalEdifices');
+                    alert("Piso creado correctamente");
+                    $('#floorName').val('');
+                    $('.saveNewFloor').prop('disabled', true);
+                    tablaPisos.ajax.reload();
+                    closeMenu('modalFloors');
                 },
                 error: function (xhr, status, error) {
-                    alert("Error al crear el edificio: " + error);
+                    alert("Error al crear el piso: " + error);
                 }
             });
         }
     });
 
-    $('#edificeName').on('keyup', toggleAcceptButton);
-    $('#selectSchool').on('change', toggleAcceptButton);
+    $('#floorName').on('keyup', toggleAcceptButton);
 
-    $('.addMassiveEdifice').click(function () {
-        $('.moduleAddEdifices').removeClass('d-none');
-        $('.newEdificeForm, .addEdifices').addClass('d-none');
+    $('.addMassiveFloor').click(function () {
+        $('.moduleAddFloors').removeClass('d-none');
+        $('.newFloorForm, .addFloors').addClass('d-none');
 
         if (!myDropzone) {
-            myDropzone = new Dropzone("#addEdificesDropzone", {
+            myDropzone = new Dropzone("#addFloorsDropzone", {
                 url: "/ruta_de_subida",
                 acceptedFiles: ".xls,.xlsx",
                 init: function () {
@@ -113,9 +111,9 @@ $(document).ready(function () {
         }
     });
 
-    $('.cancelMassiveEdifices').click(function () {
-        $('.moduleAddEdifices').addClass('d-none');
-        $('.newEdificeForm, .addEdifices').removeClass('d-none');
+    $('.cancelMassiveFloors').click(function () {
+        $('.moduleAddFloors').addClass('d-none');
+        $('.newFloorForm, .addFloors').removeClass('d-none');
 
         if (myDropzone) {
             myDropzone.destroy();
@@ -124,11 +122,11 @@ $(document).ready(function () {
     });
     
     // Evento para manejar el reordenamiento
-    tablaEdificio.on('row-reorder', function (e, diff, edit) {
+    tablaPisos.on('row-reorder', function (e, diff, edit) {
         var orden = [];
         diff.forEach(function (change) {
             orden.push({
-                id: tablaEdificio.row(change.node).data().idEdificers,
+                id: tablaPisos.row(change.node).data().idFloor,
                 position: change.newPosition + 1
             });
         });
@@ -138,12 +136,12 @@ $(document).ready(function () {
             type: "POST",
             url: 'controller/forms.ajax.php',
             data: {
-                action: 'updateOrderEdificer',
+                action: 'updateOrderFloor',
                 order: orden
             },
             success: function(response) {
                 if(response === 'ok') {
-                    tablaEdificio.ajax.reload(); // Recargar la tabla para reflejar los cambios
+                    tablaPisos.ajax.reload();
                 } else {
                     console.error('Error al actualizar el orden:', response);
                 }
@@ -152,33 +150,33 @@ $(document).ready(function () {
     });
 });
 
-function openMenuEdit(idEdificer) {
-    openMenu('modalNavUpdate', 'editEdifices');
+function openMenuEdit(idFloor) {
+    openMenu('modalNavUpdate', 'editFloors');
 
     $.ajax({
         url: "controller/forms.ajax.php",
         type: "POST",
-        data: { action: "searchEdificer", searchEdificer: idEdificer },
+        data: { action: "searchFloor", searchFloor: idFloor },
         dataType: "json",
         success: function (response) {
-            $('#nameEdificeEdit').val(response.nameEdificer);
+            $('#nameFloorEdit').val(response.nameFloor);
 
             $('.update').off('click').on('click', function () {
                 $.ajax({
                     url: "controller/forms.ajax.php",
                     type: "POST",
                     data: {
-                        action: "updateEdificer",
-                        idEdificers: response.idEdificers,
-                        edificeName: $('#nameEdificeEdit').val()
+                        action: "updateFloor",
+                        idFloor: response.idFloor,
+                        floorName: $('#nameFloorEdit').val()
                     },
                     success: function () {
-                        alert("Edificio actualizado correctamente");
-                        $('#edifices').DataTable().ajax.reload();
+                        alert("Piso actualizado correctamente");
+                        $('#floors').DataTable().ajax.reload();
                         closeMenu('modalNavUpdate');
                     },
                     error: function (xhr, status, error) {
-                        alert("Error al actualizar el edificio: " + error);
+                        alert("Error al actualizar el piso: " + error);
                     }
                 });
             });
@@ -186,28 +184,28 @@ function openMenuEdit(idEdificer) {
     });
 }
 
-function showModal(idEdificers) {
-    $('#deleteEdificers').modal('show');
+function showModal(idFloor) {
+    $('#deleteFloors').modal('show');
     $('.delete').off('click').on('click', function () {
         $.ajax({
             url: "controller/forms.ajax.php",
             type: "POST",
             data: {
-                action: "deleteEdificer",
-                idEdificers: idEdificers
+                action: "deleteFloor",
+                idFloor: idFloor
             },
             success: function () {
-                alert("Edificio eliminado correctamente");
-                $('#edifices').DataTable().ajax.reload();
-                $('#deleteEdificers').modal('hide');
+                alert("Piso eliminado correctamente");
+                $('#floors').DataTable().ajax.reload();
+                $('#deleteFloors').modal('hide');
             },
             error: function (xhr, status, error) {
-                alert("Error al eliminar el edificio: " + error);
+                alert("Error al eliminar el piso: " + error);
             }
         });
     });
 }
 
-function openEdifices(idEdificers) {
-    window.location.href = "floors&edificer=" + idEdificers;
+function openFloors(idFloor) {
+    window.location.href = "zones&floor=" + idFloor;
 }

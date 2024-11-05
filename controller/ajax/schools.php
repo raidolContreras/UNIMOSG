@@ -26,12 +26,14 @@ switch ($_POST['action']) {
         break;
 
     case 'updateOrderSchool':
-        $order = $_POST['order'];
-        foreach ($order as $item) {
-            $idSchool = $item['id'];
-            $position = $item['position'];
-            
-            FormsController::ctrUpdateOrderSchool($position, $idSchool);
+        if (isset($_POST['order'])) {
+            $order = $_POST['order'];
+            foreach ($order as $item) {
+                $idSchool = $item['id'];
+                $position = $item['position'];
+                
+                FormsController::ctrUpdateOrderSchool($position, $idSchool);
+            }
         }
         echo 'ok';
         break;

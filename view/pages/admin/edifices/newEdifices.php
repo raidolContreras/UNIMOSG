@@ -28,12 +28,6 @@
         <div class="col-md-12">
             <div id="addEdificesDropzone" class="dropzone"></div>
         </div>
-        <select class="form-select mt-3" name="idSchool" id="idSchool">
-            <option value="" disabled selected>Seleccione una escuela</option>
-            <?php foreach ($schools as $school) :?>
-                <option value="<?php echo $school['idSchool'];?>"><?php echo $school['nameSchool'];?></option>
-            <?php endforeach;?>
-        </select>
         <input type="hidden" id="edifice" value="1">
         
         <div class="d-flex justify-content-center my-3">
@@ -48,5 +42,3 @@
         <button type="button" class="btn btn-link my-3 addMassiveEdifice"><i class="fad fa-folder-plus"></i> Registro masivo con archivo</button>
     </div>
 </div>
-
-<script src="view/assets/js/ajax/Edifices/addEdifices.js"></script>

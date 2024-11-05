@@ -1038,4 +1038,364 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlRegisterEdificer($edificeName, $idSchool)
+	{
+		try {
+			$pdo = Conexion::conectar();
+
+			// Obtener el valor máximo actual de "position" para el "idSchool" dado y sumar 1
+			$stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_edificers WHERE edificer_idSchool = :edificer_idSchool");
+			$stmt->bindParam(':edificer_idSchool', $idSchool, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$nextPosition = $result['next_position'];
+
+			// Insertar el nuevo edificio con el valor de "position" calculado
+			$stmt = $pdo->prepare("INSERT INTO servicios_edificers (nameEdificer, edificer_idSchool, position) VALUES (:nameEdificer, :edificer_idSchool, :position)");
+			$stmt->bindParam(":nameEdificer", $edificeName, PDO::PARAM_STR);
+			$stmt->bindParam(":edificer_idSchool", $idSchool, PDO::PARAM_INT);
+			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
+
+			if ($stmt->execute()) {
+				return 'ok';
+			} else {
+				return 'error';
+			}
+		} catch (PDOException $e) {
+			error_log("Error al registrar el edificio: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlSearchEdificers($item, $value) {
+		{
+			try {
+				$pdo = Conexion::conectar();
+	
+				if ($item != null) {
+					if ($item == 'edificer_idSchool') {
+						$data = array();
+						$stmt = $pdo->prepare("SELECT * FROM servicios_edificers WHERE $item = :$item AND status = 1 ORDER BY position ASC");
+						$stmt->bindParam(":$item", $value);
+
+						if ($stmt->execute()) {
+							$data['edificers'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+						} else {
+							return false;
+						}
+						// Buscar el nombre de la escuela solo si se encontraron edificios
+						$stmt2 = $pdo->prepare("SELECT nameSchool FROM servicios_schools WHERE idSchool = :idSchool");
+						$stmt2->bindParam(":idSchool", $value);
+						$stmt2->execute();
+						$schoolName = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+						$data['schoolName'] = $schoolName ? $schoolName['nameSchool'] : null;
+
+						return $data;
+					} else {
+						$stmt = $pdo->prepare("SELECT * FROM servicios_edificers WHERE $item = :$item");
+						$stmt->bindParam(":$item", $value);
+						if ($stmt->execute() && $stmt->rowCount() > 0) {
+							return $stmt->fetch();
+						} else {
+							return false;
+						}
+					}
+				} else {
+					$stmt = $pdo->prepare("SELECT * FROM servicios_edificers WHERE status = 1 ORDER BY position ASC");
+                    $stmt->execute();
+                    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+			} catch (PDOException $e) {
+				error_log("Error al buscar el edificio: " . $e->getMessage());
+				throw $e;
+			}
+		}
+	}
+
+	static public function mdlUpdateEdificer($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_edificers SET nameEdificer = :nameEdificer WHERE idEdificers = :idEdificers");
+			$stmt->bindParam(":nameEdificer", $data['nameEdificer'], PDO::PARAM_STR);
+			$stmt->bindParam(":idEdificers", $data['idEdificers'], PDO::PARAM_INT);
+			if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+			
+        } catch (PDOException $e) {
+            error_log("Error al actualizar el edificio: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlDeleteEdificer($idEdificers) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_edificers SET status = 0 WHERE idEdificers = :idEdificers");
+            $stmt->bindParam(":idEdificers", $idEdificers, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar el edificio: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateOrderEdificer($position, $idEdificers) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_edificers SET position = :position WHERE idEdificers = :idEdificers");
+            $stmt->bindParam(":position", $position, PDO::PARAM_INT);
+            $stmt->bindParam(":idEdificers", $idEdificers, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la posición del edificio: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlRegisterFloor($floorName, $idEdificers) {
+		try {
+			$pdo = Conexion::conectar();
+	
+			// Obtener el valor máximo actual de "position" para el "idEdificers" dado y sumar 1
+			$stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_floors WHERE floor_idEdificer = :floor_idEdificer");
+			$stmt->bindParam(':floor_idEdificer', $idEdificers, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$nextPosition = $result['next_position'];
+	
+			// Insertar el nuevo piso con el valor de "position" calculado
+			$stmt = $pdo->prepare("INSERT INTO servicios_floors (nameFloor, floor_idEdificer, position) VALUES (:nameFloor, :floor_idEdificer, :position)");
+			$stmt->bindParam(":nameFloor", $floorName, PDO::PARAM_STR);
+			$stmt->bindParam(":floor_idEdificer", $idEdificers, PDO::PARAM_INT);
+			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
+	
+			if ($stmt->execute()) {
+				return 'ok';
+			} else {
+				return 'error';
+			}
+		} catch (PDOException $e) {
+			error_log("Error al registrar el piso: " . $e->getMessage());
+			throw $e;
+		}
+	}
+	
+	static public function mdlSearchFloors($item, $value) {
+		try {
+			$pdo = Conexion::conectar();
+	
+			if ($item != null) {
+				if ($item == 'floor_idEdificer') {
+					$data = array();
+					$stmt = $pdo->prepare("SELECT * FROM servicios_floors WHERE $item = :$item AND status = 1 ORDER BY position ASC");
+					$stmt->bindParam(":$item", $value);
+	
+					if ($stmt->execute()) {
+						$data['floors'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					} else {
+						return false;
+					}
+					// Buscar el nombre del edificio solo si se encontraron pisos
+					$stmt2 = $pdo->prepare("SELECT nameEdificer FROM servicios_edificers WHERE idEdificers = :idEdificers");
+					$stmt2->bindParam(":idEdificers", $value);
+					$stmt2->execute();
+					$EdificersName = $stmt2->fetch(PDO::FETCH_ASSOC);
+	
+					$data['EdificersName'] = $EdificersName ? $EdificersName['nameEdificer'] : null;
+
+					// Buscar el nombre de la escuela a la que pertenece el edificio
+					$stmt3 = $pdo->prepare("SELECT nameSchool FROM servicios_schools WHERE idSchool = (SELECT edificer_idSchool FROM servicios_edificers WHERE idEdificers = :idEdificers)");
+                    $stmt3->bindParam(":idEdificers", $value);
+                    $stmt3->execute();
+                    $escuelaName = $stmt3->fetch(PDO::FETCH_ASSOC);
+					
+                    $data['nameSchool'] = $escuelaName? $escuelaName['nameSchool'] : null;
+	
+					return $data;
+				} else {
+					$stmt = $pdo->prepare("SELECT * FROM servicios_floors WHERE $item = :$item");
+					$stmt->bindParam(":$item", $value);
+					if ($stmt->execute() && $stmt->rowCount() > 0) {
+						return $stmt->fetch();
+					} else {
+						return false;
+					}
+				}
+			} else {
+				$stmt = $pdo->prepare("SELECT * FROM servicios_floors WHERE status = 1 ORDER BY position ASC");
+				$stmt->execute();
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			}
+		} catch (PDOException $e) {
+			error_log("Error al buscar el piso: " . $e->getMessage());
+			throw $e;
+		}
+	}
+	
+	static public function mdlUpdateFloor($data) {
+		try {
+			$pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_floors SET nameFloor = :nameFloor WHERE idFloor = :idFloor");
+			$stmt->bindParam(":nameFloor", $data['nameFloor'], PDO::PARAM_STR);
+			$stmt->bindParam(":idFloor", $data['idFloor'], PDO::PARAM_INT);
+			if ($stmt->execute()) {
+				return 'ok';
+			} else {
+				return 'error';
+			}
+			
+		} catch (PDOException $e) {
+			error_log("Error al actualizar el piso: ". $e->getMessage());
+			throw $e;
+		}
+	}
+	
+	static public function mdlDeleteFloor($idFloor) {
+		try {
+			$pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_floors SET status = 0 WHERE idFloor = :idFloor");
+			$stmt->bindParam(":idFloor", $idFloor, PDO::PARAM_INT);
+			if ($stmt->execute()) {
+				return 'ok';
+			} else {
+				return 'error';
+			}
+		} catch (PDOException $e) {
+			error_log("Error al eliminar el piso: ". $e->getMessage());
+			throw $e;
+		}
+	}
+	
+	static public function mdlUpdateOrderFloor($position, $idFloor) {
+		try {
+			$pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("UPDATE servicios_floors SET position = :position WHERE idFloor = :idFloor");
+			$stmt->bindParam(":position", $position, PDO::PARAM_INT);
+			$stmt->bindParam(":idFloor", $idFloor, PDO::PARAM_INT);
+			if ($stmt->execute()) {
+				return 'ok';
+			} else {
+				return 'error';
+			}
+		} catch (PDOException $e) {
+			error_log("Error al actualizar la posición del piso: ". $e->getMessage());
+			throw $e;
+		}
+	}
+	static public function mdlGetAreasForZone($zone, $idFloor) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE zone = :zone AND area_idFloors = :area_idFloors AND status = 1 ORDER BY position ASC");
+            $stmt->bindParam(":zone", $zone, PDO::PARAM_STR);
+            $stmt->bindParam(":area_idFloors", $idFloor, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al obtener las áreas para la zona y el piso: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlRegisterArea($zone, $nareaName, $idFloor) {
+		try {
+            $pdo = Conexion::conectar();
+			// Obtener el valor máximo actual de "position" para el "idEdificers" dado y sumar 1
+			$stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_areas WHERE area_idFloors = :area_idFloors AND zone = :zone");
+			$stmt->bindParam(':area_idFloors', $idFloor, PDO::PARAM_INT);
+            $stmt->bindParam(":zone", $zone, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$nextPosition = $result['next_position'];
+			
+            $stmt = $pdo->prepare("INSERT INTO servicios_areas (zone, nameArea, area_idFloors, position) VALUES (:zone, :nameArea, :area_idFloors, :position)");
+            $stmt->bindParam(":zone", $zone, PDO::PARAM_STR);
+            $stmt->bindParam(":nameArea", $nareaName, PDO::PARAM_STR);
+            $stmt->bindParam(":area_idFloors", $idFloor, PDO::PARAM_INT);
+			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al registrar la área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlSearchAreas($item, $value) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item AND status = 1");
+            $stmt->bindParam(":$item", $value);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al buscar el área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateArea($data) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_areas SET nameArea = :nameArea WHERE idArea = :idArea");
+            $stmt->bindParam(":nameArea", $data['nameArea'], PDO::PARAM_STR);
+            $stmt->bindParam(":idArea", $data['idArea'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar el área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlDeleteArea($idArea) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_areas SET status = 0 WHERE idArea = :idArea");
+            $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar el área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateOrderArea($position, $idArea) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_areas SET position = :position WHERE idArea = :idArea");
+            $stmt->bindParam(":position", $position, PDO::PARAM_INT);
+            $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la posición del área: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }

@@ -1,7 +1,5 @@
-<div class="card-custom">
-    <div class="card-header-custom">
-        <strong id='namePage'></strong>
-    </div>
+<div class="p-3 mb-4 rounded">
+    <h5 id="namePage" class="page-title"></h5>
 </div>
 <div class="col-12">
     <div class="p-3">
@@ -33,6 +31,26 @@
     <div class="modal-nav">
         <?php include "view/pages/admin/edifices/editEdifices.php"; ?>
     </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="deleteEdificers" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Eliminar Escuela</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Esta usted seguro que desea eliminar el edificio?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success delete">Aceptar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="view/assets/js/ajax/Edifices/getEdifices.js"></script>

@@ -12,6 +12,46 @@ class FormsController {
         return FormsModel::mdlRegisterSchool($nameSchool);
     }
 
+    static public function ctrSearchEdificers($item, $value){
+        return FormsModel::mdlSearchEdificers($item, $value);
+    }
+    
+    static public function ctrRegisterEdificer($edificeName, $idSchool){
+        return FormsModel::mdlRegisterEdificer($edificeName, $idSchool);
+    }
+    
+    static public function ctrUpdateEdificer($data){
+        return FormsModel::mdlUpdateEdificer($data);
+    }
+    
+    static public function ctrDeleteEdificer($idEdificers){
+        return FormsModel::mdlDeleteEdificer($idEdificers);
+    }
+    
+    static public function ctrUpdateOrderEdificer($position, $idEdificers){
+        return FormsModel::mdlUpdateOrderEdificer($position, $idEdificers);
+    }
+
+    static public function ctrSearchFloors($item, $value) {
+        return FormsModel::mdlSearchFloors($item, $value);
+    }
+    
+    static public function ctrRegisterFloor($floorName, $idEdificers) {
+        return FormsModel::mdlRegisterFloor($floorName, $idEdificers);
+    }
+    
+    static public function ctrUpdateFloor($data) {
+        return FormsModel::mdlUpdateFloor($data);
+    }
+    
+    static public function ctrDeleteFloor($idFloor) {
+        return FormsModel::mdlDeleteFloor($idFloor);
+    }
+    
+    static public function ctrUpdateOrderFloor($position, $idFloor) {
+        return FormsModel::mdlUpdateOrderFloor($position, $idFloor);
+    }    
+
     static public function ctrRegisterUser($data){
         return FormsModel::mdlRegisterUser($data);
     }
@@ -103,5 +143,29 @@ class FormsController {
 
     static public function ctrAsignarFecha($data) {
         return FormsModel::mdlAsignarFecha($data);
+    }
+
+    static public function ctrGetAreasForZone($zone, $idFloor) {
+        return FormsModel::mdlGetAreasForZone($zone, $idFloor);
+    }
+
+    static public function ctrSearchAreas($item, $value) {
+        return FormsModel::mdlSearchAreas($item, $value);
+    }
+
+    static public function ctrRegisterArea($zone, $nareaName, $idFloor) {
+        return FormsModel::mdlRegisterArea($zone, $nareaName, $idFloor);
+    }
+
+    static public function ctrUpdateArea($data) {
+        return FormsModel::mdlUpdateArea($data);
+    }
+
+    static public function ctrDeleteArea($idArea) {
+        return FormsModel::mdlDeleteArea($idArea);
+    }
+
+    static public function ctrUpdateOrderArea($position, $idArea) {
+        return FormsModel::mdlUpdateOrderArea($position, $idArea);
     }
 }

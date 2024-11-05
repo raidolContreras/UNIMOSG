@@ -26,7 +26,7 @@
 					<img src="view/assets/images/logo.png" alt="Logo" class="logo image-nav">
 				</a>
 				<?php endif ?>
-			<div class="row" style="flex-wrap: nowrap; justify-content: center;">
+			<div class="row pr-3" style="flex-wrap: nowrap; justify-content: center;">
 					
 			<?php if ($_SESSION['level'] == 2):?>
 			<?php else: ?>

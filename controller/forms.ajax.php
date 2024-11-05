@@ -21,6 +21,31 @@ switch ($action) {
         require 'ajax/schools.php';
         break;
 
+    case 'searchEdificer':
+    case 'registerEdificer':
+    case 'updateEdificer':
+    case 'deleteEdificer':
+    case 'updateOrderEdificer':
+        require 'ajax/edificer.php';
+        break;
+
+    case 'getAreasForZone':
+    case 'searchArea':
+    case 'registerArea':
+    case 'updateArea':
+    case 'deleteArea':
+    case 'updateOrderArea':
+        require 'ajax/areas.php';
+        break;
+
+    case 'searchFloor':
+    case 'registerFloor':
+    case 'updateFloor':
+    case 'deleteFloor':
+    case 'updateOrderFloor':
+        require 'ajax/floor.php';
+        break;
+
     case 'registerUser':
     case 'searchUser':
     case 'editUser':

@@ -1,10 +1,5 @@
-<link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css">
-<script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
-
-<div class="card-custom">
-    <div class="card-header-custom">
-        <strong id='namePage'></strong>
-    </div>
+<div class="p-3 mb-4 rounded">
+    <h5 id="namePage" class="page-title"></h5>
 </div>
 <div class="col-12">
 <main class="container">

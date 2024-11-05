@@ -17,7 +17,7 @@ $(document).ready(function () {
             {
                 data: 'position',
                 render: function (data, type, row, meta) {
-                    return `<center><i class="fas fa-grip-lines" style="cursor: grab;"></i></center>`;
+                    return `<center style="cursor: grab;"><i class="fad fa-grip-lines"></i></center>`;
                 }
             },
             {
@@ -25,7 +25,7 @@ $(document).ready(function () {
                 render: function (data) {
                     return `
                     <center>
-                        <button class="btn btn-link" onclick="openEdifices(${data.idSchool})" data-tippy-content="Zonas de ${data.nameSchool}">
+                        <button class="btn btn-link" onclick="openEdifices(${data.idSchool})">
                             <span class="arrow">${data.nameSchool}</span>
                         </button>
                     </center>`;
