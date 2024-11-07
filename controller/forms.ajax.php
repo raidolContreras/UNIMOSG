@@ -29,6 +29,14 @@ switch ($action) {
         require 'ajax/edificer.php';
         break;
 
+    case 'searchFloor':
+    case 'registerFloor':
+    case 'updateFloor':
+    case 'deleteFloor':
+    case 'updateOrderFloor':
+        require 'ajax/floor.php';
+        break;
+
     case 'getAreasForZone':
     case 'searchArea':
     case 'registerArea':
@@ -38,12 +46,13 @@ switch ($action) {
         require 'ajax/areas.php';
         break;
 
-    case 'searchFloor':
-    case 'registerFloor':
-    case 'updateFloor':
-    case 'deleteFloor':
-    case 'updateOrderFloor':
-        require 'ajax/floor.php';
+    case 'getObjets':
+    case 'searchObject':
+    case 'addObject':
+    case 'updateObject':
+    case 'deleteObject':
+    case 'updateOrderObject':
+        require 'ajax/objects.php';
         break;
 
     case 'registerUser':

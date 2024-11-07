@@ -168,4 +168,28 @@ class FormsController {
     static public function ctrUpdateOrderArea($position, $idArea) {
         return FormsModel::mdlUpdateOrderArea($position, $idArea);
     }
+
+    static public function ctrGetObjects($idArea){
+        return FormsModel::mdlGetObjects($idArea);
+    }
+
+    static public function ctrAddObject($data) {
+        return FormsModel::mdlAddObject($data);
+    }
+
+    static public function ctrSearchObject($idObject) {
+        return FormsModel::mdlSearchObject($idObject);
+    }
+
+    static public function ctrUpdateObject($data) {
+        return FormsModel::mdlUpdateObject($data);
+    }
+
+    static public function ctrDeleteObject($idObject) {
+        return FormsModel::mdlDeleteObject($idObject);
+    }
+
+    static public function ctrUpdateOrderObject($position, $idObject) {
+        return FormsModel::mdlUpdateOrderObject($position, $idObject);
+    }
 }

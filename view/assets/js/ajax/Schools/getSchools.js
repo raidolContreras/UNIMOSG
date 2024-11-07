@@ -13,12 +13,11 @@ $(document).ready(function () {
             url: 'controller/forms.ajax.php',
             dataSrc: ''
         },
+        ordering: false,
         columns: [
             {
                 data: 'position',
-                render: function (data, type, row, meta) {
-                    return `<center style="cursor: grab;"><i class="fad fa-grip-lines"></i></center>`;
-                }
+                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
             },
             {
                 data: null,

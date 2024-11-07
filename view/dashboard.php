@@ -57,6 +57,10 @@
                 echo 'Planteles registrados';
             } else if ($pagina === 'edifices'){
                 echo 'Edificios registrados';
+            } else if ($pagina === 'zones'){
+                echo 'Zonas';
+            } else if ($pagina === 'objects'){
+                echo 'Objetos por area';
             } else {
                 echo $pagina;
             }

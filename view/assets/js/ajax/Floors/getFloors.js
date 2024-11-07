@@ -16,10 +16,11 @@ $(document).ready(function () {
                 return json.floors || [];
             }
         },
+        ordering: false,
         columns: [
             {
                 data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fad fa-grip-lines"></i></center>`
+                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
             },
             {
                 data: null,

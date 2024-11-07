@@ -2,7 +2,7 @@
 
 session_start();
 
-$pagina = filter_input(INPUT_GET, 'pagina', FILTER_SANITIZE_STRING) ?: 'inicio';
+$pagina = filter_input(INPUT_GET, 'pagina') ?: 'inicio';
 
 if (!isset($_SESSION['logged'])) {
     if ($pagina == 'login') {
@@ -13,9 +13,11 @@ if (!isset($_SESSION['logged'])) {
     }
 } else {
     if ($_SESSION['level'] == 0) {
-        $adminPages = ['newUser', 'users', 'schools', 'newSchools', 'edifices', 'newEdifices', 'floors', 'zones', 'objects'];
+        $adminPages = ['inicio', 'newUser', 'users', 'schools', 'newSchools', 'edifices', 'newEdifices', 'floors', 'zones', 'objects'];
         if (in_array($pagina, $adminPages)) {
             includeAdminPages($pagina);
+        } elseif ($pagina == 'login') {
+            header("Location: inicio");
         } else {
             includeError404();
         }
@@ -45,7 +47,11 @@ function includeUserPages($pagina) {
 
 function includeAdminPages($pagina) {
     includeCommonComponents();
-    include 'view/pages/admin/' . $pagina .'/' . $pagina . '.php';
+    if ($pagina == 'inicio') {
+        include 'view/pages/' . $pagina . '.php';
+    } else {
+        include 'view/pages/admin/' . $pagina .'/' . $pagina . '.php';
+    }
 }
 
 function includeCommonComponents() {

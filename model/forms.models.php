@@ -1398,4 +1398,109 @@ class FormsModel
             throw $e;
         }
 	}
+
+	static public function mdlGetObjects($idArea) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE object_idArea = :idArea AND status = 1 ORDER BY position ASC");
+            $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al obtener los objetos para el área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlAddObject($data) {
+		try {
+            $pdo = Conexion::conectar();
+            // Obtener el valor máximo actual de "position" para el "idEdificers" dado y sumar 1
+            $stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_objects WHERE object_idArea = :object_idArea");
+            $stmt->bindParam(':object_idArea', $data['idArea'], PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $nextPosition = $result['next_position'];
+			
+            $stmt = $pdo->prepare("INSERT INTO servicios_objects (nameObject, object_idArea, position, quantity) VALUES (:nameObject, :object_idArea, :position, :quantity)");
+			$stmt->bindParam(":nameObject", $data['nameObject'], PDO::PARAM_STR);
+			$stmt->bindParam(":object_idArea", $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
+			$stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
+			
+            if ($stmt->execute()) {
+				return 'ok';
+				} else {
+                return 'error';
+            }
+			
+        } catch (PDOException $e) {
+            error_log("Error al agregar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlSearchObject($idObject) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE idObject = :idObject");
+            $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al buscar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateObject($data) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_objects SET nameObject = :nameObject, quantity = :quantity WHERE idObject = :idObject");
+            $stmt->bindParam(":nameObject", $data['nameObject'], PDO::PARAM_STR);
+            $stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
+            $stmt->bindParam(":idObject", $data['idObject'], PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlDeleteObject($idObject) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_objects SET status = 0 WHERE idObject = :idObject");
+            $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al eliminar el objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlUpdateOrderObject($position, $idObject) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_objects SET position = :position WHERE idObject = :idObject");
+            $stmt->bindParam(":position", $position, PDO::PARAM_INT);
+            $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return 'ok';
+            } else {
+                return 'error';
+            }
+        } catch (PDOException $e) {
+            error_log("Error al actualizar la posición del objeto: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }
