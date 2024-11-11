@@ -48,15 +48,12 @@
 		</div>
 		<div class="container navbar-hidden">
 			<div id="schools" style="display: flex; justify-content: space-evenly;">
-				<a href="./" class="mt-3 menu-top py-2 <?php echo ($current_page == 'inicio') ? 'active' : ''; ?>">
-				<i class="fa-duotone fa-house"></i> Tablero
-				</a>
 				<?php if ($_SESSION['level'] == 0): ?>
 					<a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
-					<i class="fa-duotone fa-school"></i> Escuelas
+						<i class="fa-duotone fa-school"></i> Planteles
 					</a>
-					<a href="zones" class="mt-3 menu-top py-2 <?php echo ($current_page == 'zones') ? 'active' : ''; ?>">
-					<i class="fa-duotone fa-location-dot"></i> Zonas
+					<a href="reportes" class="mt-3 menu-top py-2 <?php echo ($current_page == 'reportes') ? 'active' : ''; ?>">
+						<i class="fa-duotone fa-house"></i> Generación de reportes
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
 					<script src="view/assets/js/ajax/General/getSchools.js"></script>

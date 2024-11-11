@@ -11,14 +11,6 @@
 			</a>
             <nav class="navbar">
                 <div class="row schools px-4" style="padding-right: 0 !important;">
-                    <a href="./" class="mt-3 menu-top py-2 <?php echo ($current_page == 'inicio') ? 'active' : ''; ?>">
-                        <div class="row">
-                            <div class="col-2">
-                                <i class="fa-duotone fa-house"></i> 
-                            </div>
-                            <div class="col-8">Tablero</div> 
-                        </div>
-                    </a>
                     <?php if ($_SESSION['level'] == 0): ?>
                         <a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
                             <div class="row">
@@ -26,6 +18,14 @@
                                     <i class="fa-duotone fa-school"></i> 
                                 </div>
                                 <div class="col-8">Planteles</div> 
+                            </div>
+                        </a>
+                        <a href="reportes" class="mt-3 menu-top py-2 <?php echo ($current_page == 'reportes') ? 'active' : ''; ?>">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-house"></i> 
+                                </div>
+                                <div class="col-8">Generación de reportes</div> 
                             </div>
                         </a>
                     <?php elseif ($_SESSION['level'] == 1): ?>

@@ -2,7 +2,7 @@
 
 session_start();
 
-$pagina = filter_input(INPUT_GET, 'pagina') ?: 'inicio';
+$pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
 
 if (!isset($_SESSION['logged'])) {
     if ($pagina == 'login') {
@@ -17,7 +17,7 @@ if (!isset($_SESSION['logged'])) {
         if (in_array($pagina, $adminPages)) {
             includeAdminPages($pagina);
         } elseif ($pagina == 'login') {
-            header("Location: inicio");
+            header("Location: schools");
         } else {
             includeError404();
         }

@@ -1,66 +1,14 @@
 $(document).ready(function () {
-    const tablaEdificio = $('#edifices').DataTable({
-        rowReorder: {
-            dataSrc: 'position',
-            selector: 'td:first-child'
-        },
-        ajax: {
-            type: 'POST',
-            data: { 
-                action: 'searchEdificer',
-                idSchool: $('#school').val()
-            },
-            url: 'controller/forms.ajax.php',
-            dataSrc: function (json) {
-                // Muestra el nombre de la escuela en el encabezado o algún lugar de la interfaz
-                $('#namePage').text('Edificios registrados - '+json.schoolName || "Escuela no especificada");
-                return json.edificers || []; // Solo pasa el array 'edificers' a DataTable
-            }
-        },
-        ordering: false,
-        columns: [
-            {
-                data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
-            },
-            {
-                data: null,
-                render: (data) => `
-                    <center>
-                        <button class="btn btn-link" onclick="openEdifices(${data.idEdificers})">
-                            <span class="arrow">${data.nameEdificer}</span>
-                        </button>
-                    </center>`
-            },
-            {
-                data: null,
-                render: (data) => `
-                    <center>
-                        <div class="btn-group">
-                            <button class="btn btn-info" onclick="openMenuEdit(${data.idEdificers})" data-tippy-content="Editar">
-                                <i class="fa-duotone fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn btn-danger" onclick="showModal(${data.idEdificers})" data-tippy-content="Eliminar">
-                                <i class="fa-duotone fa-trash"></i>
-                            </button>
-                        </div>
-                    </center>`
-            }
-        ],
-        language: {
-            url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-        },
-        drawCallback: function () {
-            tippy('[data-tippy-content]', {
-                duration: 0,
-                arrow: false,
-                delay: [1000, 200],
-                followCursor: true,
-            });
-        }
-    });    
+    if (typeof $.ui === 'undefined' || !$.ui.sortable) {
+        $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
+            inicializarReordenamientoEdificios();
+        });
+    } else {
+        inicializarReordenamientoEdificios();
+    }
 
-    let myDropzone = null;
+    cargarEdificios();
+    
 
     const toggleAcceptButton = () => {
         const isNameFilled = $('#edificeName').val().trim();
@@ -84,7 +32,7 @@ $(document).ready(function () {
                     alert("Edificio creado correctamente");
                     $('#edificeName, #selectSchool').val('');
                     $('.saveNewEdifice').prop('disabled', true);
-                    tablaEdificio.ajax.reload();
+                    cargarEdificios();
                     closeMenu('modalEdifices');
                 },
                 error: function (xhr, status, error) {
@@ -96,62 +44,86 @@ $(document).ready(function () {
 
     $('#edificeName').on('keyup', toggleAcceptButton);
     $('#selectSchool').on('change', toggleAcceptButton);
-
-    $('.addMassiveEdifice').click(function () {
-        $('.moduleAddEdifices').removeClass('d-none');
-        $('.newEdificeForm, .addEdifices').addClass('d-none');
-
-        if (!myDropzone) {
-            myDropzone = new Dropzone("#addEdificesDropzone", {
-                url: "/ruta_de_subida",
-                acceptedFiles: ".xls,.xlsx",
-                init: function () {
-                    this.on("success", function () {
-                        alert("Archivo subido correctamente");
-                    });
-                }
-            });
-        }
-    });
-
-    $('.cancelMassiveEdifices').click(function () {
-        $('.moduleAddEdifices').addClass('d-none');
-        $('.newEdificeForm, .addEdifices').removeClass('d-none');
-
-        if (myDropzone) {
-            myDropzone.destroy();
-            myDropzone = null;
-        }
-    });
-    
-    // Evento para manejar el reordenamiento
-    tablaEdificio.on('row-reorder', function (e, diff, edit) {
-        var orden = [];
-        diff.forEach(function (change) {
-            orden.push({
-                id: tablaEdificio.row(change.node).data().idEdificers,
-                position: change.newPosition + 1
-            });
-        });
-
-        // Enviar el nuevo orden al servidor
-        $.ajax({
-            type: "POST",
-            url: 'controller/forms.ajax.php',
-            data: {
-                action: 'updateOrderEdificer',
-                order: orden
-            },
-            success: function(response) {
-                if(response === 'ok') {
-                    tablaEdificio.ajax.reload(); // Recargar la tabla para reflejar los cambios
-                } else {
-                    console.error('Error al actualizar el orden:', response);
-                }
-            }
-        });
-    });
 });
+
+
+function cargarEdificios() {
+    $.ajax({
+        type: 'POST',
+        url: 'controller/forms.ajax.php',
+        data: {
+            action: 'searchEdificer',
+            idSchool: $('#school').val()
+        },
+        success: function(response) {
+            // Asegúrate de que `response` es un objeto JSON
+            var data = JSON.parse(response);
+            var edificios = data.edificers || []; // Accede al array 'edificers'
+            
+            $('#edificesContainer').empty();
+            edificios.forEach(function (edificio) {
+                var edificioCard = `
+                <div class="col-md-3 mb-3">
+                    <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
+                        <div class="card-body d-flex justify-content-between align-items-center p-3">
+                            <div class="handle me-3" style="cursor: grab;">
+                                <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                            </div>
+                            <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openEdifices(${edificio.idEdificers})" style="text-decoration: none;">
+                                <span class="arrow">${edificio.nameEdificer}</span>
+                            </button>
+                        </div>
+                        <div class="dropdown ms-3">
+                            <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${edificio.idEdificers}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                                <i class="fas fa-ellipsis-v fa-lg"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${edificio.idEdificers}">
+                                <li><button class="dropdown-item" onclick="openMenuEdit(${edificio.idEdificers})">Editar</button></li>
+                                <li><button class="dropdown-item text-danger" onclick="showModal(${edificio.idEdificers})">Eliminar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>`;
+                $('#edificesContainer').append(edificioCard);
+            });
+            inicializarReordenamientoEdificios();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar los edificios:", error);
+        }
+    });
+}
+
+
+function inicializarReordenamientoEdificios() {
+    $('#edificesContainer').sortable({
+        handle: '.handle',
+        update: function (event, ui) {
+            var orden = [];
+            $('.edificio-item').each(function (index) {
+                orden.push({
+                    id: $(this).find('button.btn-link').attr('onclick').match(/\d+/)[0],
+                    position: index + 1
+                });
+            });
+            $.ajax({
+                type: "POST",
+                url: 'controller/forms.ajax.php',
+                data: {
+                    action: 'updateOrderEdificer',
+                    order: orden
+                },
+                success: function(response) {
+                    if(response === 'ok') {
+                        cargarEdificios(); // Recargar la lista para reflejar los cambios
+                    } else {
+                        console.error('Error al actualizar el orden:', response);
+                    }
+                }
+            });
+        }
+    });
+}
 
 function openMenuEdit(idEdificer) {
     openMenu('modalNavUpdate', 'editEdifices');
@@ -175,7 +147,7 @@ function openMenuEdit(idEdificer) {
                     },
                     success: function () {
                         alert("Edificio actualizado correctamente");
-                        $('#edifices').DataTable().ajax.reload();
+                        cargarEdificios();
                         closeMenu('modalNavUpdate');
                     },
                     error: function (xhr, status, error) {
@@ -199,7 +171,7 @@ function showModal(idEdificers) {
             },
             success: function () {
                 alert("Edificio eliminado correctamente");
-                $('#edifices').DataTable().ajax.reload();
+                cargarEdificios();
                 $('#deleteEdificers').modal('hide');
             },
             error: function (xhr, status, error) {

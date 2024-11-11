@@ -1,93 +1,92 @@
 $(document).ready(function () {
-    var tablaEscuelas = $('#schoolsActive').DataTable({
-        rowReorder: {
-            dataSrc: 'position',
-            selector: 'td:first-child'
-        },
+    // Asegúrate de que jQuery UI esté cargado para usar sortable
+    if (typeof $.ui === 'undefined' || !$.ui.sortable) {
+        $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
+            inicializarReordenamiento();
+        });
+    } else {
+        inicializarReordenamiento();
+    }
 
-        ajax: {
-            type: 'POST',
-            data: {
-                action: 'searchSchool'
-            },
-            url: 'controller/forms.ajax.php',
-            dataSrc: ''
+    cargarEscuelas();
+});
+
+
+function cargarEscuelas() {
+    $.ajax({
+        type: 'POST',
+        url: 'controller/forms.ajax.php',
+        data: {
+            action: 'searchSchool'
         },
-        ordering: false,
-        columns: [
-            {
-                data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return `
-                    <center>
-                        <button class="btn btn-link" onclick="openEdifices(${data.idSchool})">
-                            <span class="arrow">${data.nameSchool}</span>
-                        </button>
-                    </center>`;
-                }
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return `
-                    <center>
-                        <div class="btn-group">
-                            <button class="btn btn-info" onclick="openMenuEdit('modalNavUpdate', ${data.idSchool})" data-tippy-content="Editar">
-                                <i class="fa-duotone fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn btn-danger" onclick="showModal(${data.idSchool})" data-tippy-content="Eliminar">
-                                <i class="fa-duotone fa-trash"></i>
+        success: function(response) {
+            var escuelas = JSON.parse(response);
+            $('#schoolsContainer').empty();
+            escuelas.forEach(function (escuela, index) {
+                var schoolCard = `
+                <div class="col-md-3 mb-3">
+                    <div class="card school-item shadow-sm border-0" data-position="${escuela.position}" style="align-items: center; flex-direction: row;">
+                        <div class="card-body d-flex justify-content-between align-items-center p-3">
+                            <div class="handle me-3" style="cursor: grab;">
+                                <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                            </div>
+                            <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openEdifices(${escuela.idSchool})" style="text-decoration: none;">
+                                <span class="arrow">${escuela.nameSchool}</span>
                             </button>
                         </div>
-                    </center>`;
-                }
-            }
-        ],        
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-        },
-        drawCallback: function() {
-            tippy('[data-tippy-content]', {
-                duration: 0,
-                arrow: false,
-                delay: [1000, 200],
-                followCursor: true,
-            });            
+                        <div class="dropdown ms-3">
+                            <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${escuela.idSchool}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                                <i class="fas fa-ellipsis-v fa-lg"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${escuela.idSchool}">
+                                <li><button class="dropdown-item" onclick="openMenuEdit('modalNavUpdate', ${escuela.idSchool})">Editar</button></li>
+                                <li><button class="dropdown-item text-danger" onclick="showModal(${escuela.idSchool})">Eliminar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>`;
+                // Añade esto al inicializar el dropdown
+                $('#dropdownMenuButton' + escuela.idSchool).dropdown({
+                    display: 'static'
+                }).appendTo('body');
+
+
+                $('#schoolsContainer').append(schoolCard);
+            });
+            inicializarReordenamiento();
         }
     });
+}
 
-    // Evento para manejar el reordenamiento
-    tablaEscuelas.on('row-reorder', function (e, diff, edit) {
-        var orden = [];
-        diff.forEach(function (change) {
-            orden.push({
-                id: tablaEscuelas.row(change.node).data().idSchool,
-                position: change.newPosition + 1
+function inicializarReordenamiento() {
+    $('#schoolsContainer').sortable({
+        handle: '.handle',
+        update: function (event, ui) {
+            var orden = [];
+            $('.school-item').each(function (index) {
+                orden.push({
+                    id: $(this).find('button.btn-link').attr('onclick').match(/\d+/)[0],
+                    position: index + 1
+                });
             });
-        });
-
-        // Enviar el nuevo orden al servidor
-        $.ajax({
-            type: "POST",
-            url: 'controller/forms.ajax.php',
-            data: {
-                action: 'updateOrderSchool',
-                order: orden
-            },
-            success: function(response) {
-                if(response === 'ok') {
-                    tablaEscuelas.ajax.reload(); // Recargar la tabla para reflejar los cambios
-                } else {
-                    console.error('Error al actualizar el orden:', response);
+            $.ajax({
+                type: "POST",
+                url: 'controller/forms.ajax.php',
+                data: {
+                    action: 'updateOrderSchool',
+                    order: orden
+                },
+                success: function(response) {
+                    if(response === 'ok') {
+                        cargarEscuelas(); // Recargar la lista para reflejar los cambios
+                    } else {
+                        console.error('Error al actualizar el orden:', response);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
-});
+}
 
 function openMenuEdit(collapse, id) {
 
@@ -124,7 +123,7 @@ function openMenuEdit(collapse, id) {
                         if (data == 'ok'){
                             $('#edit-1').val('');
                             closeMenu('modalNavUpdate');
-                            $('#schoolsActive').DataTable().ajax.reload();
+                            cargarEscuelas();
                         }
                     }
                 });   
@@ -153,7 +152,7 @@ function deleteSchool(){
         success: function (response) {
             if (response == 'ok') { 
                 $('#deleteSchool').modal('hide');
-                $('#schoolsActive').DataTable().ajax.reload();
+                cargarEscuelas();
             }
         }
     });
@@ -177,7 +176,7 @@ $('.success').click(function(e){
         success: function(response){
             if (response = 'ok') {
                 closeMenu('modalCollapse');
-                $('#schoolsActive').DataTable().ajax.reload();
+                cargarEscuelas();
             }
         },
         error: function(xhr, status, error){
