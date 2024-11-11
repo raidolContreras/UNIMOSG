@@ -10,8 +10,9 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "controller/ajax/ajax.form.php",
+            url: "controller/forms.ajax.php",
             data: {
+                action: "editUser",
                 nameEdit: name,
                 emailEdit: email,
                 phoneEdit: phone,
@@ -36,8 +37,9 @@ function openMenuEdit(collapse, idForm, id) {
 
     $.ajax({
         type: "POST",
-        url: "controller/ajax/ajax.form.php",
+        url: "controller/forms.ajax.php",
         data: {
+            action: "searchUser",
             searchUser: id
             },
         dataType: 'json',

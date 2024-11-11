@@ -9,8 +9,9 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "controller/ajax/ajax.form.php",
+            url: "controller/forms.ajax.php",
             data: {
+                action: "registerUser",
                 name: name,
                 email: email,
                 password: password,

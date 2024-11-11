@@ -1,65 +1,13 @@
 $(document).ready(function () {
-    const tablaPisos = $('#floors').DataTable({
-        rowReorder: {
-            dataSrc: 'position',
-            selector: 'td:first-child'
-        },
-        ajax: {
-            type: 'POST',
-            data: { 
-                action: 'searchFloor',
-                idEdificers: $('#edificer').val()
-            },
-            url: 'controller/forms.ajax.php',
-            dataSrc: function (json) {
-                $('#namePage').text('Pisos registrados - ' + json.nameSchool + ' - ' + json.EdificersName || "Edificio no especificado");
-                return json.floors || [];
-            }
-        },
-        ordering: false,
-        columns: [
-            {
-                data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
-            },
-            {
-                data: null,
-                render: (data) => `
-                    <center>
-                        <button class="btn btn-link" onclick="openFloors(${data.idFloor})">
-                            <span class="arrow">${data.nameFloor}</span>
-                        </button>
-                    </center>`
-            },
-            {
-                data: null,
-                render: (data) => `
-                    <center>
-                        <div class="btn-group">
-                            <button class="btn btn-info" onclick="openMenuEdit(${data.idFloor})" data-tippy-content="Editar">
-                                <i class="fa-duotone fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn btn-danger" onclick="showModal(${data.idFloor})" data-tippy-content="Eliminar">
-                                <i class="fa-duotone fa-trash"></i>
-                            </button>
-                        </div>
-                    </center>`
-            }
-        ],
-        language: {
-            url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-        },
-        drawCallback: function () {
-            tippy('[data-tippy-content]', {
-                duration: 0,
-                arrow: false,
-                delay: [1000, 200],
-                followCursor: true,
-            });
-        }
-    });    
+    if (typeof $.ui === 'undefined' || !$.ui.sortable) {
+        $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
+            inicializarReordenamientoPisos();
+        });
+    } else {
+        inicializarReordenamientoPisos();
+    }
 
-    let myDropzone = null;
+    cargarPisos();
 
     const toggleAcceptButton = () => {
         const isNameFilled = $('#floorName').val().trim();
@@ -83,7 +31,7 @@ $(document).ready(function () {
                     alert("Piso creado correctamente");
                     $('#floorName').val('');
                     $('.saveNewFloor').prop('disabled', true);
-                    tablaPisos.ajax.reload();
+                    cargarPisos();
                     closeMenu('modalFloors');
                 },
                 error: function (xhr, status, error) {
@@ -94,62 +42,91 @@ $(document).ready(function () {
     });
 
     $('#floorName').on('keyup', toggleAcceptButton);
-
-    $('.addMassiveFloor').click(function () {
-        $('.moduleAddFloors').removeClass('d-none');
-        $('.newFloorForm, .addFloors').addClass('d-none');
-
-        if (!myDropzone) {
-            myDropzone = new Dropzone("#addFloorsDropzone", {
-                url: "/ruta_de_subida",
-                acceptedFiles: ".xls,.xlsx",
-                init: function () {
-                    this.on("success", function () {
-                        alert("Archivo subido correctamente");
-                    });
-                }
-            });
-        }
-    });
-
-    $('.cancelMassiveFloors').click(function () {
-        $('.moduleAddFloors').addClass('d-none');
-        $('.newFloorForm, .addFloors').removeClass('d-none');
-
-        if (myDropzone) {
-            myDropzone.destroy();
-            myDropzone = null;
-        }
-    });
-    
-    // Evento para manejar el reordenamiento
-    tablaPisos.on('row-reorder', function (e, diff, edit) {
-        var orden = [];
-        diff.forEach(function (change) {
-            orden.push({
-                id: tablaPisos.row(change.node).data().idFloor,
-                position: change.newPosition + 1
-            });
-        });
-
-        // Enviar el nuevo orden al servidor
-        $.ajax({
-            type: "POST",
-            url: 'controller/forms.ajax.php',
-            data: {
-                action: 'updateOrderFloor',
-                order: orden
-            },
-            success: function(response) {
-                if(response === 'ok') {
-                    tablaPisos.ajax.reload();
-                } else {
-                    console.error('Error al actualizar el orden:', response);
-                }
-            }
-        });
-    });
 });
+
+function cargarPisos() {
+    $.ajax({
+        type: 'POST',
+        url: 'controller/forms.ajax.php',
+        data: {
+            action: 'searchFloor',
+            idEdificers: $('#edificer').val()
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            var floors = data.floors || [];
+            
+            $('#namePage').html(`
+                        <a href="schools" class="btn btn-link" >Planteles</a>
+                            <i class="fal fa-angle-right"></i> 
+                        <a href="edifices&school=${data.idSchool}" class="btn btn-link" >${data.nameSchool} </a>
+                            <i class="fal fa-angle-right"></i>
+                        <a class="btn btn-link disabled">${data.EdificersName}</a>`);
+
+            $('#floorsContainer').empty();
+            floors.forEach(function (floor) {
+                var floorCard = `
+                <div class="col-md-2 mb-3">
+                    <div class="card floor-item shadow-sm border-0" data-position="${floor.position}" style="align-items: center; flex-direction: row;">
+                        <div class="card-body d-flex justify-content-between align-items-center p-3">
+                            <div class="handle me-3">
+                                <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                            </div>
+                            <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openFloors(${floor.idFloor})" style="text-decoration: none;">
+                                <span class="arrow">${floor.nameFloor}</span>
+                            </button>
+                        </div>
+                        <div class="dropdown ms-3">
+                            <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${floor.idFloor}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                                <i class="fas fa-ellipsis-v fa-lg"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${floor.idFloor}">
+                                <li><button class="dropdown-item" onclick="openMenuEdit(${floor.idFloor})">Editar</button></li>
+                                <li><button class="dropdown-item text-danger" onclick="showModal(${floor.idFloor})">Eliminar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>`;
+                $('#floorsContainer').append(floorCard);
+            });
+
+            inicializarReordenamientoPisos();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar los pisos:", error);
+        }
+    });
+}
+
+function inicializarReordenamientoPisos() {
+    $('#floorsContainer').sortable({
+        handle: '.handle',
+        update: function (event, ui) {
+            var orden = [];
+            $('.floor-item').each(function (index) {
+                orden.push({
+                    id: $(this).find('button.btn-link').attr('onclick').match(/\d+/)[0],
+                    position: index + 1
+                });
+            });
+            $.ajax({
+                type: "POST",
+                url: 'controller/forms.ajax.php',
+                data: {
+                    action: 'updateOrderFloor',
+                    order: orden
+                },
+                success: function(response) {
+                    if(response === 'ok') {
+                        cargarPisos(); // Recargar la lista para reflejar los cambios
+                    } else {
+                        console.error('Error al actualizar el orden:', response);
+                    }
+                }
+            });
+        }
+    });
+}
 
 function openMenuEdit(idFloor) {
     openMenu('modalNavUpdate', 'editFloors');
@@ -173,7 +150,7 @@ function openMenuEdit(idFloor) {
                     },
                     success: function () {
                         alert("Piso actualizado correctamente");
-                        $('#floors').DataTable().ajax.reload();
+                        cargarPisos();
                         closeMenu('modalNavUpdate');
                     },
                     error: function (xhr, status, error) {
@@ -197,7 +174,7 @@ function showModal(idFloor) {
             },
             success: function () {
                 alert("Piso eliminado correctamente");
-                $('#floors').DataTable().ajax.reload();
+                cargarPisos();
                 $('#deleteFloors').modal('hide');
             },
             error: function (xhr, status, error) {

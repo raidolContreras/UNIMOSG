@@ -1,3 +1,10 @@
+<!-- Incluir la librería de Dropzone desde una CDN o desde tu servidor -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<script>
+    Dropzone.autoDiscover = false; // Desactivar autodetección
+</script>
+
 <div class="container p-4">
     <!-- Encabezado con el nombre del area -->
     <div class="p-3 mb-4 rounded">
@@ -43,6 +50,30 @@
             </div>
             <button type="submit" class="btn btn-primary" id="addObject">Agregar Objeto</button>
         </form>
+        
+        <div class="intro-y box d-none moduleAddObjects">
+            <form class="p-1" id="newObjects">
+                <!-- Botón para descargar plantilla de ejemplo -->
+                <div class="form-group my-3">
+                    <a type="button" class="btn btn-link" download="objects_template.csv" href="view/assets/templates/objects_template.csv">Descargar plantilla</a>
+                </div>
+                <!-- Dropzone para cargar archivos -->
+                <div class="col-md-12">
+                    <div id="addObjectsDropzone" class="dropzone"></div>
+                </div>
+                
+                <div class="d-flex justify-content-center my-3">
+                    <button type="button" class="btn btn-danger me-2 cancelMassiveObjects">Cancelar</button>
+                    <button type="button" class="btn btn-success sendObjects" disabled>Aceptar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="d-grid gap-2 addObjects">
+            <div class="btn-group">
+                <button type="button" class="btn btn-link my-3 addMassiveObject"><i class="fad fa-folder-plus"></i> Registro masivo con archivo</button>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -65,9 +96,11 @@
                 <label for="quantity" class="form-label">Cantidad</label>
                 <input type="number" class="form-control" id="quantityUpdate" required>
             </div>
+
+            <button type="button" class="btn btn-danger" id="cancel">Cancelar</button>
             <button type="submit" class="btn btn-primary" id="update">Actualizar Objeto</button>
         </form>
-
+        
     </div>
 </div>
 

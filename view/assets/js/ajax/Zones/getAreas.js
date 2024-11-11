@@ -17,19 +17,27 @@ $(document).ready(function() {
                 d.zone = currentZone;
                 d.idFloor = $('#floor').val();
             },
-            dataSrc: function (json) {
+            dataSrc: function (data) {
                 // Actualizar el nombre de la página
-                $('#namePage').text(json.nameSchool + ' - ' + json.EdificersName + ' - ' + json.nameFloor);
+                
+                $('#namePage').html(`
+                        <a href="schools" class="btn btn-link" >Planteles</a>
+                            <i class="fal fa-angle-right"></i> 
+                        <a href="edifices&school=${data.idSchool}" class="btn btn-link" >${data.nameSchool} </a>
+                            <i class="fal fa-angle-right"></i>
+                        <a href="floors&edificer=${data.idEdificers}" class="btn btn-link" >${data.EdificersName}</a>
+                            <i class="fal fa-angle-right"></i>
+                        <a class="btn btn-link disabled">${data.nameFloor}</a>`);
                 
                 // Retornar los datos de áreas
-                return json.areas || [];
+                return data.areas || [];
             }
         },
         ordering: false,
         columns: [
             {
                 data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`,
+                render: () => `<center class="handle"><i class="fas fa-sort"></i></center>`,
             },
             {
                 data: null,
@@ -55,8 +63,19 @@ $(document).ready(function() {
                     </center>`
             }
         ],
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+        language: {
+            "paginate": {
+                "first": '<i class="fal fa-angle-double-left"></i>',
+                "last": '<i class="fal fa-angle-double-right"></i>',
+                "next": '<i class="fal fa-angle-right"></i>',
+                "previous": '<i class="fal fa-angle-left"></i>'
+            },
+            "search": "Buscar:",
+            "lengthMenu": "Ver _MENU_ resultados",
+            "loadingRecords": "Cargando...",
+            "info": "Mostrando _START_ de _END_ en _TOTAL_ resultados",
+            "infoEmpty": "Mostrando 0 resultados",
+			"emptyTable":	  "Ningún dato disponible en esta tabla"
         }
     });
     

@@ -192,4 +192,8 @@ class FormsController {
     static public function ctrUpdateOrderObject($position, $idObject) {
         return FormsModel::mdlUpdateOrderObject($position, $idObject);
     }
+
+    static public function ctrGetDataObjects($idArea) {
+        return FormsModel::mdlGetDataObjects($idArea);
+    }
 }

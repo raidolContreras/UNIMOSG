@@ -119,9 +119,10 @@ $(document).ready(function() {
 
 function SuspendUsers(idUsers) {
 	$.ajax({
-        url: 'controller/ajax/ajax.form.php',
+        url: "controller/forms.ajax.php",
         type: 'POST',
         data: {
+            action: 'suspendUser',
             suspendUsers: idUsers
         },
         success: function(response) {
@@ -138,9 +139,10 @@ function SuspendUsers(idUsers) {
 }
 function ActivateUsers(idUsers) {
 	$.ajax({
-        url: 'controller/ajax/ajax.form.php',
+        url: "controller/forms.ajax.php",
         type: 'POST',
         data: {
+            action: 'activateUser',
             activateUsers: idUsers
         },
         success: function(response) {
@@ -160,9 +162,10 @@ function DeleteUsers(idUsers) {
     // Confirmación antes de eliminar
     if (confirm('¿Estás seguro de eliminar este usuario permanentemente?')) {
         $.ajax({
-            url: 'controller/ajax/ajax.form.php',
+            url: "controller/forms.ajax.php",
             type: 'POST',
             data: {
+                action: 'deleteUser',
                 deleteUsers: idUsers
             },
             success: function(response) {

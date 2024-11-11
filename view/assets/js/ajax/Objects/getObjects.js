@@ -1,7 +1,73 @@
 // Inicializar documento con jQuery
 let tablaObjects;
 
-$(document).ready(function() {
+$(document).ready(function(){
+    var myDropzone = new Dropzone("#addObjectsDropzone", {
+        maxFiles: 1,
+        url: "controller/forms.ajax.php",
+        maxFilesize: 2,
+        acceptedFiles: ".csv,.xls,.xlsx",
+        dictDefaultMessage: 'Arrastra y suelta el archivo aquí o haz clic para seleccionar uno <p class="subtitulo-sup">Tipos de archivo permitidos: .csv, .xls, .xlsx (Tamaño máximo 2 MB)</p>',
+        autoProcessQueue: false,
+        dictInvalidFileType: "Archivo no permitido. Por favor, sube un archivo en formato CSV o Excel.",
+        dictFileTooBig: "El archivo es demasiado grande ({{filesize}}MB). Tamaño máximo permitido: {{maxFilesize}}MB.",
+        init: function() {
+            this.on("addedfile", function(file) {
+                if (file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "application/vnd.ms-excel") {
+                    numCSV++;
+                }
+                toggleSubmitButton();
+                var removeButton = Dropzone.createElement('<button class="rounded-button">&times;</button>');
+                var _this = this;
+                removeButton.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (file.type === "text/csv") {
+                        numCSV--;
+                    } 
+                    _this.removeFile(file);
+                    toggleSubmitButton();
+                });
+                file.previewElement.appendChild(removeButton);
+            });
+        }
+    });
+
+    $('.sendObjects').click(function(e){
+        idArea = $('#area').val();
+        myDropzone.processQueue();
+    });
+
+    myDropzone.on("sending", function(file, xhr, formData) {
+        formData.append("action", "uploadObjects");
+        formData.append("idArea", idArea);
+    });
+
+    myDropzone.on("success", function(file, response) {
+        if (response == 'ok') {
+            showAlertBootstrap('Éxito', 'Archivo cargado exitosamente.');
+            $('#objects').DataTable().ajax.reload();
+        } else {
+            showAlertBootstrap('¡Alerta!', response || 'El archivo no se pudo cargar. Intenta más tarde.');
+        }
+        myDropzone.removeAllFiles();
+    });
+
+    $('.cancelMassiveObjects').on('click', function(e) {
+        myDropzone.removeAllFiles();
+        $('.moduleAddObjects').addClass('d-none');
+        $('#newObjectForm').removeClass('d-none');
+        $('.addMassiveObject').removeClass('d-none');
+    });
+
+    $('.addMassiveObject').on('click', function() {
+        $('.moduleAddObjects').removeClass('d-none');
+        $('#newObjectForm').addClass('d-none');
+        $('.addMassiveObject').addClass('d-none');
+        numCSV = 0;
+        toggleSubmitButton();
+        myDropzone.removeAllFiles();
+    });
 
     // Inicializar DataTable con la tabla de objects usando AJAX
     tablaObjects = $('#objects').DataTable({
@@ -17,13 +83,31 @@ $(document).ready(function() {
                 d.action = 'getObjets';
                 d.idArea = $('#area').val();
             },
-            dataSrc: ""
+            dataSrc: function (data) {
+
+                dataState = data.data; 
+                // Actualizar el nombre de la página
+
+                $('#namePage').html(`
+                        <a href="schools" class="btn btn-link" >Planteles</a>
+                            <i class="fal fa-angle-right"></i> 
+                        <a href="edifices&school=${dataState.idSchool}" class="btn btn-link" >${dataState.nameSchool}</a>
+                            <i class="fal fa-angle-right"></i>
+                        <a href="floors&edificer=${dataState.idEdificers}" class="btn btn-link" >${dataState.nameEdificer}</a>
+                            <i class="fal fa-angle-right"></i>
+                        <a href="zones&floor=${dataState.idArea}" class="btn btn-link" >${dataState.nameFloor}</a>
+                            <i class="fal fa-angle-right"></i>
+                        <a class="btn btn-link disabled">${dataState.nameArea}</a>`);
+                
+                // Retornar los datos de áreas
+                return data.objets || [];
+            }
         },
         ordering: false,
         columns: [
             {
                 data: 'position',
-                render: () => `<center style="cursor: grab;"><i class="fas fa-sort"></i></center>`
+                render: () => `<center class="handle"><i class="fas fa-sort"></i></center>`
             },
             {
                 data: 'nameObject',
@@ -49,7 +133,18 @@ $(document).ready(function() {
             }
         ],
         language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            "paginate": {
+                "first": '<i class="fal fa-angle-double-left"></i>',
+                "last": '<i class="fal fa-angle-double-right"></i>',
+                "next": '<i class="fal fa-angle-right"></i>',
+                "previous": '<i class="fal fa-angle-left"></i>'
+            },
+            "search": "Buscar:",
+            "lengthMenu": "Ver _MENU_ resultados",
+            "loadingRecords": "Cargando...",
+            "info": "Mostrando _START_ de _END_ en _TOTAL_ resultados",
+            "infoEmpty": "Mostrando 0 resultados",
+			"emptyTable":	  "Ningún dato disponible en esta tabla"
         }
     });
 
@@ -100,7 +195,9 @@ $(document).ready(function() {
             nameObject: nameObject,
             quantity: quantity
         }).done(function(response) {
-            if (response === 'ok') {
+            //rescatar response como json
+            response = JSON.parse(response);
+            if (response.success) {
                 // Borrar datos en los inputs y agregar la fila a DataTable sin recargar
                 $('#newObjectForm').trigger('reset');
                 tablaObjects.row.add({
@@ -130,6 +227,15 @@ function openMenuEdit(collapse, id) {
             showModal2(collapse);
             $('#update').data({ id, collapse });
         }
+        
+        $('.modal-backdrop').on('click', function() {
+            closeMenu(collapse);
+        });
+        
+        $('#cancel').on('click', function() {
+            closeMenu(collapse);
+        });
+
     }, 'json').fail(function(xhr, status, error) {
         console.error('Error en la solicitud AJAX:', error);
     });
@@ -168,17 +274,7 @@ function handleUpdate(id, collapse) {
     }).done(function(response) {
         if (response === 'ok') {
             // Actualizar la fila correspondiente en DataTable sin recargar
-            var rowData = tablaObjects.row(function(idx, data) {
-                return data.idObject === id;
-            }).data();
-
-            rowData.nameObject = nameObject;
-            rowData.quantity = quantity;
-            tablaObjects.row(function(idx, data) {
-                return data.idObject === id;
-            }).data(rowData).draw(false);
-
-            $('#updateObjectForm').trigger('reset');
+            $('#objects').DataTable().ajax.reload();
             closeMenu(collapse);
         }
     }).fail(function(xhr, status, error) {
@@ -202,9 +298,7 @@ function showModal(id) {
         }, function(response) {
             if (response === 'ok') {
                 // Eliminar la fila correspondiente en DataTable sin recargar
-                tablaObjects.row(function(idx, data) {
-                    return data.idObject === id;
-                }).remove().draw(false);
+                $('#objects').DataTable().ajax.reload();
             } else {
                 alert('Error al eliminar el objeto.');
             }
@@ -212,4 +306,10 @@ function showModal(id) {
             console.error('Error en la solicitud AJAX:', error);
         });
     }
+}
+
+
+function toggleSubmitButton() {
+    var submitButton = document.querySelector('.sendObjects');
+    submitButton.disabled = numCSV !== 1;
 }

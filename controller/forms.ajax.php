@@ -52,6 +52,7 @@ switch ($action) {
     case 'updateObject':
     case 'deleteObject':
     case 'updateOrderObject':
+    case 'uploadObjects':
         require 'ajax/objects.php';
         break;
 

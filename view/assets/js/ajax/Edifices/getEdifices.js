@@ -59,6 +59,12 @@ function cargarEdificios() {
             // Asegúrate de que `response` es un objeto JSON
             var data = JSON.parse(response);
             var edificers = data.edificers || []; // Accede al array 'edificers'
+            // link de regresar a la lista de escuelas
+            
+            $('#namePage').html(`
+                <a href="schools" class="btn btn-link" >Planteles</a>
+                    <i class="fal fa-angle-right"></i>
+                <a class="btn btn-link disabled">${data.schoolName}</a>`);
             
             $('#edificesContainer').empty();
             edificers.forEach(function (edificio) {
@@ -66,7 +72,7 @@ function cargarEdificios() {
                 <div class="col-md-3 mb-3">
                     <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
                         <div class="card-body d-flex justify-content-between align-items-center p-3">
-                            <div class="handle me-3" style="cursor: grab;">
+                            <div class="handle me-3">
                                 <i class="fas fa-grip-vertical fa-lg text-muted"></i>
                             </div>
                             <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openEdifices(${edificio.idEdificers})" style="text-decoration: none;">
