@@ -13,12 +13,17 @@ $(document).ready(function() {
             "url": "controller/forms.ajax.php",
             "type": "POST",
             "data": function(d) {
-                // Agregar parámetros adicionales al AJAX
                 d.action = 'getAreasForZone';
                 d.zone = currentZone;
                 d.idFloor = $('#floor').val();
             },
-            "dataSrc": "" // Espera un array de objetos como respuesta
+            dataSrc: function (json) {
+                // Actualizar el nombre de la página
+                $('#namePage').text(json.nameSchool + ' - ' + json.EdificersName + ' - ' + json.nameFloor);
+                
+                // Retornar los datos de áreas
+                return json.areas || [];
+            }
         },
         ordering: false,
         columns: [
@@ -54,6 +59,7 @@ $(document).ready(function() {
             "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
         }
     });
+    
 
     // Manejar clic en la tarjeta de zona
     $(".zone-card").on("click", function() {

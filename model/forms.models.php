@@ -1295,19 +1295,49 @@ class FormsModel
 			throw $e;
 		}
 	}
+	
 	static public function mdlGetAreasForZone($zone, $idFloor) {
 		try {
-            $pdo = Conexion::conectar();
-            $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE zone = :zone AND area_idFloors = :area_idFloors AND status = 1 ORDER BY position ASC");
-            $stmt->bindParam(":zone", $zone, PDO::PARAM_STR);
-            $stmt->bindParam(":area_idFloors", $idFloor, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Error al obtener las áreas para la zona y el piso: ". $e->getMessage());
-            throw $e;
-        }
-	}
+			$pdo = Conexion::conectar();
+			
+			// Consulta para obtener las áreas
+			$stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE zone = :zone AND area_idFloors = :area_idFloors AND status = 1 ORDER BY position ASC");
+			$stmt->bindParam(":zone", $zone, PDO::PARAM_STR);
+			$stmt->bindParam(":area_idFloors", $idFloor, PDO::PARAM_INT);
+			
+			if ($stmt->execute()) {
+				$data['areas'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} else {
+				return false;
+			}
+	
+			// Consulta para obtener el nombre del piso y el ID del edificio
+			$stmt1 = $pdo->prepare("SELECT nameFloor, floor_idEdificer FROM servicios_floors WHERE idFloor = :idFloor");
+			$stmt1->bindParam(":idFloor", $idFloor);
+			$stmt1->execute();
+			$FloorName = $stmt1->fetch(PDO::FETCH_ASSOC);
+			$data['nameFloor'] = $FloorName ? $FloorName['nameFloor'] : null;
+	
+			// Consulta para obtener el nombre del edificio
+			$stmt2 = $pdo->prepare("SELECT nameEdificer FROM servicios_edificers WHERE idEdificers = :idEdificers");
+			$stmt2->bindParam(":idEdificers", $FloorName['floor_idEdificer']);
+			$stmt2->execute();
+			$EdificersName = $stmt2->fetch(PDO::FETCH_ASSOC);
+			$data['EdificersName'] = $EdificersName ? $EdificersName['nameEdificer'] : null;
+	
+			// Consulta para obtener el nombre de la escuela
+			$stmt3 = $pdo->prepare("SELECT nameSchool FROM servicios_schools WHERE idSchool = (SELECT edificer_idSchool FROM servicios_edificers WHERE idEdificers = :idEdificers)");
+			$stmt3->bindParam(":idEdificers", $FloorName['floor_idEdificer']);
+			$stmt3->execute();
+			$escuelaName = $stmt3->fetch(PDO::FETCH_ASSOC);
+			$data['nameSchool'] = $escuelaName ? $escuelaName['nameSchool'] : null;
+	
+			return $data;
+		} catch (PDOException $e) {
+			error_log("Error al obtener las áreas para la zona y el piso: " . $e->getMessage());
+			throw $e;
+		}
+	}	
 
 	static public function mdlRegisterArea($zone, $nareaName, $idFloor) {
 		try {

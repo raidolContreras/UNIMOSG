@@ -58,10 +58,10 @@ function cargarEdificios() {
         success: function(response) {
             // Asegúrate de que `response` es un objeto JSON
             var data = JSON.parse(response);
-            var edificios = data.edificers || []; // Accede al array 'edificers'
+            var edificers = data.edificers || []; // Accede al array 'edificers'
             
             $('#edificesContainer').empty();
-            edificios.forEach(function (edificio) {
+            edificers.forEach(function (edificio) {
                 var edificioCard = `
                 <div class="col-md-3 mb-3">
                     <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
