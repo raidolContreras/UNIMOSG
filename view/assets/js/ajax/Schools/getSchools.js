@@ -29,7 +29,7 @@ function cargarEscuelas() {
                 <a class="btn btn-link disabled">Planteles</a>`);
 
                 var schoolCard = `
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3"> 
                     <div class="card school-item shadow-sm border-0" data-position="${escuela.position}" style="align-items: center; flex-direction: row;">
                         <div class="card-body d-flex justify-content-between align-items-center p-3">
                             <div class="handle me-3">
