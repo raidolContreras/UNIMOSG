@@ -8,7 +8,7 @@ switch ($_POST['action']) {
         $response = FormsController::ctrRegisterSchool($nameSchool);
         echo $response;
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'registerSchool', 'Registro de una nueva escuela: '+$nameSchool);
+            Logs::createLogs($userId, 'registerSchool', 'Registro de un nuevo plantel: '+$nameSchool);
         }
         break;
 
@@ -24,11 +24,18 @@ switch ($_POST['action']) {
             "idSchool" => $_POST['idSchool']
         ];
         echo FormsController::ctrEditSchool($data);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'editSchool', 'Edición de un plantel: '+$_POST['nameSchool']);
+        }
         break;
 
     case 'deleteSchool':
         $idSchool = $_POST[$_POST['action']];
-        echo FormsController::ctrDeleteSchool($idSchool);
+        $response = FormsController::ctrDeleteSchool($idSchool);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'deleteSchool', 'Eliminación de un plantel: '+$idSchool);
+        }
+        echo $response;
         break;
 
     case 'updateOrderSchool':

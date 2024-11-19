@@ -1,3 +1,5 @@
+var level = $('#level').val();
+
 $(document).ready(function () {
     if (typeof $.ui === 'undefined' || !$.ui.sortable) {
         $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
@@ -65,28 +67,43 @@ function cargarPisos() {
 
             $('#floorsContainer').empty();
             floors.forEach(function (floor) {
-                var floorCard = `
-                <div class="col-md-4 mb-3">
-                    <div class="card floor-item shadow-sm border-0" data-position="${floor.position}" style="align-items: center; flex-direction: row;">
-                        <div class="card-body d-flex justify-content-between align-items-center p-3">
-                            <div class="handle me-3">
-                                <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                
+                if ( level == 0 ){
+                    var floorCard = `
+                    <div class="col-md-4 mb-3">
+                        <div class="card floor-item shadow-sm border-0" data-position="${floor.position}" style="align-items: center; flex-direction: row;">
+                            <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                <div class="handle me-3">
+                                    <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                                </div>
+                                <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openFloors(${floor.idFloor})" style="text-decoration: none;">
+                                    <span class="arrow">${floor.nameFloor}</span>
+                                </button>
                             </div>
-                            <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openFloors(${floor.idFloor})" style="text-decoration: none;">
-                                <span class="arrow">${floor.nameFloor}</span>
-                            </button>
+                            <div class="dropdown ms-3">
+                                <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${floor.idFloor}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                                    <i class="fas fa-ellipsis-v fa-lg"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${floor.idFloor}">
+                                    <li><button class="dropdown-item" onclick="openMenuEdit(${floor.idFloor})">Editar</button></li>
+                                    <li><button class="dropdown-item text-danger" onclick="showModal(${floor.idFloor})">Eliminar</button></li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="dropdown ms-3">
-                            <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${floor.idFloor}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
-                                <i class="fas fa-ellipsis-v fa-lg"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${floor.idFloor}">
-                                <li><button class="dropdown-item" onclick="openMenuEdit(${floor.idFloor})">Editar</button></li>
-                                <li><button class="dropdown-item text-danger" onclick="showModal(${floor.idFloor})">Eliminar</button></li>
-                            </ul>
+                    </div>`;
+                } else {
+                    var floorCard = `
+                    <div class="col-md-4 mb-3">
+                        <div class="card floor-item shadow-sm border-0" data-position="${floor.position}" style="align-items: center; flex-direction: row;">
+                            <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openFloors(${floor.idFloor})" style="text-decoration: none;">
+                                    <span class="arrow">${floor.nameFloor}</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>`;
+                    </div>`;
+                }
+
                 $('#floorsContainer').append(floorCard);
             });
 

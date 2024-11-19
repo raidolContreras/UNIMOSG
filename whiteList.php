@@ -23,12 +23,15 @@ if (!isset($_SESSION['logged'])) {
             includeError404();
         }
     } else {
-        $pagina = filter_input(INPUT_GET, 'pagina') ?: 'inicio';
+        $pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
         $userPages = [
             'inicio' => 'inicio',
             'schools' => 'principal/schools/school',
             'school' => 'principal/schools/school',
-            'edifices' => 'principal/edifices/edifice',
+            'edifices' => 'principal/edifices/edifices',
+            'floors' => 'principal/floors/floors',
+            'zones' => 'principal/zones/zones',
+            'objects' => 'principal/objects/objects',
             'lista' => 'principal/general/lista',
         ];
 

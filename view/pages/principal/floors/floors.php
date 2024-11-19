@@ -18,15 +18,14 @@
 </style>
 
 <div class="p-3 mb-4 rounded">
-    <h5 id="namePage" class="page-title"></h5>
+    <h5 id="namePage" class="page-title">Gestión de Pisos</h5>
 </div>
 <div class="col-md-12 col-lg-9 col-xl-10 p-4 row" style="width: 100vw; height: 58vh; margin: 0; padding: 0; top: 0; left: 0;">
 
   <div class="col-12">
-      <div id="edificesContainer" class="edifices-container row"></div>
+      <div id="floorsContainer" class="floors-container row"></div>
   </div>
-
 </div>
-<input type="hidden" id="school" value="<?php echo (isset($_GET['school']) ? $_GET['school'] :0) ?>">
+<input type="hidden" id="edificer" value="<?php echo (isset($_GET['edificer']) ? $_GET['edificer'] : 0); ?>">
 
-<script src="view/assets/js/ajax/Edifices/getEdifices.js"></script>
+<script src="view/assets/js/ajax/Floors/getFloors.js"></script>

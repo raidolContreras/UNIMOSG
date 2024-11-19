@@ -34,6 +34,9 @@
         </div>
     </div>
 </div>
+<?php if (isset($_SESSION['level'])):?>
+    <input type="hidden" id="level" value="<?php echo $_SESSION['level'] ?>">
+<?php endif ?>
 
 <script src="view/assets/js/bootstrap.bundle.min.js"></script>
 <script>

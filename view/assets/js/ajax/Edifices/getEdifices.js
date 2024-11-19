@@ -1,3 +1,5 @@
+var level = $('#level').val();
+
 $(document).ready(function () {
     if (typeof $.ui === 'undefined' || !$.ui.sortable) {
         $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
@@ -68,6 +70,7 @@ function cargarEdificios() {
             
             $('#edificesContainer').empty();
             edificers.forEach(function (edificio) {
+                if ( level == 0 ){
                 var edificioCard = `
                 <div class="col-md-4 mb-3">
                     <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
@@ -90,6 +93,18 @@ function cargarEdificios() {
                         </div>
                     </div>
                 </div>`;
+                } else {
+                    var edificioCard = `
+                    <div class="col-md-4 mb-3">
+                        <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
+                            <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openEdifices(${edificio.idEdificers})" style="text-decoration: none;">
+                                    <span class="arrow">${edificio.nameEdificer}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                }
                 $('#edificesContainer').append(edificioCard);
             });
             inicializarReordenamientoEdificios();

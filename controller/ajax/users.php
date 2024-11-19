@@ -1,5 +1,7 @@
 <?php
 
+$userId = $_SESSION['idUser'];
+
 switch ($_POST['action']) {
     
     case 'registerUser':
@@ -19,7 +21,13 @@ switch ($_POST['action']) {
             "level" => $level
         );
 
-        echo FormsController::ctrRegisterUser($data);
+        $response = FormsController::ctrRegisterUser($data);
+        
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'registerUser', 'Registro de un nuevo usuario: '+json_encode($data));
+        }
+
+        echo $response;
         break;
     
     case 'searchUser':
@@ -42,21 +50,37 @@ switch ($_POST['action']) {
             "idUsers" => $idUser
         );
 
-        echo FormsController::ctrEditUser($data);
+        $response = FormsController::ctrEditUser($data);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'editUser', 'Edición de un usuario: '+json_encode($data));
+        }
+        echo $response;
         break;
     
     case 'suspendUser':
         $idUser = $_POST['suspendUsers'];
-        echo FormsController::ctrSuspendUser($idUser);
+        $response = FormsController::ctrSuspendUser($idUser);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'suspendUser', 'Suspención de un usuario: '+$_POST['suspendUsers']);
+        }
+        echo $response;
         break;
     
     case 'activateUser':
         $idUser = $_POST['activateUsers'];
-        echo FormsController::ctrActivateUser($idUser);
+        $response = FormsController::ctrActivateUser($idUser);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'activateUser', 'Activación de un usuario: '+$_POST['activateUsers']);
+        }
+        echo $response;
         break;
     
     case 'deleteUser':
         $idUser = $_POST['deleteUsers'];
-        echo FormsController::ctrDeleteUser($idUser);
+        $response = FormsController::ctrDeleteUser($idUser);
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'deleteUser', 'Eliminación de un usuario: '+$_POST['deleteUsers']);
+        }
+        echo $response;
         break;
 }
