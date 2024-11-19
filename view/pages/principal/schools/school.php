@@ -1,177 +1,83 @@
-    <?php
-        $idSchool = (isset($_GET['idSchool']))  ? $_GET['idSchool'] : 0;
-    ?>
-    <div class="card-custom">
-        <div class="card-header-custom">
-            <?php if ($idSchool != 0):?>
-                <strong id='nameSchool'></strong>
-            <?php else: ?>
-                <strong>Universidad Montrer</strong>
-            <?php endif ?>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+<style>
+  .card-body {
+    margin-top: 0px !important;
+  }
+
+  .dropdown-menu {
+    position: absolute !important;
+    z-index: 9999 !important; /* Prueba con valores más altos si es necesario */
+    top: 100%; /* Esto asegurará que aparezca debajo del botón */
+    left: 0; /* Alinear a la izquierda */
+  }
+  .card.school-item {
+    position: relative;
+  }
+
+
+</style>
+
+<div class="p-3 mb-4 rounded">
+    <h5 id="namePage" class="page-title"></h5>
+</div>
+
+<div class="col-md-12 col-lg-9 col-xl-10 p-4 row" style="width: 100vw; height: 58vh; margin: 0; padding: 0; top: 0; left: 0;">
+
+  <div class="col-12">
+    <main class="container">
+        <div class="p-3">
+            <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
+                <button class="btn btn-secondary" onclick="openMenu('modalCollapse', 'newSchools')"><i class="fa-duotone fa-plus"></i> Registrar plantel</button>
+            </div>
         </div>
-        <?php if ($idSchool == 0):?>
         
-            <div class="schoolsData">
-            </div>
-        
-        <?php endif ?>
-    </div>
+        <div id="schoolsContainer" class="schools-container row"></div>
+    </main>
+  </div>
 
-    <div class="card-custom-xl" style="display: flex;">
-        <div class="justify-content-center p-3" style="display: flex;flex-wrap: wrap;
-    align-items: center;">
-            <div class="col-12 col-md-6 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'En espera')" class="btn btn-info w-100">Incidencias en espera<span class="Espera position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
-            </div>
-            <div class="col-12 col-md-6 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Urgente')" class="btn btn-warning w-100">Incidencias urgentes<span class="ungente position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
-            </div>
-            <div class="col-12 col-md-6 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Inmediata')" class="btn btn-danger w-100">Incidencias inmediatas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
-            </div>
-            <div class="col-12 col-md-6 my-3">
-                <button onclick="solicitud(<?php echo $idSchool ?>, 'Completado')" class="btn btn-success w-100">Incidencias completadas<span class="importante position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span></button>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <div class="card resultsSchools" style="display: none;">
-        <div class="p-1 table-responsive" >
-            <table class="table" id="results">
-                <thead>
-                    <tr>
-                        <th class="localitation">Localización</th>
-                        <th class="observations">Observaciónes</th>
-                        <th class="reportDate">Fecha del reporte</th>
-                        <th class="days"></th>
-                        <th whith="10%"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="lookOrder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Orden de reparación: </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label" for="nPedido">N° de pedido</label>
-                            <input type="text" id="nPedido" disabled class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="Cantidad">Cantidad</label>
-                            <input type="text" id="Cantidad" disabled class="form-control">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label" for="Observaciones">Observaciones</label>
-                            <input type="text" id="Observaciones" disabled class="form-control">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label" for="dateRevition">Fecha de revisión</label>
-                            <input type="text" id="dateRevition" disabled class="form-control">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label" for="Estado">Estado</label>
-                            <input type="text" id="Estado" disabled class="form-control">
-                        </div>
-                        <div class="col-12" id="posponerRazonContainer" style="display: none;">
-                            <label class="form-label" for="posponerRazon">Razón de posposición</label>
-                            <input type="text" id="posponerRazon" class="form-control">
-                        </div>
-                        <div class="col-12" id="fechaAsignadaContainer" style="display: none;">
-                            <label class="form-label" for="fechaAsignada">Fecha asignada para reparación</label>
-                            <input type="date" id="fechaAsignada" class="form-control">
-                        </div>
-                        <div class="col-12 details">
-                            <strong>Detalles corregidos</strong>
-                            <label class="form-check-label" id="details"></label>
-                        </div>
-                        <div class="col-12 shopping">
-                            <strong>¿Se realizó alguna compra o gasto?</strong>
-                            <label class="form-check-label" id="shopping"></label>
-                        </div>
-                        <div class="col-12 specific">
-                            <strong>Especifique el gasto</strong>
-                            <label class="form-check-label" id="specific"></label>
-                        </div>
-                        <div class="col-12 evidence">
-                            <strong>Evidencia</strong>
-                            <label class="form-check-label" id="evidence"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-success corregido" style="display: none;">Corregido</button>
-                    <button type="button" class="btn btn-warning posponer" onclick="posponerCorreccion()">Posponer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<!-- Modal: Marcar como corregido -->
-<div class="modal fade" id="corregidoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Marcar como corregido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Campo para ingresar los detalles corregidos -->
-                        <label class="form-label" for="detailsCorrect">Detalles corregidos</label>
-                        <textarea name="detailsCorrect" id="detailsCorrect" class="form-control"></textarea>
-                    </div>
-                    <div class="col-12">
-                        <!-- Opciones para indicar si se realizó alguna compra o gasto -->
-                        <label class="form-label">¿Se realizó alguna compra o gasto?</label>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="shoppingOption" id="shoppingYes" value="Si">
-                            <label class="form-check-label" for="shoppingYes">Sí</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" name="shoppingOption" id="shoppingNo" value="No">
-                            <label class="form-check-label" for="shoppingNo">No</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <!-- Opciones para indicar si se realizó alguna compra o gasto -->
-                    <label class="form-label">Especifique el gasto</label>
-                    <label class="form-check-label" for="shopping">Ingrese el gasto</label>
-                    <input type="text" name="shopping" id="shopping" class="form-control">
-                    <label class="form-check-label" for="shoppingProveedores">Ingrese el o los proveedores</label>
-                    <input type="text" name="shoppingProveedores" id="shoppingProveedores" class="form-control">
-                    <label class="form-check-label" for="shoppingEvidence">Adjunte evidencias</label>
-                    <input type="file" id="shoppingEvidence" name="shoppingEvidence" accept="image/*,.pdf" class="form-control">
-
-                </div>
-                <div class="col-12">
-                    <input type="hidden" id="idIncidente">
-                    <!-- Campo para ingresar los detalles corregidos -->
-                    <label class="form-label" for="specificShopping">Especifique el gasto</label>
-                    <textarea name="specificShopping" id="specificShopping" disabled class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!-- Botón para cancelar la acción de corrección -->
-                <button type="button" class="btn btn-danger" onclick="cancelCorreccion()">Cancelar</button>
-                <!-- Botón para confirmar que se ha corregido -->
-                <button type="button" class="btn btn-success marcarCorreccion">Aceptar</button>
-            </div>
-        </div>
+<div class="modal-collapse" id="modalCollapse">
+    <span class="close-btn" onclick="closeMenu('modalCollapse')">&times;</span>
+    <div class="modal-nav">
+        <?php include "view/pages/admin/schools/newSchool.php"; ?>
     </div>
 </div>
 
-    <input type="hidden" id="school" value="<?php echo $idSchool ?>">
+<div class="modal-collapse" id="modalZones">
+    <span class="close-btn" onclick="closeMenu('modalZones')">&times;</span>
+    <div class="modal-nav">
+        <?php include "view/pages/admin/schools/addZones.php"; ?>
+    </div>
+</div>
 
-    <script src="view/assets/js/ajax/General/getSchool.js"></script>
+<div class="modal-collapse" id="modalNavUpdate">
+    <span class="close-btn" onclick="closeMenu('modalNavUpdate')">&times;</span>
+    <div class="modal-nav">
+        <?php include "view/pages/admin/schools/editSchool.php"; ?>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteSchool" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Eliminar Escuela</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Esta usted seguro que desea eliminar la escuela?
+        <input type="hidden" id="idSchool">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="deleteSchool()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="view/assets/js/ajax/Schools/getSchools.js"></script>

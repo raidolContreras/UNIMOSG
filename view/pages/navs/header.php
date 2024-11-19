@@ -28,8 +28,7 @@
 				<?php endif ?>
 			<div class="row pr-3" style="flex-wrap: nowrap; justify-content: center;">
 					
-			<?php if ($_SESSION['level'] == 2):?>
-			<?php else: ?>
+			<?php if ($_SESSION['level'] == 0):?>
 				<a href="users" class="menu-top py-2 <?php echo ($current_page == 'users') ? 'active' : ''; ?>">
 					<div class="row">
 						<div class="col-2">
@@ -38,6 +37,7 @@
 						<div class="col-8">Usuarios</div> 
 					</div>
 				</a>
+			<?php else: ?>
 			<?php endif ?>
 				<button class="navbar-toggler boton-sombra" type="button" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon one"></span>
@@ -56,7 +56,6 @@
 						<i class="fa-duotone fa-house"></i> Generación de reportes
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
-					<script src="view/assets/js/ajax/General/getSchools.js"></script>
 				<?php else: ?>
 					<a href="lista" class="mt-3 menu-top <?php echo ($current_page == 'lista') ? 'active' : ''; ?>">
 						Supervisión

@@ -1,9 +1,15 @@
 <?php
 
+$userId = $_SESSION['idUser'];
+
 switch ($_POST['action']) {
     case 'registerSchool':
         $nameSchool = $_POST['nameSchool'];
-        echo FormsController::ctrRegisterSchool($nameSchool);
+        $response = FormsController::ctrRegisterSchool($nameSchool);
+        echo $response;
+        if ($response == 'ok') {
+            Logs::createLogs($userId, 'registerSchool', 'Registro de una nueva escuela: '+$nameSchool);
+        }
         break;
 
     case 'searchSchool':

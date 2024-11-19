@@ -20,19 +20,23 @@ class FormsModel
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetch();
+					$result = $stmt->fetch();
 				} else {
-					return false;
+					$result = false;
 				}
 			} else {
 				$stmt = $pdo->prepare($sql);
 
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
+					$result = $stmt->fetchAll();
 				} else {
-					return false;
+					$result = false;
 				}
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -48,19 +52,23 @@ class FormsModel
 				$stmt = $pdo->prepare("SELECT * FROM servicios_schools WHERE $item = :$item");
 				$stmt->bindParam(":$item", $value);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetch();
+					$result = $stmt->fetch();
 				} else {
-					return false;
+					$result = false;
 				}
 			} else {
 				$stmt = $pdo->prepare('SELECT * FROM servicios_schools WHERE status = 1 ORDER BY position ASC');
 
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
+					$result = $stmt->fetchAll();
 				} else {
-					return false;
+					$result = false;
 				}
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -84,10 +92,14 @@ class FormsModel
 			$stmt->bindParam(':position', $nextPosition, PDO::PARAM_INT);
 
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -100,11 +112,15 @@ class FormsModel
             $stmt = $pdo->prepare('UPDATE servicios_schools SET position = :position WHERE idSchool = :idSchools');
             $stmt->bindParam(':position', $position, PDO::PARAM_INT);
             $stmt->bindParam(':idSchools', $idSchool, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar el orden de la escuela: " . $e->getMessage());
             throw $e;
@@ -122,10 +138,14 @@ class FormsModel
 			$stmt->bindParam(':phone', $data['phone'], PDO::PARAM_INT);
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -143,10 +163,14 @@ class FormsModel
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
 			$stmt->bindParam(':idUsers', $data['idUsers'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -160,10 +184,14 @@ class FormsModel
 			$stmt = $pdo->prepare('UPDATE servicios_users SET status = 0 WHERE idUsers = :idUsers');
 			$stmt->bindParam(':idUsers', $idUsers, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -177,10 +205,14 @@ class FormsModel
 			$stmt = $pdo->prepare('UPDATE servicios_users SET status = 1 WHERE idUsers = :idUsers');
 			$stmt->bindParam(':idUsers', $idUsers, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -192,11 +224,15 @@ class FormsModel
             $pdo = Conexion::conectar();
 			$stmt = $pdo->prepare('DELETE FROM servicios_users WHERE idUsers = :idUsers');
             $stmt->bindParam(':idUsers', $idUser, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
             throw $e;
@@ -211,10 +247,14 @@ class FormsModel
 			$stmt->bindParam(':nameSchool', $data['nameSchool'], PDO::PARAM_STR);
 			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -248,11 +288,15 @@ class FormsModel
             $stmt = $pdo->prepare('UPDATE servicios_incidentes SET nPedido = :nPedido WHERE idIncidente = :idIncidente');
             $stmt->bindParam(':nPedido', $pedido, PDO::PARAM_STR);
             $stmt->bindParam(':idIncidente', $informe, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al registrar el evento: " . $e->getMessage());
             throw $e;
@@ -316,10 +360,15 @@ class FormsModel
 			}
 
 			if ($stmt->execute() && $stmt->rowCount() > 0) {
-				return $stmt->fetchAll();
+				$result = $stmt->fetchAll();
 			} else {
-				return false;
+				$result = false;
 			}
+			
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -333,10 +382,14 @@ class FormsModel
 			$stmt = $pdo->prepare('UPDATE servicios_schools SET status = 0 WHERE idSchool = :idSchool');
 			$stmt->bindParam(':idSchool', $idSchool, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -353,10 +406,15 @@ class FormsModel
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(':idIncidente', $idIncidente, PDO::PARAM_INT);
 			if ($stmt->execute() && $stmt->rowCount() > 0) {
-				return $stmt->fetch();
+				$result = $stmt->fetch();
 			} else {
-				return false;
+				$result = false;
 			}
+			
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -374,10 +432,14 @@ class FormsModel
 			$stmt->bindParam(':detalleCompra', $data['detalleCompra'], PDO::PARAM_STR);
 			$stmt->bindParam(':idIncidente', $data['idIncidente'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al ACTUALIZAR el evento: " . $e->getMessage());
 			throw $e;
@@ -403,9 +465,9 @@ class FormsModel
 					$stmt->bindParam(':idUsers', $user, PDO::PARAM_INT);
 				}
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetchAll();
+					$result = $stmt->fetchAll();
 				} else {
-					return false;
+					$result = false;
 				}
 			} else {
 				$sql = 'SELECT p.*, s.nameSchool, z.nameZone, a.nameArea, u.name
@@ -418,11 +480,16 @@ class FormsModel
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindParam(':idPlan', $idPlan, PDO::PARAM_INT);
 				if ($stmt->execute() && $stmt->rowCount() > 0) {
-					return $stmt->fetch();
+					$result = $stmt->fetch();
 				} else {
-					return false;
+					$result = false;
 				}
 			}
+			
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -448,9 +515,9 @@ class FormsModel
                 $stmt->bindParam(':idUsers', $user, PDO::PARAM_INT);
             }
             if ($stmt->execute() && $stmt->rowCount() > 0) {
-                return $stmt->fetchAll();
+                $result = $stmt->fetchAll();
             } else {
-                return false;
+                $result = false;
             }
         } else {
             $sql = 'SELECT s.nameSchool, z.nameZone, a.nameArea, u.name, sd.*
@@ -469,11 +536,15 @@ class FormsModel
             }
             $stmt->bindParam(':idSupervisionDays', $idSupervisionDays, PDO::PARAM_INT);
             if ($stmt->execute() && $stmt->rowCount() > 0) {
-                return $stmt->fetch();
+                $result = $stmt->fetch();
             } else {
-                return false;
+                $result = false;
             }
         }
+		// cerrar conexión
+		$stmt->closeCursor();
+		$pdo = null;
+		return $result;
     } catch (PDOException $e) {
         error_log("Error al buscar el evento: " . $e->getMessage());
         throw $e;
@@ -493,10 +564,14 @@ class FormsModel
 			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
 			$stmt->bindParam(':eventTime', $data['eventTime'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
-				return $pdo->lastInsertId();
+				$result = $pdo->lastInsertId();
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -517,10 +592,14 @@ class FormsModel
 			$stmt->bindParam(':datePlan', $data['datePlan'], PDO::PARAM_STR);
 			$stmt->bindParam(':eventTime', $data['eventTime'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
-				return $data['idPlan'];
+				$result = $data['idPlan'];
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el evento: " . $e->getMessage());
 			throw $e;
@@ -534,10 +613,14 @@ class FormsModel
 			$stmt = $pdo->prepare('DELETE FROM servicios_plan WHERE idPlan = :idPlan');
 			$stmt->bindParam(':idPlan', $idPlan, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el evento: " . $e->getMessage());
 			throw $e;
@@ -942,7 +1025,11 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al buscar el evento: " . $e->getMessage());
             throw $e;
@@ -961,10 +1048,14 @@ class FormsModel
 			$stmt->bindParam(":supervisionTime", $data['supervisionTime'], PDO::PARAM_STR);
 			$stmt->bindParam(":idSupervisor", $data['idSupervisor'], PDO::PARAM_INT);
             if ($stmt->execute()) {
-                return $pdo->lastInsertId();
+                $result = $pdo->lastInsertId();
             } else {
-                return 'error';
+                $result = 'error';
             }
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al agregar el día de supervisión: ". $e->getMessage());
             throw $e;
@@ -976,11 +1067,15 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("DELETE FROM servicios_supervision_days WHERE idSupervisionDays = :idSupervisionDays");
             $stmt->bindParam(":idSupervisionDays", $idSupervisionDays, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al eliminar el día de supervisión: ". $e->getMessage());
             throw $e;
@@ -1005,7 +1100,10 @@ class FormsModel
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute();
 		$return = $stmt->fetch(PDO::FETCH_ASSOC);
+		// cerrar conexión
+		$stmt->closeCursor();
 		$stmt = null;
+		$pdo = null;
 		return $return;
 	}
 
@@ -1014,7 +1112,11 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("SELECT * FROM servicios_users WHERE level = 1 AND status = 1");
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al buscar el director: ". $e->getMessage());
             throw $e;
@@ -1028,11 +1130,15 @@ class FormsModel
             $stmt->bindParam(":fechaAsignada", $data['fechaAsignada'], PDO::PARAM_STR);
 			$stmt->bindParam(":posponerRazon", $data['razon'], PDO::PARAM_STR);
             $stmt->bindParam(":idIncidente", $data['idIncidente'], PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar la fecha de asignación: ". $e->getMessage());
             throw $e;
@@ -1058,10 +1164,14 @@ class FormsModel
 			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
 
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el edificio: " . $e->getMessage());
 			throw $e;
@@ -1082,7 +1192,7 @@ class FormsModel
 						if ($stmt->execute()) {
 							$data['edificers'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 						} else {
-							return false;
+							$result = false;
 						}
 						// Buscar el nombre de la escuela solo si se encontraron edificios
 						$stmt2 = $pdo->prepare("SELECT nameSchool FROM servicios_schools WHERE idSchool = :idSchool");
@@ -1092,21 +1202,25 @@ class FormsModel
 
 						$data['schoolName'] = $schoolName ? $schoolName['nameSchool'] : null;
 
-						return $data;
+						$result = $data;
 					} else {
 						$stmt = $pdo->prepare("SELECT * FROM servicios_edificers WHERE $item = :$item");
 						$stmt->bindParam(":$item", $value);
 						if ($stmt->execute() && $stmt->rowCount() > 0) {
-							return $stmt->fetch();
+							$result = $stmt->fetch();
 						} else {
-							return false;
+							$result = false;
 						}
 					}
 				} else {
 					$stmt = $pdo->prepare("SELECT * FROM servicios_edificers WHERE status = 1 ORDER BY position ASC");
                     $stmt->execute();
-                    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				}
+				// cerrar conexión
+				$stmt->closeCursor();
+				$pdo = null;
+				return $result;
 			} catch (PDOException $e) {
 				error_log("Error al buscar el edificio: " . $e->getMessage());
 				throw $e;
@@ -1121,11 +1235,14 @@ class FormsModel
 			$stmt->bindParam(":nameEdificer", $data['nameEdificer'], PDO::PARAM_STR);
 			$stmt->bindParam(":idEdificers", $data['idEdificers'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
-			
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar el edificio: ". $e->getMessage());
             throw $e;
@@ -1137,11 +1254,15 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("UPDATE servicios_edificers SET status = 0 WHERE idEdificers = :idEdificers");
             $stmt->bindParam(":idEdificers", $idEdificers, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al eliminar el edificio: ". $e->getMessage());
             throw $e;
@@ -1154,11 +1275,15 @@ class FormsModel
             $stmt = $pdo->prepare("UPDATE servicios_edificers SET position = :position WHERE idEdificers = :idEdificers");
             $stmt->bindParam(":position", $position, PDO::PARAM_INT);
             $stmt->bindParam(":idEdificers", $idEdificers, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar la posición del edificio: ". $e->getMessage());
             throw $e;
@@ -1183,10 +1308,14 @@ class FormsModel
 			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
 	
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al registrar el piso: " . $e->getMessage());
 			throw $e;
@@ -1206,7 +1335,7 @@ class FormsModel
 					if ($stmt->execute()) {
 						$data['floors'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					} else {
-						return false;
+						$result = false;
 					}
 					// Buscar el nombre del edificio solo si se encontraron pisos
 					$stmt2 = $pdo->prepare("SELECT nameEdificer FROM servicios_edificers WHERE idEdificers = :idEdificers");
@@ -1225,21 +1354,25 @@ class FormsModel
                     $data['nameSchool'] = $escuelaName? $escuelaName['nameSchool'] : null;
                     $data['idSchool'] = $escuelaName? $escuelaName['idSchool'] : null;
 	
-					return $data;
+					$result = $data;
 				} else {
 					$stmt = $pdo->prepare("SELECT * FROM servicios_floors WHERE $item = :$item");
 					$stmt->bindParam(":$item", $value);
 					if ($stmt->execute() && $stmt->rowCount() > 0) {
-						return $stmt->fetch();
+						$result = $stmt->fetch();
 					} else {
-						return false;
+						$result = false;
 					}
 				}
 			} else {
 				$stmt = $pdo->prepare("SELECT * FROM servicios_floors WHERE status = 1 ORDER BY position ASC");
 				$stmt->execute();
-				return $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al buscar el piso: " . $e->getMessage());
 			throw $e;
@@ -1253,10 +1386,14 @@ class FormsModel
 			$stmt->bindParam(":nameFloor", $data['nameFloor'], PDO::PARAM_STR);
 			$stmt->bindParam(":idFloor", $data['idFloor'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 			
 		} catch (PDOException $e) {
 			error_log("Error al actualizar el piso: ". $e->getMessage());
@@ -1270,10 +1407,14 @@ class FormsModel
 			$stmt = $pdo->prepare("UPDATE servicios_floors SET status = 0 WHERE idFloor = :idFloor");
 			$stmt->bindParam(":idFloor", $idFloor, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al eliminar el piso: ". $e->getMessage());
 			throw $e;
@@ -1287,10 +1428,14 @@ class FormsModel
 			$stmt->bindParam(":position", $position, PDO::PARAM_INT);
 			$stmt->bindParam(":idFloor", $idFloor, PDO::PARAM_INT);
 			if ($stmt->execute()) {
-				return 'ok';
+				$result = 'ok';
 			} else {
-				return 'error';
+				$result = 'error';
 			}
+			// cerrar conexión
+			$stmt->closecursor();
+            $pdo = null;
+            return $result;
 		} catch (PDOException $e) {
 			error_log("Error al actualizar la posición del piso: ". $e->getMessage());
 			throw $e;
@@ -1309,6 +1454,9 @@ class FormsModel
 			if ($stmt->execute()) {
 				$data['areas'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			} else {
+				// cerrar conexión
+				$stmt->closeCursor();
+				$pdo = null;
 				return false;
 			}
 	
@@ -1336,6 +1484,9 @@ class FormsModel
 			$data['nameSchool'] = $escuelaName ? $escuelaName['nameSchool'] : null;
 			$data['idSchool'] = $escuelaName ? $escuelaName['idSchool'] : null;
 	
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
 			return $data;
 		} catch (PDOException $e) {
 			error_log("Error al obtener las áreas para la zona y el piso: " . $e->getMessage());
@@ -1359,11 +1510,15 @@ class FormsModel
             $stmt->bindParam(":nameArea", $nareaName, PDO::PARAM_STR);
             $stmt->bindParam(":area_idFloors", $idFloor, PDO::PARAM_INT);
 			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al registrar la área: ". $e->getMessage());
             throw $e;
@@ -1376,7 +1531,11 @@ class FormsModel
             $stmt = $pdo->prepare("SELECT * FROM servicios_areas WHERE $item = :$item AND status = 1");
             $stmt->bindParam(":$item", $value);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al buscar el área: ". $e->getMessage());
             throw $e;
@@ -1389,11 +1548,15 @@ class FormsModel
             $stmt = $pdo->prepare("UPDATE servicios_areas SET nameArea = :nameArea WHERE idArea = :idArea");
             $stmt->bindParam(":nameArea", $data['nameArea'], PDO::PARAM_STR);
             $stmt->bindParam(":idArea", $data['idArea'], PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar el área: ". $e->getMessage());
             throw $e;
@@ -1405,11 +1568,15 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("UPDATE servicios_areas SET status = 0 WHERE idArea = :idArea");
             $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al eliminar el área: ". $e->getMessage());
             throw $e;
@@ -1422,11 +1589,15 @@ class FormsModel
             $stmt = $pdo->prepare("UPDATE servicios_areas SET position = :position WHERE idArea = :idArea");
             $stmt->bindParam(":position", $position, PDO::PARAM_INT);
             $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar la posición del área: ". $e->getMessage());
             throw $e;
@@ -1439,7 +1610,11 @@ class FormsModel
             $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE object_idArea = :idArea AND status = 1 ORDER BY position ASC");
             $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al obtener los objetos para el área: ". $e->getMessage());
             throw $e;
@@ -1448,31 +1623,48 @@ class FormsModel
 
 	static public function mdlAddObject($data) {
 		try {
-            $pdo = Conexion::conectar();
-            // Obtener el valor máximo actual de "position" para el "idEdificers" dado y sumar 1
-            $stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_objects WHERE object_idArea = :object_idArea");
-            $stmt->bindParam(':object_idArea', $data['idArea'], PDO::PARAM_INT);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $nextPosition = $result['next_position'];
-			
-            $stmt = $pdo->prepare("INSERT INTO servicios_objects (nameObject, object_idArea, position, quantity) VALUES (:nameObject, :object_idArea, :position, :quantity)");
-			$stmt->bindParam(":nameObject", $data['nameObject'], PDO::PARAM_STR);
-			$stmt->bindParam(":object_idArea", $data['idArea'], PDO::PARAM_INT);
-			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
-			$stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
-			
-            if ($stmt->execute()) {
-				//retornar un json con un success y el id del objeto creado
-				return array('success' => true, 'idObject' => $pdo->lastInsertId());
-				} else {
-                return 'error';
-            }
-			
-        } catch (PDOException $e) {
-            error_log("Error al agregar el objeto: ". $e->getMessage());
-            throw $e;
-        }
+			$pdo = Conexion::conectar();
+	
+			// Construir una consulta de inserción múltiple
+			$placeholders = [];
+			$params = [];
+			foreach ($data as $index => $row) {
+				$placeholders[] = "(:nameObject{$index}, :idArea{$index}, :position{$index}, :quantity{$index})";
+	
+				// Obtener la posición siguiente
+				$stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_objects WHERE object_idArea = :object_idArea");
+				$stmt->bindParam(':object_idArea', $row['idArea'], PDO::PARAM_INT);
+				$stmt->execute();
+				$result = $stmt->fetch(PDO::FETCH_ASSOC);
+				$nextPosition = $result['next_position'];
+	
+				// Mapear valores
+				$params[":nameObject{$index}"] = $row['nameObject'];
+				$params[":idArea{$index}"] = $row['idArea'];
+				$params[":position{$index}"] = $nextPosition;
+				$params[":quantity{$index}"] = $row['quantity'];
+			}
+	
+			$sql = "INSERT INTO servicios_objects (nameObject, object_idArea, position, quantity) VALUES " . implode(", ", $placeholders);
+			$stmt = $pdo->prepare($sql);
+	
+			// Ejecutar la consulta con los parámetros mapeados
+			if ($stmt->execute($params)) {
+				
+				$pdo = null;
+				$result = true;
+			} else {
+				$result = false;
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
+		} catch (PDOException $e) {
+			error_log("Error al agregar los objetos: " . $e->getMessage());
+			throw $e;
+		}
+
 	}
 
 	static public function mdlSearchObject($idObject) {
@@ -1481,7 +1673,11 @@ class FormsModel
             $stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE idObject = :idObject");
             $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al buscar el objeto: ". $e->getMessage());
             throw $e;
@@ -1495,11 +1691,15 @@ class FormsModel
             $stmt->bindParam(":nameObject", $data['nameObject'], PDO::PARAM_STR);
             $stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
             $stmt->bindParam(":idObject", $data['idObject'], PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar el objeto: ". $e->getMessage());
             throw $e;
@@ -1511,11 +1711,15 @@ class FormsModel
             $pdo = Conexion::conectar();
             $stmt = $pdo->prepare("UPDATE servicios_objects SET status = 0 WHERE idObject = :idObject");
             $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al eliminar el objeto: ". $e->getMessage());
             throw $e;
@@ -1528,11 +1732,15 @@ class FormsModel
             $stmt = $pdo->prepare("UPDATE servicios_objects SET position = :position WHERE idObject = :idObject");
             $stmt->bindParam(":position", $position, PDO::PARAM_INT);
             $stmt->bindParam(":idObject", $idObject, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return 'ok';
-            } else {
-                return 'error';
-            }
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al actualizar la posición del objeto: ". $e->getMessage());
             throw $e;
@@ -1549,9 +1757,49 @@ class FormsModel
 											WHERE a.idArea = :idArea");
             $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
         } catch (PDOException $e) {
             error_log("Error al obtener los objetos para el área: ". $e->getMessage());
+            throw $e;
+        }
+	}
+}
+
+class Logs {
+	static public function createLogs($userId,$action,$description) {
+
+        // Obtener la IP del usuario
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+        // Obtener el agente de usuario (dispositivo, navegador, etc.)
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        
+        // Preparar e insertar el log
+        $sql = "INSERT INTO servicios_logs (idUser, action, description, ip_address, user_agent) VALUES (:user_id, :action, :description, :ip_address, :user_agent)";
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare($sql);
+			
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+			$stmt->bindParam(':action', $action, PDO::PARAM_STR);
+			$stmt->bindParam(':description', $description, PDO::PARAM_STR);
+			$stmt->bindParam(':ip_address', $ipAddress, PDO::PARAM_STR);
+			$stmt->bindParam(':user_agent', $userAgent, PDO::PARAM_STR);
+
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error al crear los logs: ". $e->getMessage());
             throw $e;
         }
 	}

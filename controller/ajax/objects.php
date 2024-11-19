@@ -58,55 +58,67 @@ switch ($_POST['action']) {
         $idArea = $_POST['idArea'];
         $file = $_FILES['file']['tmp_name'];
         $fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-    
+        
         if ($fileType === 'csv') {
             // Procesar archivo CSV
             $handle = fopen($file, "r");
-    
+        
             // Saltar la primera fila si contiene encabezados
             fgetcsv($handle, 1000, ",");
-    
+        
+            $values = []; // Array para acumular los valores
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $nombre = $data[0];
                 $cantidad = $data[1];
                 
-                $data = [
+                // Agregar fila al array
+                $values[] = [
                     'idArea' => $idArea,
                     'nameObject' => $nombre,
                     'quantity' => $cantidad
                 ];
-
-                FormsController::ctrAddObject($data);
             }
-    
+        
             fclose($handle);
-            echo 'ok';
+        
+            // Llamar a la función con todos los datos acumulados
+            if (FormsController::ctrAddObject($values)) {
+                echo 'ok';
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al insertar los datos."]);
+            }
+        
         } elseif ($fileType === 'xlsx' || $fileType === 'xls') {
             // Procesar archivo Excel
             $spreadsheet = IOFactory::load($file);
             $sheet = $spreadsheet->getActiveSheet();
             
+            $values = []; // Array para acumular los valores
             foreach ($sheet->getRowIterator(2) as $row) { // Comenzamos en la fila 2 si la fila 1 es el encabezado
                 $cellIterator = $row->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(false);
-    
+        
                 $nombre = $cellIterator->current()->getValue(); // Columna A
                 $cellIterator->next();
                 $cantidad = $cellIterator->current()->getValue(); // Columna B
                 
-                $data = [
+                // Agregar fila al array
+                $values[] = [
                     'idArea' => $idArea,
                     'nameObject' => $nombre,
                     'quantity' => $cantidad
                 ];
-
-                FormsController::ctrAddObject($data);
-                
             }
-    
-            echo 'ok';
+        
+            // Llamar a la función con todos los datos acumulados
+            if (FormsController::ctrAddObject($values)) {
+                echo 'ok';
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al insertar los datos."]);
+            }
         } else {
             echo json_encode(["status" => "error", "message" => "Formato de archivo no soportado."]);
         }
+    
         break;
 }

@@ -1,8 +1,10 @@
 $(document).ready(function () {
-    // Asegúrate de que jQuery UI esté cargado para usar sortable
+    // Asegúrate de que jQuery UI y Touch Punch estén cargados
     if (typeof $.ui === 'undefined' || !$.ui.sortable) {
         $.getScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", function() {
-            inicializarReordenamiento();
+            $.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js", function() {
+                inicializarReordenamiento();
+            });
         });
     } else {
         inicializarReordenamiento();
@@ -10,7 +12,6 @@ $(document).ready(function () {
 
     cargarEscuelas();
 });
-
 
 function cargarEscuelas() {
     $.ajax({
@@ -23,8 +24,12 @@ function cargarEscuelas() {
             var escuelas = JSON.parse(response);
             $('#schoolsContainer').empty();
             escuelas.forEach(function (escuela, index) {
+                
+            $('#namePage').html(`
+                <a class="btn btn-link disabled">Planteles</a>`);
+
                 var schoolCard = `
-                <div class="col-md-3 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="card school-item shadow-sm border-0" data-position="${escuela.position}" style="align-items: center; flex-direction: row;">
                         <div class="card-body d-flex justify-content-between align-items-center p-3">
                             <div class="handle me-3">
@@ -185,3 +190,81 @@ $('.success').click(function(e){
         }
     });
 });
+
+async function getExtendedSystemInfo() {
+    
+    const userAgent = navigator.userAgent;
+    // Ejemplo simple: extraer el dispositivo del userAgent (no confiable pero a veces útil)
+    let deviceModel = "Unknown Device";
+    if (/iPhone/.test(userAgent)) {
+        deviceModel = "iPhone";
+    } else if (/iPad/.test(userAgent)) {
+        deviceModel = "iPad";
+    } else if (/Android/.test(userAgent) && /Mobile/.test(userAgent)) {
+        deviceModel = "Android Phone";
+    } else if (/Android/.test(userAgent)) {
+        deviceModel = "Android Tablet";
+    } else if (/Windows/.test(userAgent)) {
+        deviceModel = "Windows PC";
+    } else if (/Mac/.test(userAgent)) {
+        deviceModel = "Mac Computer";
+    }
+
+    const systemInfo = {
+        userAgent: deviceModel,
+        platform: navigator.platform,
+        vendor: navigator.vendor,
+        screenResolution: `${screen.width}x${screen.height}`,
+        windowSize: `${window.innerWidth}x${window.innerHeight}`,
+        language: navigator.language,
+        deviceMemory: navigator.deviceMemory || 'N/A',
+        hardwareConcurrency: navigator.hardwareConcurrency || 'N/A',
+        dateTime: new Date().toLocaleString(),
+        pageHistoryLength: history.length,  // Cantidad de páginas en la sesión de navegación actual
+        themePreference: window.matchMedia("(prefers-color-scheme: dark)").matches ? 'Dark' : 'Light',
+        orientation: screen.orientation ? screen.orientation.type : "N/A",
+    };
+
+    // API de Rendimiento para Tiempos de Carga
+    if (performance && performance.timing) {
+        const perfData = performance.timing;
+        systemInfo.pageLoadTime = (perfData.loadEventEnd - perfData.navigationStart) / 1000;  // en segundos
+        systemInfo.domContentLoadedTime = (perfData.domContentLoadedEventEnd - perfData.navigationStart) / 1000;
+    }
+
+    // Información de permisos, verificando si el usuario ha concedido permisos
+    if (navigator.permissions) {
+        const permissionsToCheck = ["geolocation", "notifications", "camera", "microphone"];
+        systemInfo.permissions = {};
+
+        for (let permission of permissionsToCheck) {
+            try {
+                const result = await navigator.permissions.query({ name: permission });
+                systemInfo.permissions[permission] = result.state; // granted, denied o prompt
+            } catch (error) {
+                systemInfo.permissions[permission] = "Not available"; // En caso de error o permisos no soportados
+            }
+        }
+    }
+
+    // Información de batería
+    if (navigator.getBattery) {
+        const battery = await navigator.getBattery();
+        systemInfo.batteryLevel = `${Math.round(battery.level * 100)}%`;
+        systemInfo.batteryCharging = battery.charging ? "Yes" : "No";
+    }
+
+    console.log(systemInfo);
+    // // Enviar la información al servidor
+    // fetch('log_system_info.php', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(systemInfo)
+    // })
+    // .then(response => response.text())
+    // .then(data => console.log('Log saved:', data))
+    // .catch(error => console.error('Error:', error));
+}
+
+// Ejecutar la función para enviar la información extendida
+getExtendedSystemInfo();

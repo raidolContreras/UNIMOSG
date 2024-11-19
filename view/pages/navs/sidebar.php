@@ -29,8 +29,22 @@
                             </div>
                         </a>
                     <?php elseif ($_SESSION['level'] == 1): ?>
-                    
-                        <script src="view/assets/js/ajax/General/getSchools.js"></script>
+                        <a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-school"></i> 
+                                </div>
+                                <div class="col-8">Planteles</div> 
+                            </div>
+                        </a>
+                        <a href="reportes" class="mt-3 menu-top py-2 <?php echo ($current_page == 'reportes') ? 'active' : ''; ?>">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-house"></i> 
+                                </div>
+                                <div class="col-8">Generación de reportes</div> 
+                            </div>
+                        </a>
                     <?php else: ?>
                         <a href="lista" class="mt-3 menu-top py-2 <?php echo ($current_page == 'lista') ? 'active' : ''; ?>">
                             <div class="row">

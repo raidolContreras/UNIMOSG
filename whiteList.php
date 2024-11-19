@@ -2,9 +2,9 @@
 
 session_start();
 
-$pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
 
 if (!isset($_SESSION['logged'])) {
+    $pagina = filter_input(INPUT_GET, 'pagina') ?: 'login';
     if ($pagina == 'login') {
         include_once 'view/pages/auth/login.php';
     } else {
@@ -13,6 +13,7 @@ if (!isset($_SESSION['logged'])) {
     }
 } else {
     if ($_SESSION['level'] == 0) {
+        $pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
         $adminPages = ['inicio', 'newUser', 'users', 'schools', 'newSchools', 'edifices', 'newEdifices', 'floors', 'zones', 'objects'];
         if (in_array($pagina, $adminPages)) {
             includeAdminPages($pagina);
@@ -22,6 +23,7 @@ if (!isset($_SESSION['logged'])) {
             includeError404();
         }
     } else {
+        $pagina = filter_input(INPUT_GET, 'pagina') ?: 'inicio';
         $userPages = [
             'inicio' => 'inicio',
             'schools' => 'principal/schools/school',

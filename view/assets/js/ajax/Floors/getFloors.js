@@ -66,7 +66,7 @@ function cargarPisos() {
             $('#floorsContainer').empty();
             floors.forEach(function (floor) {
                 var floorCard = `
-                <div class="col-md-2 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="card floor-item shadow-sm border-0" data-position="${floor.position}" style="align-items: center; flex-direction: row;">
                         <div class="card-body d-flex justify-content-between align-items-center p-3">
                             <div class="handle me-3">
