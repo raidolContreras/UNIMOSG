@@ -29,6 +29,7 @@ function cargarEscuelas() {
                 
             $('#namePage').html(`
                 <a class="btn btn-link disabled">Planteles</a>`);
+                var level = $('#level').val();
                 if ( level == 0 ){
                     var schoolCard = `
                     <div class="col-md-4 mb-3"> 

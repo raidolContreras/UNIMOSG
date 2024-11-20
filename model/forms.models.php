@@ -1621,7 +1621,7 @@ class FormsModel
         }
 	}
 
-	static public function mdlAddObject($data) {
+	static public function mdlAddObjects($data) {
 		try {
 			$pdo = Conexion::conectar();
 	
@@ -1664,6 +1664,38 @@ class FormsModel
 			error_log("Error al agregar los objetos: " . $e->getMessage());
 			throw $e;
 		}
+
+	}
+
+	static public function mdlAddObject($data) {
+		try {
+			$pdo = Conexion::conectar();
+			// Obtener el valor máximo actual de "position" para el "idEdificers" dado y sumar 1
+			$stmt = $pdo->prepare("SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM servicios_objects WHERE object_idArea = :object_idArea");
+			$stmt->bindParam(':object_idArea', $data['idArea'], PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$nextPosition = $result['next_position'];
+
+			$stmt = $pdo->prepare("INSERT INTO servicios_objects (nameObject, object_idArea, position, quantity) VALUES (:nameObject, :idArea, :position, :quantity)");
+			$stmt->bindParam(":nameObject", $data['nameObject'], PDO::PARAM_STR);
+			$stmt->bindParam(":idArea", $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(":position", $nextPosition, PDO::PARAM_INT);
+			$stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
+			if ($stmt->execute()) {
+				//retornar success con true y el idObject en un array
+				$result = array('success' => true, 'idObject' => $pdo->lastInsertId());
+            } else {
+                $result = 'error';
+            }
+			// cerrar conexión
+			$stmt->closeCursor();
+            $pdo = null;
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error al agregar el objeto: ". $e->getMessage());
+            throw $e;
+        }
 
 	}
 

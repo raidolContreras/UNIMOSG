@@ -82,7 +82,7 @@ switch ($_POST['action']) {
             fclose($handle);
         
             // Llamar a la función con todos los datos acumulados
-            if (FormsController::ctrAddObject($values)) {
+            if (FormsController::ctrAddObjects($values)) {
                 echo 'ok';
             } else {
                 echo json_encode(["status" => "error", "message" => "Error al insertar los datos."]);
@@ -111,7 +111,7 @@ switch ($_POST['action']) {
             }
         
             // Llamar a la función con todos los datos acumulados
-            if (FormsController::ctrAddObject($values)) {
+            if (FormsController::ctrAddObjects($values)) {
                 echo 'ok';
             } else {
                 echo json_encode(["status" => "error", "message" => "Error al insertar los datos."]);

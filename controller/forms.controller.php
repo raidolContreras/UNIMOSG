@@ -173,6 +173,10 @@ class FormsController {
         return FormsModel::mdlGetObjects($idArea);
     }
 
+    static public function ctrAddObjects($data) {
+        return FormsModel::mdlAddObjects($data);
+    }
+
     static public function ctrAddObject($data) {
         return FormsModel::mdlAddObject($data);
     }

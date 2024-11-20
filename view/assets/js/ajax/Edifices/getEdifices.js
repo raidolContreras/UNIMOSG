@@ -70,6 +70,7 @@ function cargarEdificios() {
             
             $('#edificesContainer').empty();
             edificers.forEach(function (edificio) {
+                var level = $('#level').val();
                 if ( level == 0 ){
                 var edificioCard = `
                 <div class="col-md-4 mb-3">

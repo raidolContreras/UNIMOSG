@@ -67,7 +67,7 @@ function cargarPisos() {
 
             $('#floorsContainer').empty();
             floors.forEach(function (floor) {
-                
+                var level = $('#level').val();
                 if ( level == 0 ){
                     var floorCard = `
                     <div class="col-md-4 mb-3">
