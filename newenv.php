@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     $password = trim($_POST['PASSWORD'] ?? '');
 
     // Validación básica de los campos
-    if (empty($token) || empty($instance_id) || empty($host) || empty($database) || empty($username) || empty($password)) {
+    if (empty($token) || empty($instance_id) || empty($host) || empty($database) || empty($username)) {
         $response['error'] = "Todos los campos son obligatorios.";
     } else {
         // Actualizar el archivo .env

@@ -52,6 +52,9 @@
 					<a href="schools" class="mt-3 menu-top py-2 <?php echo ($current_page == 'schools') ? 'active' : ''; ?>">
 						<i class="fa-duotone fa-school"></i> Planteles
 					</a>
+					<a href="supervicion" class="mt-3 menu-top py-2 <?php echo ($current_page == 'supervicion') ? 'active' : ''; ?>">
+						<i class="fa-duotone fa-user-hard-hat"></i> Gestión de supervisores
+					</a>
 					<a href="reportes" class="mt-3 menu-top py-2 <?php echo ($current_page == 'reportes') ? 'active' : ''; ?>">
 						<i class="fa-duotone fa-house"></i> Generación de reportes
 					</a>

@@ -200,4 +200,28 @@ class FormsController {
     static public function ctrGetDataObjects($idArea) {
         return FormsModel::mdlGetDataObjects($idArea);
     }
+
+    static public function ctrGetSupervitionDays($idSupervisionDays ) {
+        return FormsModel::mdlGetSupervitionDays($idSupervisionDays);
+    }
+
+    static public function ctrAddSupervition($data) {
+        return FormsModel::mdlAddSupervition($data);
+    }
+
+    static public function ctrAddSupervitionAreas($data) {
+        return FormsModel::mdlAddSupervitionAreas($data);
+    }
+
+    static public function ctrGetSupervitionAreas() {
+        return FormsModel::mdlGetSupervitionAreas();
+    }
+
+    static public function getSupervitors() {
+        return FormsModel::getSupervitors();
+    }
+
+    static public function ctrDeleteSupervitionArea($idSupervisionAreas) {
+        return FormsModel::mdlDeleteSupervitionArea($idSupervisionAreas);
+    }
 }

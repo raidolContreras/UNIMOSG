@@ -24,7 +24,7 @@ switch ($_POST['action']) {
         $response = FormsController::ctrRegisterUser($data);
         
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'registerUser', 'Registro de un nuevo usuario: '+json_encode($data));
+            Logs::createLogs($userId, 'registerUser', 'Registro de un nuevo usuario: '.json_encode($data));
         }
 
         echo $response;
@@ -52,7 +52,7 @@ switch ($_POST['action']) {
 
         $response = FormsController::ctrEditUser($data);
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'editUser', 'Edición de un usuario: '+json_encode($data));
+            Logs::createLogs($userId, 'editUser', 'Edición de un usuario: '.json_encode($data));
         }
         echo $response;
         break;
@@ -61,7 +61,7 @@ switch ($_POST['action']) {
         $idUser = $_POST['suspendUsers'];
         $response = FormsController::ctrSuspendUser($idUser);
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'suspendUser', 'Suspención de un usuario: '+$_POST['suspendUsers']);
+            Logs::createLogs($userId, 'suspendUser', 'Suspención de un usuario: '.$_POST['suspendUsers']);
         }
         echo $response;
         break;
@@ -70,7 +70,7 @@ switch ($_POST['action']) {
         $idUser = $_POST['activateUsers'];
         $response = FormsController::ctrActivateUser($idUser);
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'activateUser', 'Activación de un usuario: '+$_POST['activateUsers']);
+            Logs::createLogs($userId, 'activateUser', 'Activación de un usuario: '.$_POST['activateUsers']);
         }
         echo $response;
         break;
@@ -79,7 +79,7 @@ switch ($_POST['action']) {
         $idUser = $_POST['deleteUsers'];
         $response = FormsController::ctrDeleteUser($idUser);
         if ($response == 'ok') {
-            Logs::createLogs($userId, 'deleteUser', 'Eliminación de un usuario: '+$_POST['deleteUsers']);
+            Logs::createLogs($userId, 'deleteUser', 'Eliminación de un usuario: '.$_POST['deleteUsers']);
         }
         echo $response;
         break;

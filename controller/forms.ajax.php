@@ -70,6 +70,15 @@ switch ($action) {
         require 'ajax/incidents.php';
         break;
 
+    case 'getSupervitionDays':
+    case 'registerRoute':
+    case 'deleteSupervisionDays':
+    case 'getSupervitionAreas':
+    case 'addSupervitionAreas':
+    case 'deleteSupervitionArea':
+        require 'ajax/supervition.php';
+        break;
+
     default:
         echo json_encode(['error' => 'Acción no reconocida']);
 }

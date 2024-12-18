@@ -14,7 +14,7 @@ if (!isset($_SESSION['logged'])) {
 } else {
     if ($_SESSION['level'] == 0) {
         $pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
-        $adminPages = ['inicio', 'newUser', 'users', 'schools', 'newSchools', 'edifices', 'newEdifices', 'floors', 'zones', 'objects'];
+        $adminPages = ['inicio', 'newUser', 'users', 'schools', 'newSchools', 'edifices', 'newEdifices', 'floors', 'zones', 'objects', 'supervicion'];
         if (in_array($pagina, $adminPages)) {
             includeAdminPages($pagina);
         } elseif ($pagina == 'login') {
@@ -32,13 +32,14 @@ if (!isset($_SESSION['logged'])) {
             'floors' => 'principal/floors/floors',
             'zones' => 'principal/zones/zones',
             'objects' => 'principal/objects/objects',
-            'lista' => 'principal/general/lista',
+            'planes' => 'principal/planes/planes',
+            'supervicion' => 'principal/supervicion/supervicion',
         ];
 
         if (isset($userPages[$pagina])) {
             includeUserPages($userPages[$pagina]);
         } elseif ($pagina == 'login') {
-            header("Location: inicio");
+            header("Location: schools");
         } else {
             includeError404();
         }

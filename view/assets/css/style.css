@@ -2821,7 +2821,7 @@ option {
   padding: 0px 2px 1px;
   white-space: nowrap;
   border-radius: 2rem;
-  background-color: #b6effb;
+  background-color: #efefef;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -16000,4 +16000,99 @@ body {
 
 .handle:active {
   cursor: -webkit-grabbing; cursor: grabbing;
+}
+
+
+/* Estilo para el contenedor principal */
+#calendar-container {
+  /* Ajusta el alto al 80% de la altura de la ventana */
+  overflow: hidden;
+  /* Elimina las barras de desplazamiento innecesarias */
+  margin: 0 auto;
+}
+
+#calendar {
+  width: 100%;
+  height: 100%;
+  /* Ajusta el calendario al tamaño del contenedor */
+}
+
+@media (max-width: 768px) {
+  #calendar-container {
+    height: 70vh;
+    /* Menor altura en dispositivos pequeños */
+  }
+}
+
+.fc-daygrid-day-frame:hover {
+  background-color: #f5f5f5;
+}
+
+.fc-timegrid-slot .fc-timegrid-slot-lane:hover {
+  border: 1px solid #4e9754;
+}
+
+.delete-event-btn {
+  background: #e74c3c;
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.delete-event-btn:hover {
+  background: #c0392b;
+}
+
+.fc-event-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.fc-event-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.fc-custom-time-label {
+  background: linear-gradient(to right, #f0f0f0, #e0e0e0);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-weight: bold;
+  color: #333;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.fc-custom-time-label:hover {
+  background: linear-gradient(to right, #e0e0e0, #f0f0f0);
+  cursor: default;
+}
+
+.fc .fc-timegrid-axis-cushion {
+  /* Ajusta el espaciado entre las líneas */
+  padding: 2px 0;
+}
+
+.fc .fc-cell-shaded, .fc .fc-day-disabled {
+  background-color: #f9f9f9;
+}
+
+.fc-timegrid-slot:hover {
+  background-color: #BCBCBC;
+  cursor: pointer;
 }

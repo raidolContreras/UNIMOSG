@@ -37,6 +37,14 @@
                                 <div class="col-8">Planteles</div> 
                             </div>
                         </a>
+                        <a href="supervicion" class="mt-3 menu-top py-2 <?php echo ($current_page == 'supervicion') ? 'active' : ''; ?>">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-user-hard-hat"></i> 
+                                </div>
+                                <div class="col-8">Gestión de supervisores</div> 
+                            </div>
+                        </a>
                         <a href="reportes" class="mt-3 menu-top py-2 <?php echo ($current_page == 'reportes') ? 'active' : ''; ?>">
                             <div class="row">
                                 <div class="col-2">
