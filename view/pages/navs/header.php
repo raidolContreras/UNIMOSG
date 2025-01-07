@@ -59,10 +59,6 @@
 						<i class="fa-duotone fa-house"></i> Generación de reportes
 					</a>
 				<?php elseif ($_SESSION['level'] == 1): ?>
-				<?php else: ?>
-					<a href="lista" class="mt-3 menu-top <?php echo ($current_page == 'lista') ? 'active' : ''; ?>">
-						Supervisión
-					</a>
 				<?php endif ?>
 			</div>
 		</div>

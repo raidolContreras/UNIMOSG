@@ -22,7 +22,7 @@ if (!isset($_SESSION['logged'])) {
         } else {
             includeError404();
         }
-    } else {
+    } else if ($_SESSION['level'] == 1) {
         $pagina = filter_input(INPUT_GET, 'pagina') ?: 'schools';
         $userPages = [
             'inicio' => 'inicio',
@@ -34,6 +34,19 @@ if (!isset($_SESSION['logged'])) {
             'objects' => 'principal/objects/objects',
             'planes' => 'principal/planes/planes',
             'supervicion' => 'principal/supervicion/supervicion',
+        ];
+
+        if (isset($userPages[$pagina])) {
+            includeUserPages($userPages[$pagina]);
+        } elseif ($pagina == 'login') {
+            header("Location: schools");
+        } else {
+            includeError404();
+        }
+    } else {
+        $pagina = filter_input(INPUT_GET, 'pagina') ?: 'inicio';
+        $userPages = [
+            'inicio' => 'inicio',
         ];
 
         if (isset($userPages[$pagina])) {

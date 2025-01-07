@@ -224,4 +224,23 @@ class FormsController {
     static public function ctrDeleteSupervitionArea($idSupervisionAreas) {
         return FormsModel::mdlDeleteSupervitionArea($idSupervisionAreas);
     }
+
+    static public function ctrGetSupervitionDaysUser($idUser) {
+        $supervitionDays = FormsModel::mdlGetSupervitionDaysUser($idUser);
+        $supervitionAreas = FormsModel::mdlGetSupervitionAreaUser($idUser);
+        $supervisions = [
+            'daily' => $supervitionDays,
+            'today' => $supervitionAreas
+        ];
+        return $supervisions;
+        
+    }
+
+    static public function ctrUploadEvidence($data) {
+        return FormsModel::mdlUploadEvidence($data);
+    }
+
+    static public function ctrFinalizarSupervision($idSupervision) {
+        return FormsModel::mdlFinalizarSupervision($idSupervision);
+    }
 }

@@ -21,7 +21,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="eventModalLabel">Agregar/Editar Evento</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">&times;</button>
 				</div>
 				<div class="modal-body row">
 					<div class="mb-3 col-md-6 col-12">
@@ -97,7 +97,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addRecorridoModalLabel">Agregar Recorrido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">&times;</button>
             </div>
             <form id="recorridoForm">
                 <div class="modal-body">

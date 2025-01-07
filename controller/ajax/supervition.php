@@ -52,6 +52,12 @@ switch ($_POST['action']) {
         echo $response;
         break;
 
+    case 'getSupervitionDaysUser':
+        $userId = $_SESSION['idUser'];
+        $response = FormsController::ctrGetSupervitionDaysUser($userId);
+        echo json_encode($response);
+        break;
+
     case 'getSupervitionAreas':
         $responce = FormsController::ctrGetSupervitionAreas();
         echo json_encode($responce);

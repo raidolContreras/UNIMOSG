@@ -7088,11 +7088,17 @@ fieldset:disabled .btn {
   .modal-xl {
     max-width: 800px;
   }
+  .modal-xxl {
+    max-width: 1200px;
+  }
 }
 
 @media (min-width: 1200px) {
   .modal-xl {
     max-width: 1140px;
+  }
+  .modal-xxl {
+    max-width: 1320px;
   }
 }
 
@@ -7114,6 +7120,10 @@ fieldset:disabled .btn {
 }
 
 .modal-fullscreen .modal-body {
+  overflow-y: auto;
+}
+
+.modal-body {
   overflow-y: auto;
 }
 
@@ -15368,7 +15378,7 @@ body {
 }
 
 .modal-content {
-  border-radius: 20px; /* Bordes redondeados para el modal */
+  border-radius: 0px; /* Bordes redondeados para el modal */
   overflow: hidden; /* Asegurar que todo dentro del modal se quede dentro de los bordes redondeados */
 }
 
@@ -16095,4 +16105,337 @@ body {
 .fc-timegrid-slot:hover {
   background-color: #BCBCBC;
   cursor: pointer;
+}
+
+/* Estilo general para el contenedor de la lista */
+.custom-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #ffffff;
+}
+
+/* Estilo para los elementos de la lista */
+.custom-list-item {
+  padding: 15px 20px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Ícono dentro del elemento de la lista */
+.custom-list-item i {
+  font-size: 18px;
+  color: #8c8c8c;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Efecto hover para los elementos */
+.custom-list-item:hover {
+  background-color: #d9f7be;
+  color: #389e0d;
+  transform: translateY(-2px);
+}
+
+/* Animación del ícono al pasar el mouse */
+.custom-list-item:hover i {
+  transform: rotate(90deg); /* Rotación de 90 grados */
+  color: #389e0d;
+}
+
+/* Estilo para el último elemento sin borde */
+.custom-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Clase personalizada para resaltar elementos activos */
+.custom-list-item.active {
+  background-color: #bae637;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Clase personalizada para elementos con error */
+.custom-list-item.error {
+  background-color: #ffccc7;
+  color: #a8071a;
+}
+
+/* Estilo responsivo */
+@media (max-width: 768px) {
+  .custom-list-item {
+      font-size: 14px;
+      padding: 12px 15px;
+  }
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-title span {
+  display: inline-block;
+  color: #ced4da;
+}
+
+.modal-title .school-name {
+  color: #ced4da;
+}
+
+.modal-title .edificer-name {
+  color: #ced4da;
+}
+
+.modal-title .floor-name {
+  color: #ced4da;
+}
+
+.modal-title .area-name {
+  color: #adb5bd;
+}
+
+/* Estilo general para dispositivos móviles y tabletas */
+@media (max-width: 992px) {
+  .modal-dialog {
+      max-width: 100%;
+      margin: 0 auto;
+  }
+
+  .modal-content {
+      padding: 10px;
+  }
+
+  .modal-header, .modal-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .modal-header h5 {
+      font-size: 16px;
+      text-align: center;
+  }
+
+  .row.mb-3 {
+      flex-wrap: wrap;
+      gap: 10px;
+  }
+
+  .col-2, .col-3 {
+      text-align: center;
+      margin-bottom: 10px;
+  }
+
+  .col-1 {
+      text-align: center;
+  }
+
+  .btn {
+      padding: 5px 10px;
+  }
+
+  .preview-container img {
+      max-width: 100%;
+      height: auto;
+  }
+
+  /* Ajusta los títulos y listas */
+  #listTitle {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 10px;
+  }
+
+  .list-group {
+      font-size: 14px;
+  }
+
+  .custom-list-item {
+      padding: 10px;
+      font-size: 14px;
+  }
+
+  .capture-photo, .cancel-photo, .switch-camera {
+    font-size: 21px;
+  }
+}
+
+/* Ajustes para pantallas pequeñas (móviles) */
+@media (max-width: 576px) {
+  .modal-dialog {
+      max-width: 95%;
+  }
+
+  .btn {
+      font-size: 10px;
+      padding: 4px 8px;
+  }
+
+  .col-1, .col-2, .col-3 {
+      text-align: center;
+  }
+
+  .preview-container img {
+      max-width: 90%;
+      margin: 0 auto;
+  }
+
+  .modal-header h5 {
+      font-size: 14px;
+  }
+
+  #listTitle {
+      font-size: 16px;
+  }
+  
+  .capture-photo, .cancel-photo, .switch-camera {
+    font-size: 21px;
+  }
+}
+
+.modal.modal-fullscreen {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+
+.modal-dialog {
+  margin: 0;
+  max-width: 100%;
+  height: 100%;
+}
+
+.modal-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.camera {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+/* Estilos generales para los botones de la cámara */
+.camera button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  font-size: 20px;
+  color: #444;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  cursor: pointer;
+}
+
+.camera button:active {
+  transform: scale(0.95); /* Efecto de presión */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Estilo para el botón de cambio de cámara */
+.camera .switch-camera {
+  background: linear-gradient(145deg, #d1d8e0, #e4e9ed);
+  color: #007bff;
+}
+
+.camera .switch-camera:active {
+  background: #b4c2d0;
+}
+
+/* Estilo para el botón de captura */
+.camera .capture-photo {
+  background: linear-gradient(145deg, #6a6a6a, #000000);
+  color: white;
+  box-shadow: 0 4px 8px rgba(255, 87, 87, 0.2);
+}
+
+.camera .capture-photo:active {
+  background: linear-gradient(145deg, #000000, #6a6a6a);
+}
+
+/* Estilo para el botón de cancelar */
+.camera .cancel-photo {
+  background: linear-gradient(145deg, #e0e0e0, #f0f0f0);
+  color: #474747;
+}
+
+.camera .cancel-photo:active {
+  background: #d6d6d6;
+  color: #e04b4b;
+}
+
+/* Estilo para el contenedor de cámara */
+.camera .col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.camera .col-10 {
+  background: #000;
+  padding: 5px;
+}
+
+/* Estilo para iconos dentro de los botones */
+.camera button i {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.camera button:hover i {
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño del ícono al pasar el cursor */
+}
+
+.switch-camera {
+  display: inline-block;
+  color: #007bff; /* Color predeterminado */
+  transition: color 0.3s ease; /* Cambia suavemente el color al interactuar */
+}
+
+.switch-camera:hover {
+  color: #0056b3; /* Cambia el color al pasar el cursor */
+}
+
+/* Transición para el ícono */
+.switch-camera i {
+  display: inline-block;
+  transition: transform 0.3s ease; /* Transición suave para la rotación */
+}
+
+/* Rotar el ícono al hacer clic en el botón */
+.switch-camera:active i {
+  transform: rotate(180deg); /* Rota el ícono 180° */
+  color: #ff6347; /* Cambia el color del ícono opcionalmente */
 }

@@ -73,10 +73,16 @@ switch ($action) {
     case 'getSupervitionDays':
     case 'registerRoute':
     case 'deleteSupervisionDays':
+    case 'getSupervitionDaysUser':
     case 'getSupervitionAreas':
     case 'addSupervitionAreas':
     case 'deleteSupervitionArea':
         require 'ajax/supervition.php';
+        break;
+
+    case 'uploadEvidence':
+    case 'finalizarSupervision':
+        require 'ajax/supervisor.php';
         break;
 
     default:

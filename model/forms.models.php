@@ -1935,6 +1935,104 @@ class FormsModel
             throw $e;
         }
 	}
+
+	public static function mdlGetSupervitionDaysUser($idUser) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "SELECT sd.*, u.name, s.nameSchool, e.nameEdificer, f.nameFloor, a.nameArea 
+					FROM servicios_supervision_days sd
+					LEFT JOIN servicios_users u ON sd.idSupervisor = u.idUsers
+					LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+					LEFT JOIN servicios_edificers e ON e.idEdificers = sd.idEdificers
+					LEFT JOIN servicios_floors f ON f.idFloor = sd.idFloor
+					LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+					WHERE u.idUsers = :idUser;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+			$stmt->closeCursor();
+			$pdo = null;
+	
+			return $result;
+	
+		} catch (PDOException $e) {
+			error_log("Error al obtener los días de supervisión: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+	public static function mdlGetSupervitionAreaUser($idUser) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "SELECT sa.*, u.name, s.nameSchool, e.nameEdificer, f.nameFloor, a.nameArea 
+					FROM servicios_supervision_areas sa
+					LEFT JOIN servicios_users u ON sa.idSupervisor = u.idUsers
+					LEFT JOIN servicios_schools s ON s.idSchool = sa.idSchool
+					LEFT JOIN servicios_edificers e ON e.idEdificers = sa.idEdificers
+					LEFT JOIN servicios_floors f ON f.idFloor = sa.idFloor
+					LEFT JOIN servicios_areas a ON a.idArea = sa.idArea
+					WHERE u.idUsers = :idUser;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+			$stmt->closeCursor();
+			$pdo = null;
+	
+			return $result;
+	
+		} catch (PDOException $e) {
+			error_log("Error al obtener los días de supervisión: " . $e->getMessage());
+			throw $e;
+		}
+	}
+	public static function mdlUploadEvidence($data) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "INSERT INTO servicios_evidences(idObjects, idUser, urgency, evidence, description) VALUES (:idObject, :idUser, :urgency, :evidence, :description);";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idObject', $data['idObject'], PDO::PARAM_INT);
+			$stmt->bindParam(':idUser', $data['idUser'], PDO::PARAM_INT);
+			$stmt->bindParam(':urgency', $data['urgency'], PDO::PARAM_INT);
+			$stmt->bindParam(':evidence', $data['evidence'], PDO::PARAM_STR);
+			$stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+			$pdo = null;
+			return $result;
+		} catch (PDOException $e) {
+			error_log("Error al subir la evidencia: ". $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlFinalizarSupervision($idSupervision) {
+		try {
+            $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("UPDATE servicios_supervision_areas SET status = 1 WHERE idSupervisionAreas = :idSupervision");
+            $stmt->bindParam(':idSupervision', $idSupervision, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                $result = 'ok';
+            } else {
+                $result = 'error';
+            }
+            // cerrar conexión
+            $stmt->closeCursor();
+            $pdo = null;
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error al finalizar la supervisión: ". $e->getMessage());
+            throw $e;
+        }
+	}
 }
 
 class Logs {

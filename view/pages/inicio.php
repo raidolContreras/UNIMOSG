@@ -64,7 +64,7 @@
         <script src="view/assets/js/ajax/principal/getStats.js"></script> -->
 
         <?php else: 
-            include 'view/pages/principal/general/lista.php';
+            include 'view/pages/supervisor/general/lista.php';
         ?>
             
         <?php endif ?>
