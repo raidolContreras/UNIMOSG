@@ -89,7 +89,7 @@ $(document).ready(function(){
                 // Actualizar el nombre de la página
 
                 $('#namePage').html(`
-                        <a href="schools" class="btn btn-link" >Planteles</a>
+                        <a href="schools" class="btn btn-link" >Inicio</a>
                             <i class="fal fa-angle-right"></i> 
                         <a href="edifices&school=${dataState.idSchool}" class="btn btn-link" >${dataState.nameSchool}</a>
                             <i class="fal fa-angle-right"></i>

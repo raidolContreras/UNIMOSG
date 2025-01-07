@@ -64,7 +64,7 @@ function cargarEdificios() {
             // link de regresar a la lista de escuelas
             
             $('#namePage').html(`
-                <a href="schools" class="btn btn-link" >Planteles</a>
+                <a href="schools" class="btn btn-link" >Inicio</a>
                     <i class="fal fa-angle-right"></i>
                 <a class="btn btn-link disabled">${data.schoolName}</a>`);
             

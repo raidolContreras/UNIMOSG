@@ -28,7 +28,7 @@ function cargarEscuelas() {
             escuelas.forEach(function (escuela, index) {
                 
             $('#namePage').html(`
-                <a class="btn btn-link disabled">Planteles</a>`);
+                <a class="btn btn-link disabled">Inicio</a>`);
                 var level = $('#level').val();
                 if ( level == 0 ){
                     var schoolCard = `

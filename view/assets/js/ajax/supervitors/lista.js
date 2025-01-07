@@ -46,7 +46,6 @@ $(document).ready(function () {
     // Mostrar lista dinámica
     function mostrarLista(titulo, lista, contenedor, claseItem) {
         // Configurar el título y el contenedor
-        $("#listTitle").text(titulo);
         const $contenedor = $(contenedor);
         $contenedor.empty().removeClass("d-none");
 
@@ -59,8 +58,7 @@ $(document).ready(function () {
         // Generar contenido dinámico de la lista
         lista.forEach((item) => {
             if (!seccionesMostradas[item.type]) {
-                const headerText = item.type === 'daily' ? 'Recorrido diario' : 'Recorrido de hoy';
-                $contenedor.append(`<h5 class="text-center">${headerText}</h5>`);
+                $contenedor.append(`<h5 class="text-center">${titulo}</h5>`);
                 seccionesMostradas[item.type] = true;
             }
 
@@ -112,7 +110,10 @@ $(document).ready(function () {
                 id: response.idSchool,
                 nombre: response.nameSchool
             }));
-            mostrarLista("Recorrido Libre", lugaresLibres, "#recorridoListSchool", "school");
+            
+            $("#listTitle").text('Recorrido libre');
+            
+            mostrarLista("Planteles", lugaresLibres, "#recorridoListSchool", "school");
             $('#recorridoListEdificer').addClass("d-none");
             $('#recorridoListFloor').addClass("d-none");
             $('#recorridoListZone').addClass("d-none");

@@ -59,7 +59,7 @@ function cargarPisos() {
             var floors = data.floors || [];
             
             $('#namePage').html(`
-                        <a href="schools" class="btn btn-link" >Planteles</a>
+                        <a href="schools" class="btn btn-link" >Inicio</a>
                             <i class="fal fa-angle-right"></i> 
                         <a href="edifices&school=${data.idSchool}" class="btn btn-link" >${data.nameSchool} </a>
                             <i class="fal fa-angle-right"></i>

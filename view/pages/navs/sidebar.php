@@ -34,7 +34,7 @@
                                 <div class="col-2">
                                     <i class="fa-duotone fa-school"></i> 
                                 </div>
-                                <div class="col-8">Planteles</div> 
+                                <div class="col-8">Inicio</div> 
                             </div>
                         </a>
                         <a href="supervicion" class="mt-3 menu-top py-2 <?php echo ($current_page == 'supervicion') ? 'active' : ''; ?>">

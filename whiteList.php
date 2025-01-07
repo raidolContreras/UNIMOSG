@@ -34,6 +34,7 @@ if (!isset($_SESSION['logged'])) {
             'objects' => 'principal/objects/objects',
             'planes' => 'principal/planes/planes',
             'supervicion' => 'principal/supervicion/supervicion',
+            'reportes' => 'principal/reportes/reportes',
         ];
 
         if (isset($userPages[$pagina])) {
