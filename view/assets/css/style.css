@@ -15722,12 +15722,12 @@ body {
 }
 
 .list-group-item {
-  background-color: #EAFAF4 !important;
+  background-color: #fafafa !important;
   cursor: pointer;
 }
 
 .list-group-item:hover {
-  background-color: #BFEEDC !important;
+  background-color: #e3e3e3 !important;
   cursor: pointer;
 }
 
@@ -16321,7 +16321,7 @@ body {
   left: 0;
 }
 
-.modal-dialog {
+.modal-fullscreen .modal-dialog {
   margin: 0;
   max-width: 100%;
   height: 100%;

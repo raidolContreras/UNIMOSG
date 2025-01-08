@@ -196,6 +196,7 @@ $(document).ready(function () {
                                 `;
 
             $('#modalObjects').find('.modal-title').html(modalTitle);
+
             modalBody.empty();
             if (!objects.length) {
                 modalBody.append('<p>No hay objetos registrados para este área.</p>');
@@ -204,45 +205,77 @@ $(document).ready(function () {
                 modalBody.append('<div class="row mb-3"><div class="col-2">Objeto</div><div class="col-1">Cantidad</div><div class="col-2">Urgencia</div><div class="col-2">Descripción</div><div class="col-2">Evidencia</div></div>');
             }
 
-            objects.forEach(({ nameObject, quantity, idObject }) => {
+            objects.forEach(( object ) => {
+                let idObject = object.idObject;
+                let nameObject = object.nameObject;
+                let quantity = object.quantity;
+                let statusEvidence = object.statusEvidence;
+                let urgency = (object.urgency === 'urgent') ? 'Urgente' : (object.urgency === 'immediate') ? 'De inmediato' : 'Sin urgencia';
+                let description = object.description;
+                let evidence = 'view/evidences/' + object.evidence;
+                let row = '';
+                
                 const fileInput = $(`<input type="file" accept="image/*" style="display: none;" id="file-${idObject}">`);
                 $('body').append(fileInput);
+                //si el objeto tiene statusEvidence = 0 no se muestra
+                let objectRow = '';
+                if (statusEvidence !== 0) {
+                
+                    row =`
+                        <div class="row mb-3 id-${idObject}" style="align-items: center;">
+                            <div class="col-2">${nameObject}</div>
+                            <div class="col-1">${quantity}</div>
+                            <div class="col-2">
+                                <select class="form-select urgency" data-id="${idObject}">
+                                    <option value="">Seleccionar</option>
+                                    <option value="urgent">Urgente</option>
+                                    <option value="immediate">De inmediato</option>
+                                    <option value="no-urgency">Sin urgencia</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <textarea class="form-control description" data-id="${idObject}" placeholder="Describir situación"></textarea>
+                            </div>
+                            <div class="col">
+                                <button class="attach-evidence" data-id="${idObject}">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="take-photo" data-id="${idObject}">
+                                    <i class="fad fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="send-object" data-id="${idObject}" disabled>
+                                    <i class="fad fa-share-square"></i>
+                                </button>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="preview-container" id="preview-${idObject}"></div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // señalar como si ya se hubiera enviado
+                    row = `
+                        <div class="row mb-3 id-${idObject}" style="align-items: center;">
+                            <div class="col-2">${nameObject}</div>
+                            <div class="col-1">${quantity}</div>
+                            <div class="col-2">${urgency}</div>
+                            <div class="col-2">${description}</div>
+                            <div class="col-2 mt-2">
+                                <div class="preview-container" id="preview-${idObject}">
+                                    <img src="${evidence}" style="max-width: 200px; max-height: 200px;" class="mt-2">
+                                </div>
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                    `;
+                }
 
-                const objectRow = $(`
-                                    <div class="row mb-3 id-${idObject}" style="align-items: center;">
-                                        <div class="col-2">${nameObject}</div>
-                                        <div class="col-1">${quantity}</div>
-                                        <div class="col-2">
-                                            <select class="form-select urgency" data-id="${idObject}">
-                                                <option value="">Seleccionar</option>
-                                                <option value="urgent">Urgente</option>
-                                                <option value="immediate">De inmediato</option>
-                                                <option value="no-urgency">Sin urgencia</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-2">
-                                            <textarea class="form-control description" data-id="${idObject}" placeholder="Describir situación"></textarea>
-                                        </div>
-                                        <div class="col">
-                                            <button class="attach-evidence" data-id="${idObject}">
-                                                <i class="fas fa-paperclip"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="take-photo" data-id="${idObject}">
-                                                <i class="fad fa-camera"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="send-object" data-id="${idObject}" disabled>
-                                                <i class="fad fa-share-square"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col-12 mt-2">
-                                            <div class="preview-container" id="preview-${idObject}"></div>
-                                        </div>
-                                    </div>
-                                `);
+                objectRow = $(row);
 
                 modalBody.append(objectRow);
 
@@ -313,27 +346,27 @@ $(document).ready(function () {
 
                     const videoElement = $('<video autoplay style="width: 75%;"></video>');
                     const cameraModal = $(`
-                                        <div class="modal fade" id="cameraModal-${idObject}">
-                                        <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="camera row">
-                                        <div class="col-10 camera" id="camera-container-${idObject}"></div>
-                                        <div class="col-2 text-center row">
-                                        ${hasMultipleCameras ? `
-                                        <button type="button" class="switch-camera">
-                                        <i class="fad fa-sync-alt"></i>
-                                        </button>
-                                        ` : ''}
-                                        <button type="button" class="capture-photo">
-                                        <i class="fad fa-camera"></i>
-                                        </button>
-                                        <button type="button" class="cancel-photo" data-bs-dismiss="modal">
-                                        <i class="fas fa-times"></i>
-                                        </button>
-                                        </div>
-                                        </div>
-                                        </div>
-                                        </div>
+                                        <div class="modal modal-fullscreen fade" id="cameraModal-${idObject}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="camera row">
+                                                        <div class="col-10 camera" id="camera-container-${idObject}"></div>
+                                                            <div class="col-2 text-center row">
+                                                            ${hasMultipleCameras ? `
+                                                                <button type="button" class="switch-camera">
+                                                                    <i class="fad fa-sync-alt"></i>
+                                                                </button>
+                                                            ` : ''}
+                                                            <button type="button" class="capture-photo">
+                                                                <i class="fad fa-camera"></i>
+                                                            </button>
+                                                            <button type="button" class="cancel-photo" data-bs-dismiss="modal">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         `);
 

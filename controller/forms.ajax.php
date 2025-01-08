@@ -82,6 +82,7 @@ switch ($action) {
 
     case 'uploadEvidence':
     case 'finalizarSupervision':
+    case 'getIncidents':
         require 'ajax/supervisor.php';
         break;
 

@@ -8,6 +8,10 @@ switch ($_POST['action']) {
         echo FormsController::ctrFinalizarSupervision($idSupervision);
         break;
 
+    case 'getIncidents':
+        echo json_encode(FormsController::ctrGetIncidents());
+        break;
+
     case 'uploadEvidence':
         // Verificar que se haya enviado un archivo
         if (isset($_FILES['evidence']) && $_FILES['evidence']['error'] == UPLOAD_ERR_OK) {

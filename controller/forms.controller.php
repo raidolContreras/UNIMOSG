@@ -243,4 +243,8 @@ class FormsController {
     static public function ctrFinalizarSupervision($idSupervision) {
         return FormsModel::mdlFinalizarSupervision($idSupervision);
     }
+
+    static public function ctrGetIncidents() {
+        return FormsModel::mdlGetIncidents();
+    }
 }

@@ -1605,7 +1605,10 @@ class FormsModel
 	static public function mdlGetObjects($idArea) {
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare("SELECT * FROM servicios_objects WHERE object_idArea = :idArea AND status = 1 ORDER BY position ASC");
+			$stmt = $pdo->prepare("SELECT * FROM servicios_objects o
+											LEFT JOIN servicios_evidences e ON e.idObjects = o.idObject AND e.statusEvidence = 0
+											WHERE o.object_idArea = :idArea AND o.status = 1
+										ORDER BY position ASC;");
 			$stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
 			$stmt->execute();
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1996,7 +1999,7 @@ class FormsModel
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(':idObject', $data['idObject'], PDO::PARAM_INT);
 			$stmt->bindParam(':idUser', $data['idUser'], PDO::PARAM_INT);
-			$stmt->bindParam(':urgency', $data['urgency'], PDO::PARAM_INT);
+			$stmt->bindParam(':urgency', $data['urgency'], PDO::PARAM_STR);
 			$stmt->bindParam(':evidence', $data['evidence'], PDO::PARAM_STR);
 			$stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
@@ -2032,6 +2035,28 @@ class FormsModel
             error_log("Error al finalizar la supervisión: ". $e->getMessage());
             throw $e;
         }
+	}
+
+	static public function mdlGetIncidents() {
+		try {
+			$pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("SELECT e.*, o.nameObject, a.nameArea, f.nameFloor, ed.nameEdificer, s.nameSchool FROM servicios_evidences e
+											LEFT JOIN servicios_objects o ON o.idObject = e.idObjects
+											LEFT JOIN servicios_areas a ON a.idArea = o.object_idArea
+											LEFT JOIN servicios_floors f ON f.idFloor = a.area_idFloors
+											LEFT JOIN servicios_edificers ed ON ed.idEdificers = f.floor_idEdificer
+											LEFT JOIN servicios_schools s ON s.idSchool = ed.edificer_idSchool
+										WHERE e.statusEvidence = 0;");
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+			$pdo = null;
+			return $result;
+		} catch (PDOException $e) {
+			error_log("Error al obtener los incidentes: ". $e->getMessage());
+			throw $e;
+		}
 	}
 }
 

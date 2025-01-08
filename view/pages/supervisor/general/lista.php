@@ -141,7 +141,7 @@
 </div>
 
 <!-- modal de objetos, nombre, cantidad boton de evidencia -->
-<div class="modal fade" id="modalObjects" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal modal-fullscreen fade" id="modalObjects" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-xxl">
 		<div class="modal-content">
 			<div class="modal-header">
