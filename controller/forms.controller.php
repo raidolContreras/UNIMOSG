@@ -247,4 +247,12 @@ class FormsController {
     static public function ctrGetIncidents() {
         return FormsModel::mdlGetIncidents();
     }
+
+    static public function ctrConfirmCorrectObject($idObject, $isCorrect, $userId) {
+        return FormsModel::mdlConfirmCorrectObject($idObject, $isCorrect, $userId);
+    }
+
+    static public function ctrGetObject($idObject) {
+        return FormsModel::mdlGetObject($idObject);
+    }
 }

@@ -15,7 +15,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
 </div>
 
 <!-- Modal para agregar/editar eventos -->
-<div class="modal modal-fullscreen fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-xl">
 		<form id="eventForm">
 			<div class="modal-content">
@@ -92,7 +92,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
 </div>
 
 <!-- Modal para agregar recorridos -->
-<div class="modal modal-fullscreen fade" id="addRecorridoModal" tabindex="-1" aria-labelledby="addRecorridoModalLabel" aria-hidden="true">
+<div class="modal fade" id="addRecorridoModal" tabindex="-1" aria-labelledby="addRecorridoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">

@@ -50,7 +50,15 @@
                                 <div class="col-2">
                                     <i class="fa-duotone fa-house"></i> 
                                 </div>
-                                <div class="col-8">Generación de reportes</div> 
+                                <div class="col-8">Generación de incidencias</div> 
+                            </div>
+                        </a>
+                        <a href="mySupervition" class="mt-3 menu-top py-2 <?php echo ($current_page == 'mySupervition') ? 'active' : ''; ?>">
+                            <div class="row">
+                                <div class="col-2">
+                                    <i class="fa-duotone fa-house"></i> 
+                                </div>
+                                <div class="col-8">Supervición</div> 
                             </div>
                         </a>
                     <?php else: ?>

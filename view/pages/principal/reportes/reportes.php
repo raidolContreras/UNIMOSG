@@ -16,6 +16,8 @@
                     <div class="col-md-6">
                         <h6 class="fw-bold">Nombre del Objeto:</h6>
                         <p id="modalNombre"></p>
+                        <h6 class="fw-bold">localización del Objeto:</h6>
+                        <p id="modaladdress"></p>
                         <h6 class="fw-bold">Nivel de Importancia:</h6>
                         <p id="modalNivel" class="badge bg-warning text-dark"></p>
                         <h6 class="fw-bold">Descripción:</h6>
@@ -78,8 +80,9 @@ function formatDate(dateString) {
 }
 
 // Función para mostrar detalles en el modal
-function showDetails(nombre, nivel, descripcion, imagen, fecha, idEvidence) {
+function showDetails(nombre, nivel, descripcion, imagen, fecha, idEvidence, address) {
     $('#modalNombre').text(nombre);
+    $('#modaladdress').text(address);
     $('#modalNivel').text(nivel);
     $('#modalDescripcion').text(descripcion);
     $('#modalImagen').attr('src', imagen);
@@ -96,6 +99,7 @@ function showIncidents() {
         dataType: 'json',
         success: function (response) {
             let incidents = response;
+            let address = '';
 
             let groupedSchools = {};
             incidents.forEach(incident => {
@@ -129,6 +133,7 @@ function showIncidents() {
                         `;
 
                         for (let area in groupedSchools[school][building][floor]) {
+                            address = school + ', ' + building + ', ' + floor + ', ' + area;
                             schoolsHTML += `
                                 <div class="mt-2 ps-4 border-start border-1 border-secondary">
                                     <h6 class="text-dark">Área: ${area}</h6>
@@ -142,7 +147,7 @@ function showIncidents() {
                                 schoolsHTML += `
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <a href="#" class="stretched-link text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                                            onclick="showDetails('${incident.nameObject}', '${urgency}', '${incident.description}', 'view/evidences/${incident.evidence}', '${incident.dateCreated}', ${incident.idEvidence})">
+                                            onclick="showDetails('${incident.nameObject}', '${urgency}', '${incident.description}', 'view/evidences/${incident.evidence}', '${incident.dateCreated}', ${incident.idEvidence}, '${address}')">
                                             <i class="bi bi-circle-fill text-${urgencyColor} me-2"></i>${incident.nameObject}
                                         </a>
                                         <span class="badge bg-${urgencyColor}">${urgency}</span>
