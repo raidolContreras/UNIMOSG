@@ -233,6 +233,9 @@ $(document).ready(function () {
 								</div>
 							</div>
 							<div class="col">
+								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}">
+								    <i class="fas fa-check"></i>
+								</button>
 							</div>
 						</div>
 					`;
@@ -453,6 +456,7 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: function (response) {
 							if(response.status == 'success') {
+								sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), attachButton.data('evidence'));
 								alert('Objeto enviado correctamente');
 								$(`.id-${idObject}`).remove();
 							} else {
@@ -512,4 +516,166 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	$(document).on('click', '#correctedObject', function () {
+		const idObject = $(this).data('id');
+		
+		// Crear un modal para subir o tomar foto
+		const modalOptions = `
+			<div class="modal fade" id="correctedModal-${idObject}" tabindex="-1" aria-labelledby="correctedModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="correctedModalLabel">Evidencia del Objeto Corregido</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+						</div>
+						<div class="modal-body text-center row mb-3" style="justify-content: space-evenly;">
+							<button class="attach-evidence upload-photo" data-id="${idObject}">
+								<i class="fas fa-paperclip" aria-hidden="true"></i>
+							</button>
+							<button class="take-photo" data-id="${idObject}">
+								<i class="fad fa-camera" aria-hidden="true"></i>
+							</button>
+							<input type="file" accept="image/*" id="upload-${idObject}" style="display: none;">
+							<div id="preview-corrected-${idObject}" class="mt-3"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+							<button type="button" class="btn btn-success confirm-corrected" data-id="${idObject}" disabled>Confirmar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
+	
+		$('body').append(modalOptions);
+		const correctedModal = new bootstrap.Modal($(`#correctedModal-${idObject}`)[0]);
+		correctedModal.show();
+	
+		// Cargar imagen
+		$(`.upload-photo[data-id="${idObject}"]`).on('click', function () {
+			$(`#upload-${idObject}`).click();
+		});
+	
+		$(`#upload-${idObject}`).on('change', function (e) {
+			const file = e.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					$(`#preview-corrected-${idObject}`).html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 200px;">`);
+					$(`.confirm-corrected[data-id="${idObject}"]`).prop('disabled', false).data('evidence', file);
+				};
+				reader.readAsDataURL(file);
+			}
+		});
+		
+		// Declarar el stream globalmente para accederlo desde varias funciones
+		let currentStream = null;
+
+		// Tomar foto
+		$(`.take-photo[data-id="${idObject}"]`).on('click', function () {
+			const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+			const facingMode = isMobile ? 'environment' : 'user';
+
+			// Iniciar la cámara
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } })
+				.then((stream) => {
+					currentStream = stream; // Guardar el stream globalmente
+					const videoElement = $('<video autoplay style="width: 100%;"></video>');
+					const captureButton = $('<button class="btn btn-danger mt-2">📸 Capturar</button>');
+					$(`#preview-corrected-${idObject}`).html(videoElement).append(captureButton);
+					videoElement[0].srcObject = stream;
+
+					// Capturar imagen
+					captureButton.on('click', function () {
+						const canvas = document.createElement('canvas');
+						canvas.width = videoElement[0].videoWidth;
+						canvas.height = videoElement[0].videoHeight;
+						canvas.getContext('2d').drawImage(videoElement[0], 0, 0);
+
+						canvas.toBlob((blob) => {
+							const file = new File([blob], "evidence.jpg", { type: "image/jpeg" });
+							const imageUrl = URL.createObjectURL(blob);
+							$(`#preview-corrected-${idObject}`).html(`<img src="${imageUrl}" style="max-width: 200px; max-height: 200px;">`);
+							$(`.confirm-corrected[data-id="${idObject}"]`).prop('disabled', false).data('evidence', file);
+
+							stopCamera();  // Apagar cámara después de capturar la imagen
+						}, 'image/jpeg');
+					});
+				})
+				.catch((err) => {
+					alert('Error al acceder a la cámara: ' + err.message);
+				});
+		});
+
+		// Detener la cámara
+		function stopCamera() {
+			if (currentStream) {
+				currentStream.getTracks().forEach(track => track.stop());
+				currentStream = null;  // Liberar el recurso
+			}
+		}
+
+		// Confirmar con evidencia
+		$(`.confirm-corrected[data-id="${idObject}"]`).on('click', function () {
+			const evidenceFile = $(this).data('evidence');
+			const formData = new FormData();
+			formData.append('action', 'confirmCorrectObject');
+			formData.append('idObject', idObject);
+			formData.append('isCorrect', 1);
+			formData.append('evidence', evidenceFile);
+	
+			$.ajax({
+				url: 'controller/forms.ajax.php',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (response) {
+					correctedModal.hide();
+					$(`#correctedModal-${idObject}`).remove();
+					$(`.id-${idObject}`).remove();
+					// enviar mensaje de telegram como correcto
+					sendTelegramMessage(idObject, 'Objeto corregido y evidencia enviada.', evidenceFile);
+				},
+				error: function () {
+					alert('Error al enviar la evidencia.');
+				}
+			});
+		});
+	
+		// Limpiar el modal al cerrarlo
+		$(`#correctedModal-${idObject}`).on('hidden.bs.modal', function () {
+			stopCamera();  // Apagar la cámara al cerrar el modal
+			$(this).remove();
+		});
+	});
+
 });
+
+
+function sendTelegramMessage(idObject, message, file = null) {
+    const formData = new FormData();
+    formData.append('action', 'sendMessageTelegram');
+    formData.append('idObject', idObject);
+    formData.append('message', message);
+
+    // Verificar si hay un archivo para enviar
+    if (file) {
+        formData.append('file', file);
+    }
+
+    $.ajax({
+        url: 'controller/forms.ajax.php',
+        type: 'POST',
+        data: formData,
+        processData: false, // Importante para enviar FormData correctamente
+        contentType: false, // Importante para enviar FormData correctamente
+        success: function (response) {
+            console.log('Telegram message sent successfully');
+        },
+        error: function (xhr, status, error) {
+            console.error('Error sending Telegram message:' + error);
+        }
+    });
+}

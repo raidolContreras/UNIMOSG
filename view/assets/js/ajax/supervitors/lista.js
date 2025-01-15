@@ -490,6 +490,7 @@ $(document).ready(function () {
 					formData.append('urgency', urgencyField.val());
 					formData.append('description', descriptionField.val());
 					formData.append('evidence', attachButton.data('evidence'));
+					// let evidence = attachButton.data('evidence');
 					if (urgencyField.val() === '') {
 						return;
 					}
@@ -502,6 +503,7 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: function (response) {
 							if(response.status == 'success') {
+								sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), attachButton.data('evidence'));
 								alert('Objeto enviado correctamente');
 								$(`.id-${idObject}`).remove();
 							} else {
@@ -695,7 +697,7 @@ $(document).ready(function () {
 			stopCamera();  // Apagar la cámara al cerrar el modal
 			$(this).remove();
 		});
-	});	
+	});
 
 });
 

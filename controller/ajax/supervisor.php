@@ -89,7 +89,6 @@ switch ($_POST['action']) {
         // si $object es falso, no se encontró el objeto o esta vacío
         if (!$object) {
             echo json_encode(['status' => 'error', 'message' => 'No se encontró el objeto.']);
-            return;
         } else {
 
             // Crear objeto DateTime con la hora actual
@@ -121,7 +120,7 @@ switch ($_POST['action']) {
     
             // Enviar el mensaje a Telegram
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'http://localhost/UNIMOSG/telegram/sendMessage.php');
+            curl_setopt($ch, CURLOPT_URL, 'https://servicios.unimontrer.edu.mx/telegram/sendMessage.php');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
