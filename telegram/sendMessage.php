@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
@@ -10,7 +10,7 @@ $dotenv->load();
 $botToken = $_ENV['TELEGRAM_BOT_TOKEN'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $chatId = '-1002286943646';
+    $chatId = $_ENV['ChatID'];
 
     // Validar si se envió un mensaje
     $message = $_POST['message'] ?? null;
