@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    const lugaresAsignados = [];
-    const lugaresLibres = [];
 
     // Utilidad para realizar solicitudes AJAX
     function realizarSolicitud(url, datos, exitoCallback, errorCallback) {
@@ -139,7 +137,7 @@ $(document).ready(function () {
 		modalFooter.append(closeButton);
 
 		$('#modalObjects').modal('show');
-		realizarSolicitud('controller/forms.ajax.php', { action: 'getObjets', idArea: idArea }, (response) => {
+		realizarSolicitud('controller/forms.ajax.php', { action: 'getObjectsBad', idArea: idArea }, (response) => {
 			const { objets: objects, data } = response;
 			const modalBody = $('#modalObjects .modal-body');
 			const modalTitle = `
@@ -158,7 +156,7 @@ $(document).ready(function () {
 			} else {
 				modalBody.append('<div class="row mb-3"><div class="col-2">Objeto</div><div class="col-1">Cantidad</div><div class="col-1">Marcar como correcto</div><div class="col-2">Urgencia</div><div class="col-2">Descripción</div><div class="col-2">Evidencia</div></div>');
 			}
-
+			let idObjectbefore = 0;
 			objects.forEach(( object ) => {
 				let idObject = object.idObject;
 				let nameObject = object.nameObject;
@@ -168,306 +166,310 @@ $(document).ready(function () {
 				let urgency = (object.urgency === 'urgent') ? 'Urgente' : (object.urgency === 'immediate') ? 'De inmediato' : 'Sin urgencia';
 				let description = object.description;
 				let evidence = 'view/evidences/' + object.evidence;
+				let idEvidence = object.idEvidence;
 				let row = '';
 				
-				const fileInput = $(`<input type="file" accept="image/*" style="display: none;" id="file-${idObject}">`);
-				$('body').append(fileInput);
-				//si el objeto tiene statusEvidence = 0 no se muestra
-				let objectRow = '';
-				if (statusEvidence !== 0) {
-				//agregar checkbox de si esta bien o no
+				if (idObjectbefore != idObject){
+					const fileInput = $(`<input type="file" accept="image/*" style="display: none;" id="file-${idObject}">`);
+					$('body').append(fileInput);
+					//si el objeto tiene statusEvidence = 0 no se muestra
+					let objectRow = '';
+					if (statusEvidence !== 0) {
+					//agregar checkbox de si esta bien o no
 
-					row = `
-					<div class="row mb-3 id-${idObject}" style="align-items: center;">
-						<div class="col-2">${nameObject}</div>
-						<div class="col-1">${quantity}</div>
-						<div class="col-1">
-							<div class="checkbox-wrapper-7">
-								<input class="tgl tgl-ios" id="object-${idObject}" data-id="${idObject}" type="checkbox" ${isOk == 1 ? 'checked' : ''}/>
-								<label class="tgl-btn" for="object-${idObject}"></label>
-							</div>
-						</div>
-						<div class="col-2">
-							<select class="form-select urgency" data-id="${idObject}">
-								<option value="">Seleccionar</option>
-								<option value="urgent">Urgente</option>
-								<option value="immediate">De inmediato</option>
-								<option value="no-urgency">Sin urgencia</option>
-							</select>
-						</div>
-						<div class="col-2">
-							<textarea class="form-control description" data-id="${idObject}" placeholder="Describir situación"></textarea>
-						</div>
-						<div class="col-1">
-							<button class="attach-evidence" data-id="${idObject}">
-								<i class="fas fa-paperclip"></i>
-							</button>
-						</div>
-						<div class="col-1">
-							<button class="take-photo" data-id="${idObject}">
-								<i class="fad fa-camera"></i>
-							</button>
-						</div>
-						<div class="col-1">
-							<button class="send-object" data-id="${idObject}" disabled>
-								<i class="fad fa-share-square"></i>
-							</button>
-						</div>
-						<div class="col-12 mt-2">
-							<div class="preview-container" id="preview-${idObject}"></div>
-						</div>
-					</div>
-				`;
-				} else {
-					// señalar como si ya se hubiera enviado
-					row = `
+						row = `
 						<div class="row mb-3 id-${idObject}" style="align-items: center;">
 							<div class="col-2">${nameObject}</div>
 							<div class="col-1">${quantity}</div>
-							<div class="col-1"></div>
-							<div class="col-2">${urgency}</div>
-							<div class="col-2">${description}</div>
-							<div class="col-2 mt-2">
-								<div class="preview-container" id="preview-${idObject}">
-									<img src="${evidence}" style="max-width: 200px; max-height: 200px;" class="mt-2">
+							<div class="col-1">
+								<div class="checkbox-wrapper-7">
+									<input class="tgl tgl-ios" id="object-${idObject}" data-id="${idObject}" type="checkbox" ${isOk == 1 ? 'checked' : ''}/>
+									<label class="tgl-btn" for="object-${idObject}"></label>
 								</div>
 							</div>
-							<div class="col">
-								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}">
-								    <i class="fas fa-check"></i>
+							<div class="col-2">
+								<select class="form-select urgency" data-id="${idObject}">
+									<option value="">Seleccionar</option>
+									<option value="urgent">Urgente</option>
+									<option value="immediate">De inmediato</option>
+									<option value="no-urgency">Sin urgencia</option>
+								</select>
+							</div>
+							<div class="col-2">
+								<textarea class="form-control description" data-id="${idObject}" placeholder="Describir situación"></textarea>
+							</div>
+							<div class="col-1">
+								<button class="attach-evidence" data-id="${idObject}">
+									<i class="fas fa-paperclip"></i>
 								</button>
+							</div>
+							<div class="col-1">
+								<button class="take-photo" data-id="${idObject}">
+									<i class="fad fa-camera"></i>
+								</button>
+							</div>
+							<div class="col-1">
+								<button class="send-object" data-id="${idObject}" disabled>
+									<i class="fad fa-share-square"></i>
+								</button>
+							</div>
+							<div class="col-12 mt-2">
+								<div class="preview-container" id="preview-${idObject}"></div>
 							</div>
 						</div>
 					`;
-				}
-
-				objectRow = $(row);
-
-				modalBody.append(objectRow);
-				
-				if (isOk == 1) {
-					// Ocultar complementos
-					$(`.id-${idObject} .urgency, 
-					.id-${idObject} .description, 
-					.id-${idObject} .attach-evidence, 
-					.id-${idObject} .take-photo`).hide();
-			
-					// Habilitar el botón de enviar
-					$(`.id-${idObject} .send-object`).prop('disabled', false);
-				} else {
-					// Mostrar complementos si se desmarca
-					$(`.id-${idObject} .urgency, 
-					.id-${idObject} .description, 
-					.id-${idObject} .attach-evidence, 
-					.id-${idObject} .take-photo`).show();
-			
-					// Deshabilitar el botón de enviar
-					$(`.id-${idObject} .send-object`).prop('disabled', true);
-				}
-			
-				const urgencyField = objectRow.find(`.urgency[data-id="${idObject}"]`);
-				const descriptionField = objectRow.find(`.description[data-id="${idObject}"]`);
-				const attachButton = objectRow.find(`.attach-evidence[data-id="${idObject}"]`);
-				const sendButton = objectRow.find(`.send-object[data-id="${idObject}"]`);
-				const previewContainer = $(`#preview-${idObject}`);
-
-				const showImagePreview = (file) => {
-					const reader = new FileReader();
-					reader.onload = (e) => {
-						previewContainer.html(`
-												<img src="${e.target.result}" style="max-width: 200px; max-height: 200px;" class="mt-2">
-												<button class="btn btn-danger btn-sm ml-2 remove-image">&times;</button>
-											`);
-						attachButton.data('evidence', file);
-						enableSendButton();
-					};
-					reader.readAsDataURL(file);
-				};
-
-				const enableSendButton = () => {
-					const hasUrgency = urgencyField.val();
-					const hasDescription = descriptionField.val().trim();
-					const hasEvidence = attachButton.data('evidence');
-					sendButton.prop('disabled', !(hasUrgency && hasDescription && hasEvidence));
-				};
-
-				attachButton.on('click', () => {
-					$(`#file-${idObject}`).click();
-				});
-
-				$(`#file-${idObject}`).on('change', function (e) {
-					if (this.files && this.files[0]) {
-						showImagePreview(this.files[0]);
+					} else {
+						// señalar como si ya se hubiera enviado
+						row = `
+							<div class="row mb-3 id-${idObject}" style="align-items: center;">
+								<div class="col-2">${nameObject}</div>
+								<div class="col-1">${quantity}</div>
+								<div class="col-1"></div>
+								<div class="col-2">${urgency}</div>
+								<div class="col-2">${description}</div>
+								<div class="col-2 mt-2">
+									<div class="preview-container" id="preview-${idObject}">
+										<img src="${evidence}" style="max-width: 200px; max-height: 200px;" class="mt-2">
+									</div>
+								</div>
+								<div class="col">
+									<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}" data-evidence="${idEvidence}">
+										<i class="fas fa-check"></i>
+									</button>
+								</div>
+							</div>
+						`;
 					}
-				});
 
-				const getMediaDevice = () => {
-					return new Promise((resolve, reject) => {
-						if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-							resolve(navigator.mediaDevices.getUserMedia({ video: true }));
-						} else {
-							reject(new Error('getUserMedia no está soportado en este navegador.'));
+					objectRow = $(row);
+
+					modalBody.append(objectRow);
+					
+					if (isOk == 1) {
+						// Ocultar complementos
+						$(`.id-${idObject} .urgency, 
+						.id-${idObject} .description, 
+						.id-${idObject} .attach-evidence, 
+						.id-${idObject} .take-photo`).hide();
+				
+						// Habilitar el botón de enviar
+						$(`.id-${idObject} .send-object`).prop('disabled', false);
+					} else {
+						// Mostrar complementos si se desmarca
+						$(`.id-${idObject} .urgency, 
+						.id-${idObject} .description, 
+						.id-${idObject} .attach-evidence, 
+						.id-${idObject} .take-photo`).show();
+				
+						// Deshabilitar el botón de enviar
+						$(`.id-${idObject} .send-object`).prop('disabled', true);
+					}
+				
+					const urgencyField = objectRow.find(`.urgency[data-id="${idObject}"]`);
+					const descriptionField = objectRow.find(`.description[data-id="${idObject}"]`);
+					const attachButton = objectRow.find(`.attach-evidence[data-id="${idObject}"]`);
+					const sendButton = objectRow.find(`.send-object[data-id="${idObject}"]`);
+					const previewContainer = $(`#preview-${idObject}`);
+
+					const showImagePreview = (file) => {
+						const reader = new FileReader();
+						reader.onload = (e) => {
+							previewContainer.html(`
+													<img src="${e.target.result}" style="max-width: 200px; max-height: 200px;" class="mt-2">
+													<button class="btn btn-danger btn-sm ml-2 remove-image">&times;</button>
+												`);
+							attachButton.data('evidence', file);
+							enableSendButton();
+						};
+						reader.readAsDataURL(file);
+					};
+
+					const enableSendButton = () => {
+						const hasUrgency = urgencyField.val();
+						const hasDescription = descriptionField.val().trim();
+						const hasEvidence = attachButton.data('evidence');
+						sendButton.prop('disabled', !(hasUrgency && hasDescription && hasEvidence));
+					};
+
+					attachButton.on('click', () => {
+						$(`#file-${idObject}`).click();
+					});
+
+					$(`#file-${idObject}`).on('change', function (e) {
+						if (this.files && this.files[0]) {
+							showImagePreview(this.files[0]);
 						}
 					});
-				};
 
-				objectRow.find(`.take-photo[data-id="${idObject}"]`).on('click', async () => {
-					if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-						alert('El acceso a la cámara requiere HTTPS.');
-						return;
-					}
+					const getMediaDevice = () => {
+						return new Promise((resolve, reject) => {
+							if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+								resolve(navigator.mediaDevices.getUserMedia({ video: true }));
+							} else {
+								reject(new Error('getUserMedia no está soportado en este navegador.'));
+							}
+						});
+					};
 
-					let currentStream = null;
-					let facingMode = 'environment'; // Start with back camera
-					let hasMultipleCameras = false;
+					objectRow.find(`.take-photo[data-id="${idObject}"]`).on('click', async () => {
+						if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+							alert('El acceso a la cámara requiere HTTPS.');
+							return;
+						}
 
-					// Check for available cameras
-					try {
-						const devices = await navigator.mediaDevices.enumerateDevices();
-						const videoDevices = devices.filter(device => device.kind === 'videoinput');
-						hasMultipleCameras = videoDevices.length > 1;
-					} catch (err) {
-						console.error('Error checking cameras:', err);
-					}
+						let currentStream = null;
+						let facingMode = 'environment'; // Start with back camera
+						let hasMultipleCameras = false;
 
-					const videoElement = $('<video autoplay style="width: 75%;"></video>');
-					const cameraModal = $(`
-										<div class="modal modal-fullscreen fade" id="cameraModal-${idObject}">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="camera row">
-														<div class="col-10 camera" id="camera-container-${idObject}"></div>
-															<div class="col-2 text-center row">
-															${hasMultipleCameras ? `
-																<button type="button" class="switch-camera">
-																	<i class="fad fa-sync-alt"></i>
+						// Check for available cameras
+						try {
+							const devices = await navigator.mediaDevices.enumerateDevices();
+							const videoDevices = devices.filter(device => device.kind === 'videoinput');
+							hasMultipleCameras = videoDevices.length > 1;
+						} catch (err) {
+							console.error('Error checking cameras:', err);
+						}
+
+						const videoElement = $('<video autoplay style="width: 75%;"></video>');
+						const cameraModal = $(`
+											<div class="modal modal-fullscreen fade" id="cameraModal-${idObject}">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="camera row">
+															<div class="col-10 camera" id="camera-container-${idObject}"></div>
+																<div class="col-2 text-center row">
+																${hasMultipleCameras ? `
+																	<button type="button" class="switch-camera">
+																		<i class="fad fa-sync-alt"></i>
+																	</button>
+																` : ''}
+																<button type="button" class="capture-photo">
+																	<i class="fad fa-camera"></i>
 																</button>
-															` : ''}
-															<button type="button" class="capture-photo">
-																<i class="fad fa-camera"></i>
-															</button>
-															<button type="button" class="cancel-photo" data-bs-dismiss="modal">
-																<i class="fas fa-times"></i>
-															</button>
+																<button type="button" class="cancel-photo" data-bs-dismiss="modal">
+																	<i class="fas fa-times"></i>
+																</button>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										`);
+											`);
 
-					$('body').append(cameraModal);
-					$(`#camera-container-${idObject}`).append(videoElement);
+						$('body').append(cameraModal);
+						$(`#camera-container-${idObject}`).append(videoElement);
 
-					const startCamera = (facingMode) => {
-						const constraints = {
-							video: {
-								facingMode: facingMode
-							}
-						};
-
-						// Stop any existing stream
-						if (currentStream) {
-							currentStream.getTracks().forEach(track => track.stop());
-						}
-
-						return navigator.mediaDevices.getUserMedia(constraints)
-							.then(stream => {
-								currentStream = stream;
-								const video = videoElement[0];
-								video.srcObject = stream;
-							})
-							.catch(err => {
-								console.error('Error accessing camera:', err);
-								if (err.name === 'NotFoundError' || err.name === 'OverconstrainedError') {
-									alert('No se encontró la cámara solicitada o no está disponible.');
-								} else {
-									alert('Error al acceder a la cámara: ' + err.message);
+						const startCamera = (facingMode) => {
+							const constraints = {
+								video: {
+									facingMode: facingMode
 								}
-							});
-					};
+							};
 
-					// Initialize camera
-					startCamera(facingMode);
-
-					// Handle camera switching (only if multiple cameras available)
-					if (hasMultipleCameras) {
-						cameraModal.find('.switch-camera').on('click', () => {
-							facingMode = facingMode === 'user' ? 'environment' : 'user';
-							startCamera(facingMode);
-						});
-					}
-
-					const modal = new bootstrap.Modal($(`#cameraModal-${idObject}`)[0]);
-					modal.show();
-
-					cameraModal.find('.capture-photo').on('click', () => {
-						const video = videoElement[0];
-						const canvas = document.createElement('canvas');
-						canvas.width = video.videoWidth;
-						canvas.height = video.videoHeight;
-						canvas.getContext('2d').drawImage(video, 0, 0);
-
-						canvas.toBlob(blob => {
-							const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
-							showImagePreview(file);
-
+							// Stop any existing stream
 							if (currentStream) {
 								currentStream.getTracks().forEach(track => track.stop());
 							}
-							modal.hide();
-							cameraModal.remove();
-						}, 'image/jpeg');
-					});
 
-					cameraModal.on('hidden.bs.modal', () => {
-						if (currentStream) {
-							currentStream.getTracks().forEach(track => track.stop());
+							return navigator.mediaDevices.getUserMedia(constraints)
+								.then(stream => {
+									currentStream = stream;
+									const video = videoElement[0];
+									video.srcObject = stream;
+								})
+								.catch(err => {
+									console.error('Error accessing camera:', err);
+									if (err.name === 'NotFoundError' || err.name === 'OverconstrainedError') {
+										alert('No se encontró la cámara solicitada o no está disponible.');
+									} else {
+										alert('Error al acceder a la cámara: ' + err.message);
+									}
+								});
+						};
+
+						// Initialize camera
+						startCamera(facingMode);
+
+						// Handle camera switching (only if multiple cameras available)
+						if (hasMultipleCameras) {
+							cameraModal.find('.switch-camera').on('click', () => {
+								facingMode = facingMode === 'user' ? 'environment' : 'user';
+								startCamera(facingMode);
+							});
 						}
-						cameraModal.remove();
-					});
-				});
 
-				previewContainer.on('click', '.remove-image', function () {
-					previewContainer.empty();
-					attachButton.data('evidence', null);
-					enableSendButton();
-				});
+						const modal = new bootstrap.Modal($(`#cameraModal-${idObject}`)[0]);
+						modal.show();
 
-				urgencyField.on('change', enableSendButton);
-				descriptionField.on('input', enableSendButton);
+						cameraModal.find('.capture-photo').on('click', () => {
+							const video = videoElement[0];
+							const canvas = document.createElement('canvas');
+							canvas.width = video.videoWidth;
+							canvas.height = video.videoHeight;
+							canvas.getContext('2d').drawImage(video, 0, 0);
 
-				sendButton.on('click', () => {
-					const formData = new FormData();
-					formData.append('action', 'uploadEvidence');
-					formData.append('idObject', idObject);
-					formData.append('urgency', urgencyField.val());
-					formData.append('description', descriptionField.val());
-					formData.append('evidence', attachButton.data('evidence'));
-					if (urgencyField.val() === '') {
-						return;
-					}
-					$.ajax({
-						url: 'controller/forms.ajax.php',
-						type: 'POST',
-						data: formData,
-						processData: false,
-						contentType: false,
-						dataType: 'json',
-						success: function (response) {
-							if(response.status == 'success') {
-								sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), attachButton.data('evidence'));
-								alert('Objeto enviado correctamente');
-								$(`.id-${idObject}`).remove();
-							} else {
-								alert('Error al enviar los datos');
+							canvas.toBlob(blob => {
+								const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+								showImagePreview(file);
+
+								if (currentStream) {
+									currentStream.getTracks().forEach(track => track.stop());
+								}
+								modal.hide();
+								cameraModal.remove();
+							}, 'image/jpeg');
+						});
+
+						cameraModal.on('hidden.bs.modal', () => {
+							if (currentStream) {
+								currentStream.getTracks().forEach(track => track.stop());
 							}
-						},
-						error: function (xhr, status, error) {
-							alert('Error al enviar los datos: ' + error);
-						}
+							cameraModal.remove();
+						});
 					});
-				});
+
+					previewContainer.on('click', '.remove-image', function () {
+						previewContainer.empty();
+						attachButton.data('evidence', null);
+						enableSendButton();
+					});
+
+					urgencyField.on('change', enableSendButton);
+					descriptionField.on('input', enableSendButton);
+
+					sendButton.on('click', () => {
+						const formData = new FormData();
+						formData.append('action', 'uploadEvidence');
+						formData.append('idObject', idObject);
+						formData.append('urgency', urgencyField.val());
+						formData.append('description', descriptionField.val());
+						formData.append('evidence', attachButton.data('evidence'));
+						if (urgencyField.val() === '') {
+							return;
+						}
+						$.ajax({
+							url: 'controller/forms.ajax.php',
+							type: 'POST',
+							data: formData,
+							processData: false,
+							contentType: false,
+							dataType: 'json',
+							success: function (response) {
+								if(response.status == 'success') {
+									sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), attachButton.data('evidence'));
+									alert('Objeto enviado correctamente');
+									$(`.id-${idObject}`).remove();
+								} else {
+									alert('Error al enviar los datos');
+								}
+							},
+							error: function (xhr, status, error) {
+								alert('Error al enviar los datos: ' + error);
+							}
+						});
+					});
+				}
+				idObjectbefore = idObject;
 			});
 		});
 	});
@@ -519,6 +521,7 @@ $(document).ready(function () {
 
 	$(document).on('click', '#correctedObject', function () {
 		const idObject = $(this).data('id');
+		const idEvidence = $(this).data('evidence');
 		
 		// Crear un modal para subir o tomar foto
 		const modalOptions = `
@@ -624,6 +627,7 @@ $(document).ready(function () {
 			formData.append('idObject', idObject);
 			formData.append('isCorrect', 1);
 			formData.append('evidence', evidenceFile);
+			formData.append('idEvidence', idEvidence);
 	
 			$.ajax({
 				url: 'controller/forms.ajax.php',

@@ -185,7 +185,7 @@ $(document).ready(function () {
 		modalFooter.append(closeButton);
 
 		$('#modalObjects').modal('show');
-		realizarSolicitud('controller/forms.ajax.php', { action: 'getObjets', idArea: idArea }, (response) => {
+		realizarSolicitud('controller/forms.ajax.php', { action: 'getObjectsBad', idArea: idArea }, (response) => {
 			const { objets: objects, data } = response;
 			const modalBody = $('#modalObjects .modal-body');
 			const modalTitle = `
@@ -214,6 +214,7 @@ $(document).ready(function () {
 				let urgency = (object.urgency === 'urgent') ? 'Urgente' : (object.urgency === 'immediate') ? 'De inmediato' : 'Sin urgencia';
 				let description = object.description;
 				let evidence = 'view/evidences/' + object.evidence;
+				let idEvidence = object.idEvidence;
 				let row = '';
 				
 				const fileInput = $(`<input type="file" accept="image/*" style="display: none;" id="file-${idObject}">`);
@@ -279,8 +280,8 @@ $(document).ready(function () {
 								</div>
 							</div>
 							<div class="col">
-								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}">
-								    <i class="fas fa-check"></i>
+								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}" data-evidence="${idEvidence}">
+									<i class="fas fa-check"></i>
 								</button>
 							</div>
 						</div>
@@ -567,6 +568,7 @@ $(document).ready(function () {
 	
 	$(document).on('click', '#correctedObject', function () {
 		const idObject = $(this).data('id');
+		const idEvidence = $(this).data('evidence');
 		
 		// Crear un modal para subir o tomar foto
 		const modalOptions = `
@@ -672,6 +674,7 @@ $(document).ready(function () {
 			formData.append('idObject', idObject);
 			formData.append('isCorrect', 1);
 			formData.append('evidence', evidenceFile);
+			formData.append('idEvidence', idEvidence);
 	
 			$.ajax({
 				url: 'controller/forms.ajax.php',

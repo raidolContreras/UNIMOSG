@@ -254,6 +254,8 @@ function createEndIncidentModal(idEvidence) {
 
     $(document).on('click', '#submitEndIncident', function () {
         let formData = new FormData($('#endIncidentForm')[0]);
+        // formdata append action = finalizar incidente
+        formData.append('action', 'endIncident');
 
         $.ajax({
             url: 'controller/forms.ajax.php',
@@ -262,9 +264,11 @@ function createEndIncidentModal(idEvidence) {
             processData: false,
             contentType: false,
             success: function (response) {
-                if (response === 'success') {
+                if (response === 'ok') {
                     showIncidents();
                     $('#endIncidentModal').modal('hide');
+                    //eliminar modal-backdrop
+                    $('.modal-backdrop').remove();
                 } else {
                     alert('Error al finalizar el incidente.');
                 }

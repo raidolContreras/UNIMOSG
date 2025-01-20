@@ -248,11 +248,23 @@ class FormsController {
         return FormsModel::mdlGetIncidents();
     }
 
-    static public function ctrConfirmCorrectObject($idObject, $isCorrect, $userId) {
-        return FormsModel::mdlConfirmCorrectObject($idObject, $isCorrect, $userId);
+    static public function ctrConfirmCorrectObject($idObject, $isCorrect) {
+        return FormsModel::mdlConfirmCorrectObject($idObject, $isCorrect);
+    }
+
+    static public function ctrGetObjectsBad($idArea) {
+        return FormsModel::mdlGetObjectsBad($idArea);
     }
 
     static public function ctrGetObject($idObject) {
         return FormsModel::mdlGetObject($idObject);
+    }
+
+    static public function ctrEndEvidence($idEvidence) {
+        return FormsModel::mdlEndEvidence($idEvidence);
+    }
+
+    static public function ctrEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason) {
+        return FormsModel::mdlEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason);
     }
 }

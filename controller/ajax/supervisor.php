@@ -12,10 +12,41 @@ switch ($_POST['action']) {
         echo json_encode(FormsController::ctrGetIncidents());
         break;
 
+    case 'endIncident':
+        $idEvidence = $_POST['idEvidence'];
+        $endDate = $_POST['endDate'];
+        $purchaseMade = ($_POST['purchaseMade'] == 'yes') ? 1 : 0;
+        $purchaseAmount = $_POST['purchaseAmount'];
+        $invoiceFile = $_FILES['invoiceFile'];
+        $evidenceFile = $_FILES['evidenceFile'];
+        $reason = $_POST['reason'];
+
+        //files name 
+        $invoiceFileName = $invoiceFile['name'];
+        $evidenceFileName = $evidenceFile['name'];
+        $response = FormsController::ctrEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason);
+        if ($response == 'ok') {
+            // Guardar los archivos en el servidor en la carpeta view/evidences conn un uniq id
+            $uploadDir = '../view/evidences/'; // Asegúrate de que esta carpeta exista y tenga permisos de escritura
+            $uniqueInvoiceFileName = uniqid(). '_'. $invoiceFileName;
+            $uniqueEvidenceFileName = uniqid(). '_'. $evidenceFileName;
+            move_uploaded_file($invoiceFile['tmp_name'], $uploadDir . $uniqueInvoiceFileName);
+            move_uploaded_file($evidenceFile['tmp_name'], $uploadDir . $uniqueEvidenceFileName);
+            
+            Logs::createLogs($userId, 'endIncident', 'Cierre de incidente: '.json_encode($_POST));
+        }
+        echo $response;
+        break;
+
     case 'confirmCorrectObject':
         $idObject = $_POST['idObject'];
         $isCorrect = $_POST['isCorrect'];
-        echo FormsController::ctrConfirmCorrectObject($idObject, $isCorrect, $userId);
+        echo FormsController::ctrConfirmCorrectObject($idObject, $isCorrect);
+        if (isset($_POST['idEvidence'])) {
+            $idEvidence = $_POST['idEvidence'];
+            FormsController::ctrEndEvidence($idEvidence);
+            Logs::createLogs($userId, 'confirmCorrectObject', 'Envio de evidencia de correccion del objeto: '.json_encode($_POST));
+        }
         break;
 
     case 'uploadEvidence':
@@ -80,7 +111,15 @@ switch ($_POST['action']) {
             ]);
         }
         break;
-        
+    
+    case 'getObjectsBad':
+        $idArea = $_POST['idArea'];
+        $objects = array();
+        $objects['objets'] = FormsController::ctrGetObjectsBad($idArea);
+        $objects['data'] = FormsController::ctrGetDataObjects($idArea);
+        echo json_encode($objects);
+        break;
+
     case 'sendMessageTelegram':
         $idObject = $_POST['idObject'];
     
@@ -120,13 +159,13 @@ switch ($_POST['action']) {
     
             // Enviar el mensaje a Telegram
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://servicios.unimontrer.edu.mx/telegram/sendMessage.php');
+            // Usando una URL relativa desde el servidor
+            curl_setopt($ch, CURLOPT_URL, $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/UNIMOSG/telegram/sendMessage.php');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
             curl_close($ch);
-    
             echo $response;
         }
         break;

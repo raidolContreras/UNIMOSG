@@ -1607,23 +1607,43 @@ class FormsModel
 			$pdo = Conexion::conectar();
 
 			$sql = "SELECT 
-						o.*, 
-						e.*
+						o.*
 					FROM servicios_objects o
-					LEFT JOIN (
-						SELECT 
-							e.* 
-						FROM servicios_evidences e
-						INNER JOIN (
-							SELECT 
-								idObjects, 
-								MAX(dateCreated) AS maxDate
-							FROM servicios_evidences
-							GROUP BY idObjects
-						) latest ON e.idObjects = latest.idObjects AND e.dateCreated = latest.maxDate
-					) e ON o.idObject = e.idObjects
 					WHERE o.object_idArea = :idArea AND o.status = 1
 					ORDER BY o.position ASC;";
+
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor();
+			$pdo = null;
+			return $result;
+		} catch (PDOException $e) {
+			error_log("Error al obtener los objetos para el área: ". $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlGetObjectsBad($idArea) {
+		try {
+			$pdo = Conexion::conectar();
+
+			$sql = "SELECT o.*, e.*
+					FROM servicios_objects o
+					LEFT JOIN servicios_evidences e
+					ON o.idObject = e.idObjects
+					AND e.dateCreated = (
+						SELECT MAX(e2.dateCreated)
+						FROM servicios_evidences e2
+						WHERE e2.idObjects = o.idObject
+					)
+					WHERE o.object_idArea = :idArea
+					AND o.status = 1
+					ORDER BY o.idObject ASC;
+
+					";
 
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
@@ -2043,7 +2063,8 @@ class FormsModel
 	public static function mdlUploadEvidence($data) {
 		try {
 			$pdo = Conexion::conectar();
-			$sql = "INSERT INTO servicios_evidences(idObjects, idUser, urgency, evidence, description) VALUES (:idObject, :idUser, :urgency, :evidence, :description);";
+			$sql = "INSERT INTO servicios_evidences(idObjects, idUser, urgency, evidence, description, dateCreated) VALUES (:idObject, :idUser, :urgency, :evidence, :description, NOW() - INTERVAL 6 HOUR);";
+			$sql .= "UPDATE servicios_objects SET isOk = 0 WHERE idObject = :idObject;";
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindParam(':idObject', $data['idObject'], PDO::PARAM_INT);
 			$stmt->bindParam(':idUser', $data['idUser'], PDO::PARAM_INT);
@@ -2107,13 +2128,13 @@ class FormsModel
 		}
 	}
 
-	static public function mdlConfirmCorrectObject($idObject, $isCorrect, $idUser) {
+	static public function mdlConfirmCorrectObject($idObject, $isCorrect) {
 		try {
             $pdo = Conexion::conectar();
-            $stmt = $pdo->prepare("INSERT INTO servicios_evidences(idObjects, idUser, urgency, evidence, description, statusEvidence, isOk) VALUES (:idObject, :idUser, null, null, null, null, :isOk);");
+			$sql = "UPDATE servicios_objects SET isOk = :isCorrect WHERE idObject = :idObject;";
+            $stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':isCorrect', $isCorrect, PDO::PARAM_INT);
 			$stmt->bindParam(':idObject', $idObject, PDO::PARAM_INT);
-			$stmt->bindParam(':idUser', $idUser, PDO::PARAM_INT);
-            $stmt->bindParam(':isOk', $isCorrect, PDO::PARAM_INT);
             if ($stmt->execute()) {
                 $result = 'ok';
             } else {
@@ -2127,6 +2148,57 @@ class FormsModel
             error_log("Error al confirmar el objeto: ". $e->getMessage());
             throw $e;
         }
+	}
+
+	static public function mdlEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "INSERT INTO servicios_finalizados(idEvidence, endDate, purchaseMade, purchaseAmount, invoiceFileName, evidenceFileName, reason) VALUES (:idEvidence, :endDate, :purchaseMade, :purchaseAmount, :invoiceFileName, :evidenceFileName, :reason);";
+			$sql .= "UPDATE servicios_evidences SET statusEvidence = 1 WHERE idEvidence = :idEvidence;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idEvidence', $idEvidence, PDO::PARAM_INT);
+			$stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+			$stmt->bindParam(':purchaseMade', $purchaseMade, PDO::PARAM_STR);
+			$stmt->bindParam(':purchaseAmount', $purchaseAmount, PDO::PARAM_STR);
+			$stmt->bindParam(':invoiceFileName', $invoiceFileName, PDO::PARAM_STR);
+			$stmt->bindParam(':evidenceFileName', $evidenceFileName, PDO::PARAM_STR);
+			$stmt->bindParam(':reason', $reason, PDO::PARAM_STR);
+
+			if ($stmt->execute()) {
+				$result = 'ok';
+			} else {
+				$result = 'error';
+			}
+			// cerrar conexión
+			$stmt->closeCursor();
+			$pdo = null;
+			return $result;
+		} catch (PDOException $e) {
+			error_log("Error al finalizar el incidente: ". $e->getMessage());
+			throw $e;
+		}
+	}
+
+	static public function mdlEndEvidence($idEvidence) {
+		try {
+            $pdo = Conexion::conectar();
+            $sql = "UPDATE servicios_evidences SET statusEvidence = 1 WHERE idEvidence = :idEvidence;";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':idEvidence', $idEvidence, PDO::PARAM_INT);
+			if ($stmt->execute()) {
+                $result = 'ok';
+            } else {
+                $result = 'error';
+            }
+			// cerrar conexión
+			$stmt->closeCursor();
+			$pdo = null;
+			return $result;
+			
+        } catch (PDOException $e) {
+			error_log("Error al finalizar la evidencia: ". $e->getMessage());
+			throw $e;
+		}
 	}
 }
 
