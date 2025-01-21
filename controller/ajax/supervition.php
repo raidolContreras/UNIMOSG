@@ -96,6 +96,60 @@ switch ($_POST['action']) {
         echo $responce;
         break;
 
+    case 'getSupervision':
+        $id = $_POST['id'];
+        $type = $_POST['type'];
+        if ($type == 'day') {
+            $responce = FormsController::ctrGetSupervisionDay($id);
+        } else {
+            $responce = FormsController::ctrGetSupervisionAreas($id);
+        }
+        echo json_encode($responce);
+        break;
+
+    case 'editSupervision':
+        $type = $_POST['type'];
+        $id = $_POST['id'];
+        $supervisor = $_POST['supervisor'];
+        $plantel = $_POST['plantel'];
+        $edificio = $_POST['edificio'];
+        $piso = $_POST['piso'];
+        $zona = $_POST['zona'];
+        $area = $_POST['area'];
+        $day = $_POST['day'];
+        $time = $_POST['time'];
+        if ($type == 'day') {
+            $data = array(
+                'idSupervisionDays' => $id,
+                'idSupervisor' => $supervisor,
+                'idSchool' => $plantel,
+                'idEdificers' => $edificio,
+                'idFloor' => $piso,
+                'zone' => $zona,
+                'idArea' => $area,
+                'day' => $day,
+                'time' => $time
+            );
+            $responce = FormsController::ctrEditSupervisionDay($data);
+        } else {
+            $title = $_POST['title'];
+            $data = array(
+                'idSupervisionAreas' => $id,
+                'title' => $title,
+                'idSupervisor' => $supervisor,
+                'idSchool' => $plantel,
+                'idEdificers' => $edificio,
+                'idFloor' => $piso,
+                'zone' => $zona,
+                'idArea' => $area,
+                'day' => $day,
+                'time' => $time
+            );
+            $responce = FormsController::ctrEditSupervisionAreas($data);
+        }
+        echo $responce;
+        break;
+
     default:
         echo json_encode(['error' => 'Acción de supervición no válida']);
 }

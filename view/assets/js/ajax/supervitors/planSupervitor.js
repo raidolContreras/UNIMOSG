@@ -153,6 +153,116 @@ $(document).ready(function () {
   // Initialize cascade dropdowns for both event and route modals
   setupCascadeDropdowns("event");
   setupCascadeDropdowns("recorrido");
+  setupCascadeDropdowns("editar");
+
+  // Initialize calendar on DOM ready
+  initializeCalendar();
+
+  $("#recorridoForm").on("submit", function (e) {
+    e.preventDefault();
+    var formData = {
+      action: "registerRoute",
+      recorridoSupervisor: $("#recorridoSupervisor").val(),
+      recorridoPlantel: $("#recorridoPlantel").val(),
+      recorridoEdificio: $("#recorridoEdificio").val(),
+      recorridoPiso: $("#recorridoPiso").val(),
+      recorridoZona: $("#recorridoZona").val(),
+      recorridoArea: $("#recorridoArea").val(),
+      recorridoDia: $("#recorridoDia").val(),
+      recorridoHora: $("#recorridoHora").val(),
+    };
+
+    $.ajax({
+      url: "controller/forms.ajax.php",
+      method: "POST",
+      data: formData,
+      success: function (response) {
+        if (response == "ok") {
+          initializeCalendar();
+          $("#recorridosTable").DataTable().ajax.reload();
+        } else {
+          alert("Error al registrar el recorrido");
+        }
+      },
+    });
+  });
+
+  $("#recorridosTable").DataTable({
+    ajax: {
+      url: "controller/forms.ajax.php",
+      type: "POST",
+      data: { action: "getSupervitionDays" },
+      dataSrc: ""
+    },
+    columns: [
+      { 
+        data: null,
+        title: '#',
+        render: function (data, type, row, meta) {
+          return meta.row + 1; // Número de fila
+        },
+        className: "text-center"
+      },
+      { 
+        data: "name", 
+        title: 'Nombre del Supervisor',
+        className: "text-left"
+      },
+      { 
+        data: "nameSchool", 
+        title: 'Plantel' 
+      },
+      { 
+        data: "nameEdificer", 
+        title: 'Edificio' 
+      },
+      { 
+        data: "nameFloor", 
+        title: 'Piso' 
+      },
+      { 
+        data: "zone", 
+        title: 'Zona' 
+      },
+      { 
+        data: "nameArea", 
+        title: 'Área' 
+      },
+      { 
+        data: "day", 
+        title: 'Día',
+        render: function (data) {
+          const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+          return days[data] || 'Desconocido'; // Convertir día numérico a texto
+        },
+        className: "text-center"
+      },
+      { 
+        data: "supervisionTime", 
+        title: 'Hora de Supervisión',
+        render: function (data) {
+          return data ? data.slice(0, 5) : '-'; // Mostrar solo HH:mm
+        },
+        className: "text-center"
+      },
+      {
+        data: null,
+        title: 'Acciones',
+        render: function (data, type, row) {
+          return `
+            <button class="btn btn-danger btn-sm btn-delete-supervision" data-id="${row.idSupervisionDays}">
+                <i class="fad fa-trash-alt"></i>
+            </button>`;
+        },
+        className: "text-center"
+      }      
+    ],
+    responsive: true, // Activar diseño responsive
+    autoWidth: false, // Evitar que las columnas se autoajusten
+    pageLength: 10, // Cantidad de filas por página
+    lengthMenu: [5, 10, 25, 50], // Opciones de cantidad de filas por página
+    order: [[0, 'asc']] // Ordenar por la primera columna de forma ascendente
+  });
 
   // Calendar initialization with enhanced configuration
   function initializeCalendar() {
@@ -161,7 +271,7 @@ $(document).ready(function () {
       locale: "es",
       initialView: "timeGridWeek",
       slotMinTime: "07:00:00",
-      slotMaxTime: "18:00:00",
+      slotMaxTime: "19:00:00",
       selectable: true,
       // Se deshabilita la edición para eliminar arrastrar y soltar
       editable: false,
@@ -213,13 +323,14 @@ $(document).ready(function () {
                 if (current.getDay() === item.day) {
                   const dateStr = current.toISOString().split("T")[0];
                   dayEvents.push({
-                    id: `day-${item.idSupervisionDays}-${dateStr}`,
-                    title: `${item.nameArea}`, // Título corto
+                    id: `day-${item.idSupervisionDays}`,
+                    title: `${item.nameArea}`,
                     start: `${dateStr}T${item.supervisionTime}`,
-                    backgroundColor: "#236823", // Un color verde claro
+                    backgroundColor: "#236823",
                     extendedProps: {
                       repeating: item.repeating == 1,
                       supervisor: item.name,
+                      area: item.nameArea,
                       school: item.nameSchool,
                       building: item.nameEdificer,
                       floor: item.nameFloor,
@@ -231,6 +342,7 @@ $(document).ready(function () {
                 current.setDate(current.getDate() + 1);
               }
             });
+            
             ajaxRequest(
               CONFIG.urls.getSupervitionAreas,
               { action: "getSupervitionAreas" },
@@ -238,10 +350,18 @@ $(document).ready(function () {
                 areaEvents = responseAreas.map((areaEvent) => {
                   return {
                     id: `area-${areaEvent.idSupervisionAreas}`,
-                    title: areaEvent.title,
+                    title: `${areaEvent.title + " - " + areaEvent.nameArea}`,
                     start: `${areaEvent.day}T${areaEvent.time}`,
+                    backgroundColor: "#69938a",
                     extendedProps: {
                       repeating: false,
+                      supervisor: areaEvent.name,
+                      area: areaEvent.nameArea,
+                      school: areaEvent.nameSchool,
+                      building: areaEvent.nameEdificer,
+                      floor: areaEvent.nameFloor,
+                      zone: areaEvent.zone,
+                      time: areaEvent.time,
                     },
                   };
                 });
@@ -259,11 +379,10 @@ $(document).ready(function () {
       eventMouseEnter: function (info) {
         var event = info.event;
         var props = event.extendedProps;
-
         // Verificamos si repeating = true (repeating: item.repeating == 1)
-        if (props.repeating) {
           var tooltipContent = `
 						<div>
+              <strong>Área:</strong> ${props.area}<br>
 							<strong>Supervisor:</strong> ${props.supervisor}<br>
 							<strong>Escuela:</strong> ${props.school}<br>
 							<strong>Edificio:</strong> ${props.building}<br>
@@ -281,7 +400,6 @@ $(document).ready(function () {
               trigger: "hover",
             })
             .tooltip("show");
-        }
       },
       eventMouseLeave: function (info) {
         $(info.el).tooltip("hide");
@@ -306,12 +424,13 @@ $(document).ready(function () {
           deleteBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             if (confirm("¿Desea eliminar este evento?")) {
+              let id = event.id.replace("area-", "");
               $.ajax({
                 url: CONFIG.urls.deleteSupervitionArea,
                 type: "POST",
                 data: {
                   action: "deleteSupervitionArea",
-                  eventId: event.id,
+                  eventId: id,
                 },
                 success: function (response) {
                   if (response.trim() === "ok") {
@@ -384,136 +503,178 @@ $(document).ready(function () {
           });
         calendar.unselect();
       },
+      eventClick: function (info) {
+        const event = info.event;
+        // si el event.id empieza con "day-" es un evento repetitivo
+        if (event.id.startsWith("day-")) {
+          //nquitar e day- para obtener el id del evento
+          const idSupervisionDays = event.id.replace("day-", "");
+          editSupervision(idSupervisionDays, "day");
+        } else {
+          //quitar el area- para obtener el id del evento
+          const idSupervisionAreas = event.id.replace("area-", "");
+          editSupervision(idSupervisionAreas, "area");
+        }
+      },
     });
 
     calendar.render();
   }
-
-  // Initialize calendar on DOM ready
-  initializeCalendar();
-
-  $("#recorridoForm").on("submit", function (e) {
-    e.preventDefault();
-    var formData = {
-      action: "registerRoute",
-      recorridoSupervisor: $("#recorridoSupervisor").val(),
-      recorridoPlantel: $("#recorridoPlantel").val(),
-      recorridoEdificio: $("#recorridoEdificio").val(),
-      recorridoPiso: $("#recorridoPiso").val(),
-      recorridoZona: $("#recorridoZona").val(),
-      recorridoArea: $("#recorridoArea").val(),
-      recorridoDia: $("#recorridoDia").val(),
-      recorridoHora: $("#recorridoHora").val(),
-    };
-
-    $.ajax({
-      url: "controller/forms.ajax.php",
-      method: "POST",
-      data: formData,
-      success: function (response) {
-        if (response == "ok") {
-          alert("Recorrido registrado correctamente");
-          $("#recorridosTable").DataTable().ajax.reload();
-        } else {
-          alert("Error al registrar el recorrido");
-        }
-      },
-    });
-  });
-
-  $("#recorridosTable").DataTable({
-    ajax: {
-      url: "controller/forms.ajax.php",
-      type: "POST",
-      data: { action: "getSupervitionDays" },
-      dataSrc: ""
-    },
-    columns: [
-      { 
-        data: null,
-        title: '#',
-        render: function (data, type, row, meta) {
-          return meta.row + 1; // Número de fila
-        },
-        className: "text-center"
-      },
-      { 
-        data: "name", 
-        title: 'Nombre del Supervisor',
-        className: "text-left"
-      },
-      { 
-        data: "nameSchool", 
-        title: 'Plantel' 
-      },
-      { 
-        data: "nameEdificer", 
-        title: 'Edificio' 
-      },
-      { 
-        data: "nameFloor", 
-        title: 'Piso' 
-      },
-      { 
-        data: "zone", 
-        title: 'Zona' 
-      },
-      { 
-        data: "nameArea", 
-        title: 'Área' 
-      },
-      { 
-        data: "day", 
-        title: 'Día',
-        render: function (data) {
-          const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-          return days[data] || 'Desconocido'; // Convertir día numérico a texto
-        },
-        className: "text-center"
-      },
-      { 
-        data: "supervisionTime", 
-        title: 'Hora de Supervisión',
-        render: function (data) {
-          return data ? data.slice(0, 5) : '-'; // Mostrar solo HH:mm
-        },
-        className: "text-center"
-      },
-      { 
-          data: null,
-          title: 'Acciones',
-          render: function (data, type, row) {
-              return `
-                  <button class="btn btn-danger btn-sm" onclick="deleteSupervision(${row.idSupervisionDays})">
-                      <i class="fad fa-trash-alt"></i>
-                  </button>`;
-          },
-          className: "text-center"
-      }
-    ],
-    responsive: true, // Activar diseño responsive
-    autoWidth: false, // Evitar que las columnas se autoajusten
-    pageLength: 10, // Cantidad de filas por página
-    lengthMenu: [5, 10, 25, 50], // Opciones de cantidad de filas por página
-    order: [[0, 'asc']] // Ordenar por la primera columna de forma ascendente
-  });  
   
-});
+  function setValueAndChange($element, value, delay = 100) {
+    return new Promise((resolve) => {
+      $element.val(value).trigger("change");
+      setTimeout(resolve, delay);
+    });
+  }
 
-function deleteSupervision(idSupervisionDays) {
-  if (confirm("¿Desea eliminar este evento?")) {
+  function editSupervision(id, type) {
     $.ajax({
       url: "controller/forms.ajax.php",
       type: "POST",
-      data: { action: "deleteSupervisionDays", idSupervisionDays: idSupervisionDays },
+      data: { action: "getSupervision", type, id },
+      dataType: "json",
+    })
+      .done(async function (data) {
+        // Asignamos supervisor directamente, pues no depende de otro select
+        $("#editarSupervisor").val(data.idSupervisor);
+
+        // Encadenamos las asignaciones de los selects dependientes usando Promesas/await
+        await setValueAndChange($("#editarPlantel"), data.idSchool);
+        await setValueAndChange($("#editarEdificio"), data.idEdificers);
+        await setValueAndChange($("#editarPiso"), data.idFloor);
+        await setValueAndChange($("#editarZona"), data.zone);
+
+        // Este último simplemente se asigna, si no requiere refrescar nada
+        $("#editarArea").val(data.idArea);
+        if (type === "day") {
+          $("#editarDia")
+            .removeClass("d-none")
+            .prop("required", true)
+            .prop("disabled", false)
+            .val(data.day);
+        
+          $("#editarFecha")
+            .addClass("d-none")
+            .prop("required", false)
+            .prop("disabled", true);
+        
+          $("#editarTitulo")
+            .addClass("d-none")
+            .prop("required", false)
+            .prop("disabled", true); // <--- Quitar el required y deshabilitar
+        
+          $("#tituloEvento").addClass("d-none");
+        
+          $("#editarHora").val(data.supervisionTime);
+        
+        } else {
+          $("#editarFecha")
+            .removeClass("d-none")
+            .prop("required", true)
+            .prop("disabled", false)
+            .val(data.day);
+        
+          $("#editarDia")
+            .addClass("d-none")
+            .prop("required", false)
+            .prop("disabled", true);
+        
+          $("#editarTitulo")
+            .removeClass("d-none")
+            .prop("required", true)
+            .prop("disabled", false) // <--- Si se requiere título aquí, marcamos como required
+            .val(data.title);
+        
+          $("#tituloEvento").removeClass("d-none");
+        
+          $("#editarHora").val(data.time);
+        }
+        
+
+        $("#editEventModal").modal("show");
+        $("#editarForm").off("submit").on("submit", function (e) {
+          e.preventDefault();
+          let formData;
+
+          if (type == 'day') {
+            formData = {
+              action: "editSupervision",
+              type,
+              id: id,
+              supervisor: $("#editarSupervisor").val(),
+              plantel: $("#editarPlantel").val(),
+              edificio: $("#editarEdificio").val(),
+              piso: $("#editarPiso").val(),
+              zona: $("#editarZona").val(),
+              area: $("#editarArea").val(),
+              day: $("#editarDia").val(),
+              time: $("#editarHora").val(),
+            };
+
+          } else {
+            formData = {
+              action: "editSupervision",
+              type,
+              id: id,
+              supervisor: $("#editarSupervisor").val(),
+              plantel: $("#editarPlantel").val(),
+              edificio: $("#editarEdificio").val(),
+              piso: $("#editarPiso").val(),
+              zona: $("#editarZona").val(),
+              area: $("#editarArea").val(),
+              day: $("#editarFecha").val(),
+              time: $("#editarHora").val(),
+              title: $("#editarTitulo").val(),
+            };
+          }
+
+          updateSupervition(formData);
+          
+        });
+      })
+      .fail(function (error) {
+        console.error("Error al obtener supervisión:", error);
+      });
+  }
+
+  function updateSupervition(formdata) {
+    $.ajax({
+      url: "controller/forms.ajax.php",
+      type: "POST",
+      data: formdata,
       success: function (response) {
         if (response == "ok") {
-          alert("Supervisión eliminada correctamente");
-          $("#recorridosTable").DataTable().ajax.reload();
-        } else {
-          alert("Error al eliminar la supervisión");
+          alert("Supervisión actualizada correctamente");
+          // actualizar fullcalendar
+
+          initializeCalendar();
+          $("#editEventModal").modal("hide");
+          
+          } else {
+          alert("Error al actualizar la supervisión");
         }
       },
     });
   }
-}
+
+  $(document).on("click", ".btn-delete-supervision", function () {
+    const idSupervisionDays = $(this).data("id");
+    if (confirm("¿Desea eliminar este evento?")) {
+      $.ajax({
+        url: "controller/forms.ajax.php",
+        type: "POST",
+        data: { action: "deleteSupervisionDays", idSupervisionDays },
+        success: function (response) {
+          if (response == "ok") {
+            initializeCalendar();
+            $("#recorridosTable").DataTable().ajax.reload();
+          } else {
+            alert("Error al eliminar la supervisión");
+          }
+        },
+      });
+    }
+  });
+
+});

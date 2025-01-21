@@ -267,4 +267,20 @@ class FormsController {
     static public function ctrEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason) {
         return FormsModel::mdlEndIncident($idEvidence, $endDate, $purchaseMade, $purchaseAmount, $invoiceFileName, $evidenceFileName, $reason);
     }
+
+    static public function ctrGetSupervisionDay($id) {
+        return FormsModel::mdlGetSupervisionDay(idSupervisionDays: $id);
+    }
+
+    static public function ctrGetSupervisionAreas($id) {
+        return FormsModel::mdlGetSupervisionAreas($id);
+    }
+
+    static public function ctrEditSupervisionDay($data) {
+        return FormsModel::mdlEditSupervisionDay($data);
+    }
+
+    static public function ctrEditSupervisionAreas($data) {
+        return FormsModel::mdlEditSupervisionAreas($data);
+    }
 }

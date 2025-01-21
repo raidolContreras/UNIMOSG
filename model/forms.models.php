@@ -1974,7 +1974,13 @@ class FormsModel
 	static public function mdlGetSupervitionAreas() {
 		try {
 			$pdo = Conexion::conectar();
-            $stmt = $pdo->prepare("SELECT * FROM servicios_supervision_areas");
+            $stmt = $pdo->prepare("SELECT sa.*, u.name, s.nameSchool, e.nameEdificer, f.nameFloor, a.nameArea 
+					FROM servicios_supervision_areas sa
+					LEFT JOIN servicios_users u ON sa.idSupervisor = u.idUsers
+					LEFT JOIN servicios_schools s ON s.idSchool = sa.idSchool
+					LEFT JOIN servicios_edificers e ON e.idEdificers = sa.idEdificers
+					LEFT JOIN servicios_floors f ON f.idFloor = sa.idFloor
+					LEFT JOIN servicios_areas a ON a.idArea = sa.idArea;");
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             // cerrar conexión
@@ -2060,6 +2066,61 @@ class FormsModel
 			throw $e;
 		}
 	}
+
+	public static function mdlGetSupervisionDay($idSupervisionDays) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "SELECT sd.*, u.name, s.nameSchool, e.nameEdificer, f.nameFloor, a.nameArea 
+					FROM servicios_supervision_days sd
+					LEFT JOIN servicios_users u ON sd.idSupervisor = u.idUsers
+					LEFT JOIN servicios_schools s ON s.idSchool = sd.idSchool
+					LEFT JOIN servicios_edificers e ON e.idEdificers = sd.idEdificers
+					LEFT JOIN servicios_floors f ON f.idFloor = sd.idFloor
+					LEFT JOIN servicios_areas a ON a.idArea = sd.idArea
+					WHERE sd.idSupervisionDays = :idSupervisionDays;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idSupervisionDays', $idSupervisionDays, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+			$stmt->closeCursor();
+			$pdo = null;
+	
+			return $result;
+	
+		} catch (PDOException $e) {
+			error_log("Error al obtener los días de supervisión: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
+	public static function mdlGetSupervisionAreas($idSupervisionAreas) {
+		try {
+			$pdo = Conexion::conectar();
+			$sql = "SELECT sa.*, u.name, s.nameSchool, e.nameEdificer, f.nameFloor, a.nameArea 
+					FROM servicios_supervision_areas sa
+					LEFT JOIN servicios_users u ON sa.idSupervisor = u.idUsers
+					LEFT JOIN servicios_schools s ON s.idSchool = sa.idSchool
+					LEFT JOIN servicios_edificers e ON e.idEdificers = sa.idEdificers
+					LEFT JOIN servicios_floors f ON f.idFloor = sa.idFloor
+					LEFT JOIN servicios_areas a ON a.idArea = sa.idArea
+					WHERE sa.idSupervisionAreas = :idSupervisionAreas;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':idSupervisionAreas', $idSupervisionAreas, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+			$stmt->closeCursor();
+			$pdo = null;
+	
+			return $result;
+	
+		} catch (PDOException $e) {
+			error_log("Error al obtener los días de supervisión: " . $e->getMessage());
+			throw $e;
+		}
+	}
+
 	public static function mdlUploadEvidence($data) {
 		try {
 			$pdo = Conexion::conectar();
@@ -2199,6 +2260,92 @@ class FormsModel
 			error_log("Error al finalizar la evidencia: ". $e->getMessage());
 			throw $e;
 		}
+	}
+
+	static public function mdlEditSupervisionDay($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("
+				UPDATE servicios_supervision_days
+				SET
+					idSchool        = :idSchool,
+					idEdificers     = :idEdificers,
+					idFloor         = :idFloor,
+					zone            = :zone,
+					idArea          = :idArea,
+					day             = :day,
+					supervisionTime = :supervisionTime,
+					idSupervisor    = :idSupervisor
+				WHERE
+					idSupervisionDays = :idSupervisionDays
+			");
+			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
+			$stmt->bindParam(':idEdificers', $data['idEdificers'], PDO::PARAM_INT);
+			$stmt->bindParam(':idFloor', $data['idFloor'], PDO::PARAM_INT);
+			$stmt->bindParam(':zone', $data['zone'], PDO::PARAM_STR);
+			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(':day', $data['day'], PDO::PARAM_INT);
+			$stmt->bindParam(':supervisionTime', $data['time'], PDO::PARAM_STR);
+			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
+			$stmt->bindParam(':idSupervisionDays', $data['idSupervisionDays'], PDO::PARAM_INT);
+			
+            if ($stmt->execute()) {
+                $result = 'ok';
+            } else {
+                $result = 'error';
+            }
+            // cerrar conexión
+            $stmt->closeCursor();
+            $pdo = null;
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error al editar el día de supervisión: ". $e->getMessage());
+            throw $e;
+        }
+	}
+
+	static public function mdlEditSupervisionAreas($data) {
+		try {
+            $pdo = Conexion::conectar();
+			$stmt = $pdo->prepare("
+				UPDATE servicios_supervision_areas
+				SET
+					title         = :title,
+					idSchool      = :idSchool,
+					idEdificers   = :idEdificers,
+					idFloor       = :idFloor,
+					zone          = :zone,
+					idArea        = :idArea,
+					day           = :day,
+					idSupervisor  = :idSupervisor,
+					time          = :time
+				WHERE
+					idSupervisionAreas = :idSupervisionAreas
+			");
+			$stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
+			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
+			$stmt->bindParam(':idEdificers', $data['idEdificers'], PDO::PARAM_INT);
+			$stmt->bindParam(':idFloor', $data['idFloor'], PDO::PARAM_INT);
+			$stmt->bindParam(':zone', $data['zone'], PDO::PARAM_STR);
+			$stmt->bindParam(':idArea', $data['idArea'], PDO::PARAM_INT);
+			$stmt->bindParam(':day', $data['day'], PDO::PARAM_STR);
+			$stmt->bindParam(':idSupervisor', $data['idSupervisor'], PDO::PARAM_INT);
+			$stmt->bindParam(':time', $data['time'], PDO::PARAM_STR);
+			$stmt->bindParam(':idSupervisionAreas', $data['idSupervisionAreas'], PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                $result = 'ok';
+            } else {
+                $result = 'error';
+            }
+            // cerrar conexión
+            $stmt->closeCursor();
+            $pdo = null;
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error al editar el día de supervisión: ". $e->getMessage());
+            throw $e;
+        }
 	}
 }
 

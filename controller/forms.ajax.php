@@ -77,6 +77,8 @@ switch ($action) {
     case 'getSupervitionAreas':
     case 'addSupervitionAreas':
     case 'deleteSupervitionArea':
+    case 'getSupervision':
+    case 'editSupervision':
         require 'ajax/supervition.php';
         break;
 
