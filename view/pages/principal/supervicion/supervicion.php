@@ -78,7 +78,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
 					</div>
 					<div class="mb-3 col-md-6 col-12" id="timePickerContainer">
 						<label for="eventTime" class="form-label">Hora</label>
-						<input type="time" class="form-control" id="eventTime" required step="1800" min="08:00" max="17:30">
+						<input type="time" class="form-control" id="eventTime" required step="300" min="08:00" max="18:30">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -177,7 +177,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
                         <!-- Hora -->
                         <div class="col-md-6 col-12">
                             <label for="recorridoHora" class="form-label">Hora</label>
-                            <input type="time" class="form-control" id="recorridoHora" required step="1800" min="08:00" max="17:30">
+                            <input type="time" class="form-control" id="recorridoHora" required step="300" min="07:00" max="18:30">
                         </div>
                     </div>
                 </div>
@@ -290,7 +290,7 @@ $planteles = FormsController::ctrSearchSchools(null, null);
             <!-- Hora -->
             <div class="col-md-6 col-12">
               <label for="editarHora" class="form-label">Hora</label>
-              <input type="time" class="form-control" id="editarHora" required step="1800" min="08:00" max="17:30">
+              <input type="time" class="form-control" id="editarHora" required step="300" min="08:00" max="18:30">
             </div>
           </div>
         </div>

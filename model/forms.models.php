@@ -75,7 +75,7 @@ class FormsModel
 		}
 	}
 
-	static public function mdlRegisterSchool($nameSchool)
+	static public function mdlRegisterSchool($nameSchool, $chatId)
 	{
 		try {
 			$pdo = Conexion::conectar();
@@ -87,9 +87,10 @@ class FormsModel
 			$nextPosition = $result['next_position'];
 
 			// Insertar el nuevo registro con el valor de "position" calculado
-			$stmt = $pdo->prepare('INSERT INTO servicios_schools (nameSchool, position) VALUES (:nameSchool, :position)');
+			$stmt = $pdo->prepare('INSERT INTO servicios_schools (nameSchool, position, chatId) VALUES (:nameSchool, :position, :chatId)');
 			$stmt->bindParam(':nameSchool', $nameSchool, PDO::PARAM_STR);
 			$stmt->bindParam(':position', $nextPosition, PDO::PARAM_INT);
+			$stmt->bindParam(':chatId', $chatId, PDO::PARAM_STR);
 
 			if ($stmt->execute()) {
 				$result = 'ok';
@@ -243,8 +244,9 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('UPDATE servicios_schools SET nameSchool = :nameSchool WHERE idSchool = :idSchool');
+			$stmt = $pdo->prepare('UPDATE servicios_schools SET nameSchool = :nameSchool, chatId = :chatId WHERE idSchool = :idSchool');
 			$stmt->bindParam(':nameSchool', $data['nameSchool'], PDO::PARAM_STR);
+			$stmt->bindParam(':chatId', $data['chatId'], PDO::PARAM_STR);
 			$stmt->bindParam(':idSchool', $data['idSchool'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
 				$result = 'ok';

@@ -8,8 +8,8 @@ class FormsController {
         return FormsModel::mdlSearchschools($item,$value);
     }
 
-    static public function ctrRegisterSchool($nameSchool){
-        return FormsModel::mdlRegisterSchool($nameSchool);
+    static public function ctrRegisterSchool($nameSchool, $chatId){
+        return FormsModel::mdlRegisterSchool($nameSchool, $chatId);
     }
 
     static public function ctrSearchEdificers($item, $value){

@@ -120,6 +120,7 @@ function openMenuEdit(collapse, id) {
         dataType: 'json',
         success: function(data) {
             $('#nameSchoolEdit').val(data.nameSchool);
+            $('#chatIdEdit').val(data.chatId);
 
             document.querySelector('#' + collapse).classList.add('show');
             var modalBackdrop = document.createElement('div');
@@ -130,6 +131,7 @@ function openMenuEdit(collapse, id) {
             $('.update').click(function(e){
                 e.preventDefault();
                 var name = $('#nameSchoolEdit').val();
+                var chatId = $('#chatIdEdit').val();
 
                 $.ajax({
                     type: "POST",
@@ -137,6 +139,7 @@ function openMenuEdit(collapse, id) {
                     data: {
                         action: 'editSchool',
                         nameSchool: name,
+                        chatId: chatId,
                         idSchool: id
                     },
                     success: function(data) {
@@ -186,12 +189,14 @@ function openEdifices(idSchool) {
 $('.success').click(function(e){
         
     var name = $('#nameSchool').val();
+    var chatId = $('#chatId').val();
     $.ajax({
         type: 'POST',
         url: 'controller/forms.ajax.php',
         data: {
             action:'registerSchool',
-            nameSchool: name
+            nameSchool: name,
+            chatId: chatId
         },
         success: function(response){
             if (response = 'ok') {

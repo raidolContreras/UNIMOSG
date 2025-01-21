@@ -5,7 +5,8 @@ $userId = $_SESSION['idUser'];
 switch ($_POST['action']) {
     case 'registerSchool':
         $nameSchool = $_POST['nameSchool'];
-        $response = FormsController::ctrRegisterSchool($nameSchool);
+        $chatId = $_POST['chatId'];
+        $response = FormsController::ctrRegisterSchool($nameSchool, $chatId);
         echo $response;
         if ($response == 'ok') {
             Logs::createLogs($userId, 'registerSchool', 'Registro de un nuevo plantel: '.$nameSchool);
@@ -21,9 +22,11 @@ switch ($_POST['action']) {
     case 'editSchool':
         $data = [
             "nameSchool" => $_POST['nameSchool'],
+            "chatId" => $_POST['chatId'],
             "idSchool" => $_POST['idSchool']
         ];
-        echo FormsController::ctrEditSchool($data);
+        $response = FormsController::ctrEditSchool($data);
+        echo $response;
         if ($response == 'ok') {
             Logs::createLogs($userId, 'editSchool', 'Edición de un plantel: '.$_POST['nameSchool']);
         }

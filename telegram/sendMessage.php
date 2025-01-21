@@ -10,7 +10,7 @@ $dotenv->load();
 $botToken = $_ENV['TELEGRAM_BOT_TOKEN'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $chatId = $_ENV['ChatID'];
+    $chatId = $_ENV['ChatID_LC'];
 
     // Validar si se envió un mensaje
     $message = $_POST['message'] ?? null;
