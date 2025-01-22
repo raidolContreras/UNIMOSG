@@ -195,6 +195,8 @@ $(document).ready(function () {
 								<span class="area-name">${data.nameArea}</span>
 								`;
 
+			const chatId = data.chatId;
+
 			$('#modalObjects').find('.modal-title').html(modalTitle);
 
 			modalBody.empty();
@@ -280,7 +282,7 @@ $(document).ready(function () {
 								</div>
 							</div>
 							<div class="col">
-								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}" data-evidence="${idEvidence}">
+								<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}" data-evidence="${idEvidence}" data-chatId="${chatId}">
 									<i class="fas fa-check"></i>
 								</button>
 							</div>
@@ -485,13 +487,13 @@ $(document).ready(function () {
 				descriptionField.on('input', enableSendButton);
 
 				sendButton.on('click', () => {
+					let evidence = attachButton.data('evidence');
 					const formData = new FormData();
 					formData.append('action', 'uploadEvidence');
 					formData.append('idObject', idObject);
 					formData.append('urgency', urgencyField.val());
 					formData.append('description', descriptionField.val());
-					formData.append('evidence', attachButton.data('evidence'));
-					// let evidence = attachButton.data('evidence');
+					formData.append('evidence', evidence);
 					if (urgencyField.val() === '') {
 						return;
 					}
@@ -504,7 +506,7 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: function (response) {
 							if(response.status == 'success') {
-								sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), attachButton.data('evidence'));
+								sendTelegramMessage(idObject, 'Descripción del incidente: ' + descriptionField.val(), evidence, chatId);
 								alert('Objeto enviado correctamente');
 								$(`.id-${idObject}`).remove();
 							} else {
@@ -569,6 +571,7 @@ $(document).ready(function () {
 	$(document).on('click', '#correctedObject', function () {
 		const idObject = $(this).data('id');
 		const idEvidence = $(this).data('evidence');
+		const chatId = $(this).data('chatid');
 		
 		// Crear un modal para subir o tomar foto
 		const modalOptions = `
@@ -687,7 +690,7 @@ $(document).ready(function () {
 					$(`#correctedModal-${idObject}`).remove();
 					$(`.id-${idObject}`).remove();
 					// enviar mensaje de telegram como correcto
-					sendTelegramMessage(idObject, 'Objeto corregido y evidencia enviada.', evidenceFile);
+					sendTelegramMessage(idObject, 'Objeto corregido y evidencia enviada.', evidenceFile, chatId);
 				},
 				error: function () {
 					alert('Error al enviar la evidencia.');
@@ -726,11 +729,12 @@ function finalizar(idSupervision) {
 	}
 }
 
-function sendTelegramMessage(idObject, message, file = null) {
+function sendTelegramMessage(idObject, message, file = null, chatId) {
     const formData = new FormData();
     formData.append('action', 'sendMessageTelegram');
     formData.append('idObject', idObject);
     formData.append('message', message);
+	formData.append('chatId', chatId);
 
     // Verificar si hay un archivo para enviar
     if (file) {
@@ -744,7 +748,6 @@ function sendTelegramMessage(idObject, message, file = null) {
         processData: false, // Importante para enviar FormData correctamente
         contentType: false, // Importante para enviar FormData correctamente
         success: function (response) {
-            console.log('Telegram message sent successfully');
         },
         error: function (xhr, status, error) {
             console.error('Error sending Telegram message:' + error);

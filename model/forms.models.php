@@ -1853,10 +1853,11 @@ class FormsModel
 	static public function mdlGetDataObjects($idArea) {
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare("SELECT a.nameArea, f.nameFloor, e.nameEdificer, s.nameSchool, a.idArea, f.idFloor, e.idEdificers, s.idSchool FROM servicios_areas a
-											LEFT JOIN servicios_floors f ON f.idFloor = a.area_idFloors
-											LEFT JOIN servicios_edificers e ON e.idEdificers = f.floor_idEdificer
-											LEFT JOIN servicios_schools s ON s.idSchool = e.edificer_idSchool
+			$stmt = $pdo->prepare("SELECT a.nameArea, f.nameFloor, e.nameEdificer, s.nameSchool, a.idArea, f.idFloor, e.idEdificers, s.idSchool, s.chatId 
+											FROM servicios_areas a
+												LEFT JOIN servicios_floors f ON f.idFloor = a.area_idFloors
+												LEFT JOIN servicios_edificers e ON e.idEdificers = f.floor_idEdificer
+												LEFT JOIN servicios_schools s ON s.idSchool = e.edificer_idSchool
 											WHERE a.idArea = :idArea");
 			$stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
 			$stmt->execute();

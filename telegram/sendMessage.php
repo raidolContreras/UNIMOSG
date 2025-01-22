@@ -10,7 +10,7 @@ $dotenv->load();
 $botToken = $_ENV['TELEGRAM_BOT_TOKEN'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $chatId = $_ENV['ChatID_LC'];
+    $chatId = $_POST['chatId'];
 
     // Validar si se envió un mensaje
     $message = $_POST['message'] ?? null;
@@ -89,4 +89,3 @@ function sendPhoto($token, $chatId, $imagePath, $caption = '') {
         echo json_encode(['status' => 'error', 'message' => 'Error al enviar la imagen.', 'response' => $response]);
     }
 }
-?>

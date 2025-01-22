@@ -122,6 +122,7 @@ switch ($_POST['action']) {
 
     case 'sendMessageTelegram':
         $idObject = $_POST['idObject'];
+        $chatId = $_POST['chatId'];
     
         // Obtener los datos del objeto con su ubicación completa
         $object = FormsController::ctrGetObject($idObject);
@@ -149,7 +150,8 @@ switch ($_POST['action']) {
     
             // Configurar los datos para enviar a Telegram
             $postData = [
-                'message' => $message
+                'message' => $message,
+                'chatId' => $chatId
             ];
     
             // Si hay archivo, lo incluimos
