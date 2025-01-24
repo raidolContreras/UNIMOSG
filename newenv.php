@@ -37,28 +37,30 @@ function updateEnvFile($filePath, $data) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     $response = [];
     
-    // Procesar los datos del formulario
-    $token = trim($_POST['TOKEN'] ?? '');
-    $instance_id = trim($_POST['INSTANCE_ID'] ?? '');
-    $host = trim($_POST['HOST'] ?? '');
-    $database = trim($_POST['DATABASE'] ?? '');
-    $username = trim($_POST['USER_NAME'] ?? '');
-    $password = trim($_POST['PASSWORD'] ?? '');
+    // Leer las variables actuales
+    $currentEnv = getEnvVars($envFilePath);
 
-    // Validación básica de los campos
-    if (empty($token) || empty($instance_id) || empty($host) || empty($database) || empty($username)) {
-        $response['error'] = "Todos los campos son obligatorios.";
+    // Procesar los datos enviados
+    $updatedEnv = [];
+    foreach ($_POST as $key => $value) {
+        if ($key !== 'ajax') {
+            $updatedEnv[$key] = trim($value);
+        }
+    }
+
+    // Validar campos obligatorios
+    $requiredFields = ['TOKEN', 'INSTANCE_ID', 'HOST', 'DATABASE', 'USER_NAME'];
+    $missingFields = array_diff($requiredFields, array_keys($updatedEnv));
+
+    if (!empty($missingFields)) {
+        $response['error'] = "Faltan los siguientes campos: " . implode(', ', $missingFields);
     } else {
+        // Mezclar con las variables existentes
+        $finalEnv = array_merge($currentEnv, $updatedEnv);
+
         // Actualizar el archivo .env
         try {
-            updateEnvFile($envFilePath, [
-                'TOKEN' => $token,
-                'INSTANCE_ID' => $instance_id,
-                'HOST' => $host,
-                'DATABASE' => $database,
-                'USER_NAME' => $username,
-                'PASSWORD' => $password
-            ]);
+            updateEnvFile($envFilePath, $finalEnv);
             $response['success'] = "Datos actualizados correctamente.";
         } catch (Exception $e) {
             $response['error'] = $e->getMessage();
@@ -80,9 +82,7 @@ $envVars = getEnvVars($envFilePath);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar .env</title>
-    <!-- Cargar Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
@@ -106,88 +106,73 @@ $envVars = getEnvVars($envFilePath);
         .btn:hover {
             background-color: #01643d;
         }
-        .navbar {
-            margin-bottom: 50px;
-        }
-        .section-title {
-            margin-top: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #dee2e6;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Formulario de edición -->
-    <div class="container">
-        <div class="form-container">
-            <h2 class="mb-4 text-center">Editar archivo .env</h2>
+<div class="container">
+    <div class="form-container">
+        <h2 class="mb-4 text-center">Editar archivo .env</h2>
+        <div id="message"></div>
 
-            <!-- Mostrar mensajes de éxito o error -->
-            <div id="message"></div>
-
-            <form id="envForm">
-                <!-- Sección para conectar WhatsApp -->
-                <div class="section-title"><h4>Conexión a WhatsApp</h4></div>
-                <div class="mb-3">
-                    <label for="token" class="form-label">TOKEN</label>
-                    <input type="text" class="form-control" id="token" name="TOKEN" value="<?php echo $envVars['TOKEN'] ?? ''; ?>" placeholder="Ingresa el nuevo TOKEN">
-                </div>
-                <div class="mb-3">
-                    <label for="instance_id" class="form-label">INSTANCE_ID</label>
-                    <input type="text" class="form-control" id="instance_id" name="INSTANCE_ID" value="<?php echo $envVars['INSTANCE_ID'] ?? ''; ?>" placeholder="Ingresa el nuevo INSTANCE_ID">
-                </div>
-
-                <!-- Sección para conexión al servidor -->
-                <div class="section-title"><h4>Conexión al Servidor</h4></div>
-                <div class="mb-3">
-                    <label for="host" class="form-label">HOST</label>
-                    <input type="text" class="form-control" id="host" name="HOST" value="<?php echo $envVars['HOST'] ?? ''; ?>" placeholder="Ingresa el HOST">
-                </div>
-                <div class="mb-3">
-                    <label for="database" class="form-label">DATABASE</label>
-                    <input type="text" class="form-control" id="database" name="DATABASE" value="<?php echo $envVars['DATABASE'] ?? ''; ?>" placeholder="Ingresa la base de datos">
-                </div>
-                <div class="mb-3">
-                    <label for="username" class="form-label">USER_NAME</label>
-                    <input type="text" class="form-control" id="username" name="USER_NAME" value="<?php echo $envVars['USER_NAME'] ?? ''; ?>" placeholder="Ingresa el nombre de usuario">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">PASSWORD</label>
-                    <input type="password" class="form-control" id="password" name="PASSWORD" value="<?php echo $envVars['PASSWORD'] ?? ''; ?>" placeholder="Ingresa la contraseña">
-                </div>
-                <button type="submit" class="btn btn-success w-100">Guardar</button>
-            </form>
-        </div>
+        <form id="envForm">
+            <div class="mb-3">
+                <label for="token" class="form-label">TOKEN</label>
+                <input type="text" class="form-control" id="token" name="TOKEN" value="<?php echo $envVars['TOKEN'] ?? ''; ?>" placeholder="Ingresa el nuevo TOKEN">
+            </div>
+            <div class="mb-3">
+                <label for="instance_id" class="form-label">INSTANCE_ID</label>
+                <input type="text" class="form-control" id="instance_id" name="INSTANCE_ID" value="<?php echo $envVars['INSTANCE_ID'] ?? ''; ?>" placeholder="Ingresa el nuevo INSTANCE_ID">
+            </div>
+            <div class="mb-3">
+                <label for="host" class="form-label">HOST</label>
+                <input type="text" class="form-control" id="host" name="HOST" value="<?php echo $envVars['HOST'] ?? ''; ?>" placeholder="Ingresa el HOST">
+            </div>
+            <div class="mb-3">
+                <label for="database" class="form-label">DATABASE</label>
+                <input type="text" class="form-control" id="database" name="DATABASE" value="<?php echo $envVars['DATABASE'] ?? ''; ?>" placeholder="Ingresa la base de datos">
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">USER_NAME</label>
+                <input type="text" class="form-control" id="username" name="USER_NAME" value="<?php echo $envVars['USER_NAME'] ?? ''; ?>" placeholder="Ingresa el nombre de usuario">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">PASSWORD</label>
+                <input type="password" class="form-control" id="password" name="PASSWORD" value="<?php echo $envVars['PASSWORD'] ?? ''; ?>" placeholder="Ingresa la contraseña">
+            </div>
+            <div class="mb-3">
+                <label for="telegram_bot_token" class="form-label">TELEGRAM_BOT_TOKEN</label>
+                <input type="text" class="form-control" id="telegram_bot_token" name="TELEGRAM_BOT_TOKEN" value="<?php echo $envVars['TELEGRAM_BOT_TOKEN'] ?? ''; ?>" placeholder="Ingresa el TOKEN del bot de Telegram">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Guardar</button>
+        </form>
     </div>
+</div>
 
-    <!-- Cargar Bootstrap JS y AJAX -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#envForm').on('submit', function(e) {
-                e.preventDefault(); // Prevenir el envío del formulario por defecto
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#envForm').on('submit', function(e) {
+            e.preventDefault();
 
-                $.ajax({
-                    url: '', // La misma página PHP maneja el POST
-                    type: 'POST',
-                    data: $(this).serialize() + '&ajax=1', // Enviar los datos del formulario junto con la marca de ajax
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            $('#message').html('<div class="alert alert-success">' + response.success + '</div>');
-                        } else if (response.error) {
-                            $('#message').html('<div class="alert alert-danger">' + response.error + '</div>');
-                        }
-                    },
-                    error: function() {
-                        $('#message').html('<div class="alert alert-danger">Error en la petición AJAX.</div>');
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: $(this).serialize() + '&ajax=1',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $('#message').html('<div class="alert alert-success">' + response.success + '</div>');
+                    } else if (response.error) {
+                        $('#message').html('<div class="alert alert-danger">' + response.error + '</div>');
                     }
-                });
+                },
+                error: function() {
+                    $('#message').html('<div class="alert alert-danger">Error en la petición AJAX.</div>');
+                }
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>

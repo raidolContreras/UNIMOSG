@@ -3,6 +3,7 @@ session_start();
 
 require_once "forms.controller.php";
 require_once "../model/forms.models.php";
+require_once "../model/logsModel.php";
 
 if (!isset($_POST['action'])) {
     echo json_encode(['error' => 'Acción no especificada']);
