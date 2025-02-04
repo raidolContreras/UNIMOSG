@@ -12,9 +12,15 @@
         </div>
         
         <!-- Telefono -->
-         <div class="mb-3">
+        <div class="mb-3">
             <label for="edit-4" class="form-label">Número de Whatsapp</label>
             <input id="edit-4" type="text" class="form-control" placeholder="Número de Whatsapp">
+        </div>
+
+        <!-- Chat telegram id -->
+         <div class="mb-3">
+            <label for="edit-6" class="form-label">Chat Telegram ID</label>
+            <input id="edit-6" type="text" class="form-control" placeholder="Chat Telegram ID">
         </div>
 
         <div class="mb-3">

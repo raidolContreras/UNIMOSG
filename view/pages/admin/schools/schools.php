@@ -16,7 +16,6 @@
     position: relative;
   }
 
-
 </style>
 
 <div class="p-3 mb-4 rounded">

@@ -132,12 +132,13 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('INSERT INTO servicios_users (name, email, password, phone, level) VALUES (:name, :email, :password, :phone, :level)');
+			$stmt = $pdo->prepare('INSERT INTO servicios_users (name, email, password, phone, level, userChatId) VALUES (:name, :email, :password, :phone, :level, :userChatId)');
 			$stmt->bindParam(':name', $data['name'], PDO::PARAM_STR);
 			$stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
 			$stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
 			$stmt->bindParam(':phone', $data['phone'], PDO::PARAM_INT);
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
+			$stmt->bindParam(':userChatId', $data['userChatId'], PDO::PARAM_STR);
 			if ($stmt->execute()) {
 				$result = 'ok';
 			} else {
@@ -157,11 +158,12 @@ class FormsModel
 	{
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare('UPDATE servicios_users SET name = :name, email = :email, phone = :phone, level = :level WHERE idUsers = :idUsers');
+			$stmt = $pdo->prepare('UPDATE servicios_users SET name = :name, email = :email, phone = :phone, level = :level, userChatId = :userChatId WHERE idUsers = :idUsers');
 			$stmt->bindParam(':name', $data['name'], PDO::PARAM_STR);
 			$stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
 			$stmt->bindParam(':phone', $data['phone'], PDO::PARAM_INT);
 			$stmt->bindParam(':level', $data['level'], PDO::PARAM_INT);
+			$stmt->bindParam(':userChatId', $data['userChatId'], PDO::PARAM_STR);
 			$stmt->bindParam(':idUsers', $data['idUsers'], PDO::PARAM_INT);
 			if ($stmt->execute()) {
 				$result = 'ok';
@@ -1373,7 +1375,7 @@ class FormsModel
 	static public function mdlGetIncidents() {
 		try {
 			$pdo = Conexion::conectar();
-			$stmt = $pdo->prepare("SELECT e.*, o.nameObject, a.nameArea, f.nameFloor, ed.nameEdificer, s.nameSchool FROM servicios_evidences e
+			$stmt = $pdo->prepare("SELECT e.*, o.nameObject, a.nameArea, f.nameFloor, ed.nameEdificer, s.nameSchool, s.chatId FROM servicios_evidences e
 											LEFT JOIN servicios_objects o ON o.idObject = e.idObjects
 											LEFT JOIN servicios_areas a ON a.idArea = o.object_idArea
 											LEFT JOIN servicios_floors f ON f.idFloor = a.area_idFloors
@@ -1423,7 +1425,12 @@ class FormsModel
 			$stmt->bindParam(':idEvidence', $idEvidence, PDO::PARAM_INT);
 			$stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
 			$stmt->bindParam(':purchaseMade', $purchaseMade, PDO::PARAM_STR);
-			$stmt->bindParam(':purchaseAmount', $purchaseAmount, PDO::PARAM_STR);
+			if ($purchaseAmount === "" || $purchaseAmount === null) {
+				$purchaseAmount = null; // Enviar como NULL
+				$stmt->bindParam(':purchaseAmount', $purchaseAmount, PDO::PARAM_NULL);
+			} else {
+				$stmt->bindParam(':purchaseAmount', $purchaseAmount, PDO::PARAM_STR);
+			}
 			$stmt->bindParam(':invoiceFileName', $invoiceFileName, PDO::PARAM_STR);
 			$stmt->bindParam(':evidenceFileName', $evidenceFileName, PDO::PARAM_STR);
 			$stmt->bindParam(':reason', $reason, PDO::PARAM_STR);

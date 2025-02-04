@@ -5,6 +5,7 @@ $(document).ready(function(){
         var email = $('#regular-form-3').val();
         var password = $('#regular-form-4').val();
         var phone = $('#regular-form-6').val();
+        var userChatId = $('#regular-form-7').val();
         var level = $('#regular-form-5').val();
 
         $.ajax({
@@ -16,6 +17,7 @@ $(document).ready(function(){
                 email: email,
                 password: password,
                 phone: phone,
+                userChatId: userChatId,
                 level: level
                 },
             success: function(data) {
@@ -25,6 +27,8 @@ $(document).ready(function(){
                     $('#regular-form-4').val('');
                     $('#regular-form-5').val(0);
                     $('#regular-form-6').val('');
+                    $('#regular-form-7').val('');
+
                     closeMenu('modalNav');
                     $('#tableUsers').DataTable().ajax.reload();
                 }

@@ -51,8 +51,10 @@ $(document).ready(function () {
     // Manejar el clic en "Finalizar Incidente"
     $(document).on('click', '#endIncident', function () {
         let idEvidence = $(this).attr('data-id-evidence');
+        let idObject = $(this).attr('data-id-object');
+        let chatId = $(this).attr('data-chat-id');
         $('#modalDetalle').modal('hide'); // Ocultar el modal de detalles
-        createEndIncidentModal(idEvidence); // Crear el modal de finalización
+        createEndIncidentModal(idEvidence, idObject, chatId); // Crear el modal de finalización
     });
 
     // Manejar el clic en "Cancelar" en el modal dinámico
@@ -80,7 +82,7 @@ function formatDate(dateString) {
 }
 
 // Función para mostrar detalles en el modal
-function showDetails(nombre, nivel, descripcion, imagen, fecha, idEvidence, address) {
+function showDetails(nombre, nivel, descripcion, imagen, fecha, idEvidence, address, idObject, chatId) {
     $('#modalNombre').text(nombre);
     $('#modaladdress').text(address);
     $('#modalNivel').text(nivel);
@@ -88,6 +90,8 @@ function showDetails(nombre, nivel, descripcion, imagen, fecha, idEvidence, addr
     $('#modalImagen').attr('src', imagen);
     $('#modalFecha').text(formatDate(fecha));
     $('#endIncident').attr('data-id-evidence', idEvidence);
+    $('#endIncident').attr('data-id-object', idObject);
+    $('#endIncident').attr('data-chat-id', chatId);
 }
 
 // Función para mostrar los incidentes
@@ -147,7 +151,7 @@ function showIncidents() {
                                 schoolsHTML += `
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <a href="#" class="stretched-link text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                                            onclick="showDetails('${incident.nameObject}', '${urgency}', '${incident.description}', 'view/evidences/${incident.evidence}', '${incident.dateCreated}', ${incident.idEvidence}, '${address}')">
+                                            onclick="showDetails('${incident.nameObject}', '${urgency}', '${incident.description}', 'view/evidences/${incident.evidence}', '${incident.dateCreated}', ${incident.idEvidence}, '${address}', ${incident.idObjects}, '${incident.chatId}')">
                                             <i class="bi bi-circle-fill text-${urgencyColor} me-2"></i>${incident.nameObject}
                                         </a>
                                         <span class="badge bg-${urgencyColor}">${urgency}</span>
@@ -183,7 +187,7 @@ function showIncidents() {
 }
 
 // Función para crear el modal de finalizar incidente
-function createEndIncidentModal(idEvidence) {
+function createEndIncidentModal(idEvidence, idObject, chatId) {
     $('#endIncidentModal').remove();
 
     let modalHTML = `
@@ -197,6 +201,8 @@ function createEndIncidentModal(idEvidence) {
                     <div class="modal-body">
                         <form id="endIncidentForm" enctype="multipart/form-data">
                             <input type="hidden" name="idEvidence" value="${idEvidence}">
+                            <input type="hidden" name="idObject" id="idObject" value="${idObject}">
+                            <input type="hidden" name="chatId" id="chatId" value="${chatId}">
                             <div class="mb-3">
                                 <label for="endDate" class="form-label">Fecha de Finalización</label>
                                 <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
@@ -254,6 +260,7 @@ function createEndIncidentModal(idEvidence) {
 
     $(document).on('click', '#submitEndIncident', function () {
         let formData = new FormData($('#endIncidentForm')[0]);
+        let formDataMessage = new FormData($('#endIncidentForm')[0]);
         // formdata append action = finalizar incidente
         formData.append('action', 'endIncident');
 
@@ -269,6 +276,33 @@ function createEndIncidentModal(idEvidence) {
                     $('#endIncidentModal').modal('hide');
                     //eliminar modal-backdrop
                     $('.modal-backdrop').remove();
+                    // Obtener el archivo del campo 'evidenceFile'
+                    let evidenceFile = formDataMessage.get('evidenceFile');
+
+                    if (evidenceFile) {
+                        // Agregar el archivo con el nuevo nombre 'file'
+                        formDataMessage.append('file', evidenceFile);
+
+                        // Eliminar el campo original 'evidenceFile'
+                        formDataMessage.delete('evidenceFile');
+                    }
+
+                    // Agregar el mensaje y la acción al FormData
+                    let message = `Incidente finalizado: ${$('#reason').val()}`;
+                    formDataMessage.append('message', message);
+                    formDataMessage.append('action', 'sendMessageTelegram');
+
+                    // Enviar la solicitud AJAX
+                    $.ajax({
+                        url: 'controller/forms.ajax.php',
+                        type: 'POST',
+                        data: formDataMessage,
+                        processData: false,  // Necesario para enviar FormData correctamente
+                        contentType: false,  // Necesario para enviar archivos en FormData
+                        success: function (response) {
+                            console.log(response);
+                        }
+                    });
                 } else {
                     alert('Error al finalizar el incidente.');
                 }

@@ -17,6 +17,13 @@
             <label for="regular-form-6" class="form-label">Número de Whatsapp</label>
             <input id="regular-form-6" type="text" class="form-control" placeholder="Número de Whatsapp">
         </div>
+
+        <!-- Chat telegram id -->
+        <div class="mb-3">
+            <label for="regular-form-7" class="form-label">Chat Telegram ID</label>
+            <input id="regular-form-7" type="text" class="form-control" placeholder="Chat Telegram ID">
+        </div>
+
         <div class="mb-3">
             <label for="regular-form-5" class="form-label">Nivel de acceso</label>
             <select class="form-select" aria-label="Default select example" id="regular-form-5">

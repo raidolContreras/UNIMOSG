@@ -4,9 +4,12 @@
     </div>
 </div>
 <div class="col-12">
-    <div class="p-3">
-        <div class="d-flex items-center ms-auto mt-3 mt-sm-0">
+    <div class="row">
+        <div class="col">
             <button class="btn btn-secondary" onclick="openMenu('modalNav', 'newUsers')"><i class="fa-duotone fa-plus"></i> Registrar usuario</button>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-info" onclick="openApi()"><i class="fad fa-paper-plane"></i> Ver API Telegram</button>
         </div>
     </div>
     <table id="tableUsers" class="table">

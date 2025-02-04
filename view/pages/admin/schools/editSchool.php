@@ -5,8 +5,8 @@
             <input id="nameSchoolEdit" type="text" class="form-control" placeholder="Nombre del plantel">
         </div>
         <div class="mb-3">
-            <label for="chatIdEdit" class="form-label">ChatId</label>
-            <input id="chatIdEdit" type="text" class="form-control" placeholder="ChatId">
+            <label for="chatIdEdit" class="form-label">ChatId Telegram</label>
+            <input id="chatIdEdit" type="text" class="form-control" placeholder="Id del chat de telegram">
         </div>
         <div class="d-flex justify-content-center mb-3">
             <button type="button" class="btn btn-danger me-2" onclick="closeMenu('modalNavUpdate')">Cancelar</button>

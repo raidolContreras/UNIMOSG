@@ -6,6 +6,7 @@ $(document).ready(function(){
         var email = $('#edit-3').val();
         var phone = $('#edit-4').val();
         var level = $('#edit-5').val();
+        var userChatId = $('#edit-6').val();
         var idUser = $('#edit').val();
 
         $.ajax({
@@ -17,6 +18,7 @@ $(document).ready(function(){
                 emailEdit: email,
                 phoneEdit: phone,
                 levelEdit: level,
+                userChatId: userChatId,
                 idUser: idUser
                 },
             success: function(data) {
@@ -25,6 +27,7 @@ $(document).ready(function(){
                     $('#edit-3').val('');
                     $('#edit-4').val('');
                     $('#edit-5').val(0);
+                    $('#edit-6').val('');
                     closeMenu('modalNavUpdate');
                     $('#tableUsers').DataTable().ajax.reload();
                 }
@@ -48,6 +51,7 @@ function openMenuEdit(collapse, idForm, id) {
             $('#edit-3').val(data.email);
             $('#edit-4').val(data.phone);
             $('#edit-5').val(data.level);
+            $('#edit-6').val(data.userChatId);
             $('#edit').val(data.idUsers);
 
             document.querySelector('#' + collapse).classList.add('show');

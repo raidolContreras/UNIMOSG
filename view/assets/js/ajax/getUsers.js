@@ -186,3 +186,26 @@ function DeleteUsers(idUsers) {
         });
     }
 }
+
+function openApi(){
+    // Genera el link del api con ajax
+    $.ajax({
+        url: "controller/forms.ajax.php",
+        type: 'POST',
+        data: {
+            action: 'generateApiLink'
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response) {
+                // Abre el link en una nueva pestaña
+                window.open(response.apiLink, '_blank');
+            } else {
+                console.log('Error al generar el link del API.');
+            }
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+}

@@ -9,6 +9,7 @@ switch ($_POST['action']) {
         $email = $_POST['email'];
         $password = $_POST['password'];
         $phone = $_POST['phone'];
+        $userChatId = $_POST['userChatId'];
         $level = $_POST['level'];
 
         $cryptPassword = crypt($password, '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
@@ -18,6 +19,7 @@ switch ($_POST['action']) {
             "email" => $email,
             "password" => $cryptPassword,
             "phone" => $phone,
+            "userChatId" => $userChatId,
             "level" => $level
         );
 
@@ -40,6 +42,7 @@ switch ($_POST['action']) {
         $email = $_POST['emailEdit'];
         $phone = $_POST['phoneEdit'];
         $level = $_POST['levelEdit'];
+        $userChatId = $_POST['userChatId'];
         $idUser = $_POST['idUser'];
 
         $data = array(
@@ -47,6 +50,7 @@ switch ($_POST['action']) {
             "email" => $email,
             "phone" => $phone,
             "level" => $level,
+            "userChatId" => $userChatId,
             "idUsers" => $idUser
         );
 
