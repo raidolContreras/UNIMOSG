@@ -164,7 +164,7 @@ switch ($_POST['action']) {
             // Usando una URL relativa desde el servidor
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
 
-            curl_setopt($ch, CURLOPT_URL, $protocol . '://' . $_SERVER['HTTP_HOST'] . '/UNIMOSG/telegram/sendMessage.php');
+            curl_setopt($ch, CURLOPT_URL, $protocol . '://' . $_SERVER['HTTP_HOST'] . '/telegram/sendMessage.php');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

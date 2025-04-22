@@ -38,7 +38,7 @@ $(document).ready(function () {
                 <li class="custom-list-item ${claseItem} ${item.type}-${item.idSupervision}" data-id="${item.id}" data-type="${item.type}" data-supervision="${item.idSupervision}">
                     ${item.nombre || item.lugar}
                     ${item.type === 'today' ? `<span class="urgent-message">${item.mensaje}</span>` : ''}
-                    <i class="fas fa-angle-right"></i>
+                    <i class="fal fa-angle-right"></i>
                 </li>
             `);
         });
@@ -202,17 +202,17 @@ $(document).ready(function () {
 							</div>
 							<div class="col-1">
 								<button class="attach-evidence" data-id="${idObject}">
-									<i class="fas fa-paperclip"></i>
+									<i class="fal fa-paperclip"></i>
 								</button>
 							</div>
 							<div class="col-1">
 								<button class="take-photo" data-id="${idObject}">
-									<i class="fad fa-camera"></i>
+									<i class="fal fa-camera"></i>
 								</button>
 							</div>
 							<div class="col-1">
 								<button class="send-object" data-id="${idObject}" disabled>
-									<i class="fad fa-share-square"></i>
+									<i class="fal fa-share-square"></i>
 								</button>
 							</div>
 							<div class="col-12 mt-2">
@@ -236,7 +236,7 @@ $(document).ready(function () {
 								</div>
 								<div class="col">
 									<button class="btn btn-success btn-sm" id="correctedObject" data-id="${idObject}" data-evidence="${idEvidence}" data-chatid="${chatId}">
-										<i class="fas fa-check"></i>
+										<i class="fal fa-check"></i>
 									</button>
 								</div>
 							</div>
@@ -342,14 +342,14 @@ $(document).ready(function () {
 																<div class="col-2 text-center row">
 																${hasMultipleCameras ? `
 																	<button type="button" class="switch-camera">
-																		<i class="fad fa-sync-alt"></i>
+																		<i class="fal fa-sync-alt"></i>
 																	</button>
 																` : ''}
 																<button type="button" class="capture-photo">
-																	<i class="fad fa-camera"></i>
+																	<i class="fal fa-camera"></i>
 																</button>
 																<button type="button" class="cancel-photo" data-bs-dismiss="modal">
-																	<i class="fas fa-times"></i>
+																	<i class="fal fa-times"></i>
 																</button>
 															</div>
 														</div>
@@ -538,10 +538,10 @@ $(document).ready(function () {
 						</div>
 						<div class="modal-body text-center row mb-3" style="justify-content: space-evenly;">
 							<button class="attach-evidence upload-photo" data-id="${idObject}">
-								<i class="fas fa-paperclip" aria-hidden="true"></i>
+								<i class="fal fa-paperclip" aria-hidden="true"></i>
 							</button>
 							<button class="take-photo" data-id="${idObject}">
-								<i class="fad fa-camera" aria-hidden="true"></i>
+								<i class="fal fa-camera" aria-hidden="true"></i>
 							</button>
 							<input type="file" accept="image/*" id="upload-${idObject}" style="display: none;">
 							<div id="preview-corrected-${idObject}" class="mt-3"></div>

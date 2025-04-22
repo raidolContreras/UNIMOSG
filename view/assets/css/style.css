@@ -15222,16 +15222,16 @@ body {
 
 .navbar-collapse {
   position: fixed;
-  top: 0;
+  top: 37px;
   right: 0;
   bottom: 0;
   background-color: var(--menu-bg-color);
   padding: 20px;
   z-index: 1051;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
-  transition: transform 0.3s ease-out;
+  transition: transform 0.3s cubic-bezier(0.73, -0.33, 0.65, 0.94)
 }
 
 .navbar-collapse.show {
@@ -15275,7 +15275,7 @@ body {
 
 .nav-link {
   color: #333;
-  font-size: 1.2rem;
+  /* font-size: 1.2rem; */
   display: block;
   padding: 10px;
   border-radius: 5px;

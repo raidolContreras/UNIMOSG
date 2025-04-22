@@ -107,7 +107,7 @@ $(document).ready(function(){
         columns: [
             {
                 data: 'position',
-                render: () => `<center class="handle"><i class="fas fa-sort"></i></center>`
+                render: () => `<center class="handle"><i class="fal fa-sort"></i></center>`
             },
             {
                 data: 'nameObject',

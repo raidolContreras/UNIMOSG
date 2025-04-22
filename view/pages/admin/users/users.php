@@ -9,7 +9,7 @@
             <button class="btn btn-secondary" onclick="openMenu('modalNav', 'newUsers')"><i class="fa-duotone fa-plus"></i> Registrar usuario</button>
         </div>
         <div class="col-2">
-            <button class="btn btn-info" onclick="openApi()"><i class="fad fa-paper-plane"></i> Ver API Telegram</button>
+            <button class="btn btn-info" onclick="openApi()"><i class="fal fa-paper-plane"></i> Ver API Telegram</button>
         </div>
     </div>
     <table id="tableUsers" class="table">

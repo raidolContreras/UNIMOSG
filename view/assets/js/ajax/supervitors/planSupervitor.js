@@ -251,7 +251,7 @@ $(document).ready(function () {
         render: function (data, type, row) {
           return `
             <button class="btn btn-danger btn-sm btn-delete-supervision" data-id="${row.idSupervisionDays}">
-                <i class="fad fa-trash-alt"></i>
+                <i class="fal fa-trash-alt"></i>
             </button>`;
         },
         className: "text-center"

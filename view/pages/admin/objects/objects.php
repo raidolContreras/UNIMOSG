@@ -71,7 +71,7 @@
 
         <div class="d-grid gap-2 addObjects">
             <div class="btn-group">
-                <button type="button" class="btn btn-link my-3 addMassiveObject"><i class="fad fa-folder-plus"></i> Registro masivo con archivo</button>
+                <button type="button" class="btn btn-link my-3 addMassiveObject"><i class="fal fa-folder-plus"></i> Registro masivo con archivo</button>
             </div>
         </div>
 

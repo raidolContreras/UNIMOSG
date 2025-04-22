@@ -77,7 +77,7 @@ function cargarEdificios() {
                     <div class="card edificio-item shadow-sm border-0" data-position="${edificio.position}" style="align-items: center; flex-direction: row;">
                         <div class="card-body d-flex justify-content-between align-items-center p-3">
                             <div class="handle me-3">
-                                <i class="fas fa-grip-vertical fa-lg text-muted"></i>
+                                <i class="fal fa-grip-vertical fa-lg text-muted"></i>
                             </div>
                             <button class="btn btn-link p-0 text-dark fw-bold flex-grow-1 text-start" onclick="openEdifices(${edificio.idEdificers})" style="text-decoration: none;">
                                 <span class="arrow">${edificio.nameEdificer}</span>
@@ -85,7 +85,7 @@ function cargarEdificios() {
                         </div>
                         <div class="dropdown ms-3">
                             <button style="margin-right: 15px;" class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton${edificio.idEdificers}" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
-                                <i class="fas fa-ellipsis-v fa-lg"></i>
+                                <i class="fal fa-ellipsis-v fa-lg"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${edificio.idEdificers}">
                                 <li><button class="dropdown-item" onclick="openMenuEdit(${edificio.idEdificers})">Editar</button></li>

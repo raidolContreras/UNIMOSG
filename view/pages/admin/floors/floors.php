@@ -39,7 +39,7 @@
 
 <div class="modal-collapse" id="modalFloors">
     <span class="close-btn" onclick="closeMenu('modalFloors')">
-        <i class="fas fa-times"></i>
+        <i class="fal fa-times"></i>
     </span>
     <div class="modal-nav">
         <?php include "view/pages/admin/floors/newFloor.php"; ?>
@@ -48,7 +48,7 @@
 
 <div class="modal-collapse" id="modalNavUpdate">
     <span class="close-btn" onclick="closeMenu('modalNavUpdate')">
-        <i class="fas fa-times"></i>
+        <i class="fal fa-times"></i>
     </span>
     <div class="modal-nav">
         <?php include "view/pages/admin/floors/editFloor.php"; ?>

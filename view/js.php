@@ -103,7 +103,7 @@ $(document).on('click', '#modalAcceptButton', function() {
                             <center>
                             <a class="btn btn-success btn-download" href="view/assets/docs/${downloadAttendanceListPresent}/lista_invitados.xlsx" download>
                                 <span class="download-text">Descargar</span>
-                                <i class="fas fa-arrow-down"></i>
+                                <i class="fal fa-arrow-down"></i>
                             </a>
                             </center>
                         `);
