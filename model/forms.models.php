@@ -1558,3 +1558,49 @@ class FormsModel
         }
 	}
 }
+
+class ReportsModel {
+	static public function mdlGenerateReport($fecha_inicio, $fecha_fin) {
+		try {
+			$pdo = Conexion::conectar();
+			
+			$sql = "SELECT 
+					e.idEvidence,
+					e.dateCreated,
+					u.name AS reportado_por,
+					o.nameObject AS objeto,
+					a.nameArea AS area,
+					e.description,
+					e.urgency,
+					e.statusEvidence,
+					f.endDate AS fecha_cierre
+					FROM servicios_evidences e
+					JOIN servicios_users u ON e.idUser = u.idUsers
+					LEFT JOIN servicios_objects o ON e.idObjects = o.idObject
+					LEFT JOIN servicios_areas a ON o.object_idArea = a.idArea
+					LEFT JOIN servicios_finalizados f ON e.idEvidence = f.idEvidence";
+
+			// Add WHERE clause only if dates are provided
+			if ($fecha_inicio !== null && $fecha_fin !== null) {
+				$fecha_inicio .= ' 00:00:00';
+				$fecha_fin .= ' 23:59:59';
+				$sql .= " WHERE e.dateCreated BETWEEN :fechaIni AND :fechaFin";
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindParam(':fechaIni', $fecha_inicio, PDO::PARAM_STR);
+				$stmt->bindParam(':fechaFin', $fecha_fin, PDO::PARAM_STR);
+			} else {
+				$stmt = $pdo->prepare($sql);
+			}
+
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// cerrar conexión
+			$stmt->closeCursor(); 
+			$pdo = null;
+			return $result;
+		} catch (PDOException $e) {
+			error_log("Error al obtener los reportes: ". $e->getMessage());
+			throw $e;
+		}
+	}
+}

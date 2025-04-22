@@ -93,6 +93,10 @@ switch ($action) {
         require 'ajax/supervisor.php';
         break;
 
+    case 'generateIncidentReport':
+        require 'ajax/reportes.php';
+        break;
+
     case 'generateApiLink':
         
         require '../vendor/autoload.php';

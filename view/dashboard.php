@@ -66,6 +66,8 @@
                 echo 'Objetos por area';
             } else if ($pagina === 'supervicion'){
                 echo 'Gestión de supervisores';
+            } else if ($pagina === 'reportes'){
+                echo 'Generar Reporte de Incidentes';
             } else {
                 echo $pagina;
             }

@@ -8,3 +8,4 @@
 /.env
 /view/evidences/
 /*.zip
+/vendor

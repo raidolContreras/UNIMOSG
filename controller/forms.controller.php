@@ -233,3 +233,9 @@ class FormsController {
         return FormsModel::mdlEditSupervisionAreas($data);
     }
 }
+
+class ReportsController {
+    static public function ctrGenerateReport($fecha_inicio, $fecha_fin) {
+        return ReportsModel::mdlGenerateReport($fecha_inicio, $fecha_fin);
+    }
+}
